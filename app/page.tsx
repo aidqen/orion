@@ -1,65 +1,137 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { RecentChats } from "@/components/RecentChats";
+import { CustomPromptInput } from "@/components/CustomPromptInput";
+import {
+  CalendarClock,
+  CalendarRange,
+  Lightbulb,
+  ListChecks,
+  PanelLeft,
+  PenLine,
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import AuthCard from "@/components/auth/AuthCard";
+import { useSidebarStore } from "@/store/useSidebarStore";
+
+const quickActions = [
+  { id: "plan-day", label: "Plan my day", icon: CalendarRange },
+  { id: "prioritize", label: "Prioritize tasks", icon: ListChecks },
+  { id: "optimize-focus", label: "Optimize Routines", icon: CalendarClock },
+  { id: "help-write", label: "Import from Google", icon: PenLine },
+  { id: "brainstorm", label: "Brainstorm", icon: Lightbulb },
+];
+
+type User = {
+  user_metadata?: {
+    name?: string;
+  };
+};
 
 export default function Home() {
+  const [input, setInput] = useState("");
+  const [showRecentChats, setShowRecentChats] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const { toggleSidebar } = useSidebarStore();
+  const user: User | null = null; // UI-only placeholder
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowRecentChats(true), 850);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // UI-only placeholder function
+  const startChat = (message: any) => {
+    console.log("Start chat with:", message);
+    setOpenLogin(true);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className=" w-full h-full flex flex-col justify-center items-center dark:bg-[#161618] bg-white text-black dark:text-white">
+      {/* Sidebar Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-100 dark:bg-[#222124] hover:bg-gray-200 dark:hover:bg-[#292929] transition-colors"
+        aria-label="Toggle Sidebar"
+      >
+        <PanelLeft className="w-5 h-5" />
+      </button>
+
+      <AnimatePresence>
+        {openLogin && (
+          <motion.div
+            onClick={() => setOpenLogin(false)}
+            className="fixed inset-0 backdrop-brightness-50 backdrop-blur-sm z-[1000]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: "easeOut",
+            }}
+          >
+            <div className="fixed inset-x-0 bottom-0 flex justify-center">
+              <motion.div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{
+                  type: "spring",
+                  bounce: 0,
+                  damping: 35,
+                  mass: 1,
+                  stiffness: 300,
+                  duration: 0.4,
+                }}
+              >
+                <AuthCard setOpen={setOpenLogin} />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="w-full max-w-[680px] mt-[100px] flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center text-black dark:text-white mb-4">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Good evening,{" "}
+            <span className="capitalize">
+              {(user as User | null)?.user_metadata?.name || "user"}
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg text-gray-500 dark:text-gray-300">
+            How can I help you?
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <CustomPromptInput setInput={setInput} input={input} onSubmit={startChat} />
+        <div className="flex flex-row items-center justify-between w-full gap-2 mt-4">
+          {quickActions.map((action, index: number) => (
+            <motion.button
+              key={action.id}
+              initial={{ y: "50%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                type: "spring",
+                bounce: 0,
+                damping: 35,
+                mass: 1,
+                stiffness: 300,
+                delay: 0.4 + 0.1 * index,
+                duration: 0.1,
+              }}
+              className="rounded-full flex flex-row gap-1 dark:text-stone-200 text-stone-600 items-center justify-center dark:bg-[#222124] dark:hover:bg-[#292929] hover:bg-stone-100 bg-gray-100 px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
+            >
+              <action.icon className="w-4 h-4" />
+              {action.label}
+            </motion.button>
+          ))}
         </div>
-      </main>
+
+        <RecentChats showRecentChats={showRecentChats} />
+      </div>
     </div>
   );
 }
