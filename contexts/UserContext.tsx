@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useContext, useCallback, useEffect, useState, ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 // Infer User type from Supabase client
@@ -8,7 +8,15 @@ type SupabaseClient = ReturnType<typeof createClient>;
 type SessionResponse = Awaited<ReturnType<SupabaseClient["auth"]["getSession"]>>["data"]["session"];
 type User = NonNullable<SessionResponse>["user"];
 
-interface UseUserReturn {
+const scopes = [
+    'openid',
+    'email',
+    'profile',
+    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+    'https://www.googleapis.com/auth/calendar.events',
+  ].join(' ');
+
+interface UserContextType {
   user: User | null;
   authenticated: boolean;
   loading: boolean;
@@ -18,7 +26,9 @@ interface UseUserReturn {
   signOut: () => Promise<void>;
 }
 
-export function useUser(): UseUserReturn {
+const UserContext = createContext<UserContextType | null>(null);
+
+export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -41,7 +51,7 @@ export function useUser(): UseUserReturn {
 
     getInitialSession();
 
-    // Listen for auth state changes
+    // Listen for auth state changes (SINGLE listener for entire app)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -63,7 +73,6 @@ export function useUser(): UseUserReturn {
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) throw signInError;
-      // User state will be updated via onAuthStateChange listener
     } catch (err) {
       setError(err as Error);
       throw err;
@@ -82,13 +91,7 @@ export function useUser(): UseUserReturn {
         : undefined;
 
       // Request required Google scopes: basic profile + Calendar list + Calendar events
-      const scopes = [
-        'openid',
-        'email',
-        'profile',
-        'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-        'https://www.googleapis.com/auth/calendar.events',
-      ].join(' ');
+
 
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -101,7 +104,6 @@ export function useUser(): UseUserReturn {
       });
 
       if (oauthError) throw oauthError;
-      // User will be redirected, so state will update on return
     } catch (err) {
       setError(err as Error);
       throw err;
@@ -116,7 +118,6 @@ export function useUser(): UseUserReturn {
     try {
       const { error: signOutError } = await supabase.auth.signOut();
       if (signOutError) throw signOutError;
-      // User state will be updated via onAuthStateChange listener
       setUser(null);
     } catch (err) {
       setError(err as Error);
@@ -128,6 +129,28 @@ export function useUser(): UseUserReturn {
 
   const authenticated = user !== null;
 
-  return { user, authenticated, loading, error, signInWithPassword, signInWithGoogle, signOut };
+  return (
+    <UserContext.Provider 
+      value={{ 
+        user, 
+        authenticated, 
+        loading, 
+        error, 
+        signInWithPassword, 
+        signInWithGoogle, 
+        signOut 
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export function useUser() {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within UserProvider");
+  }
+  return context;
 }
 

@@ -83,7 +83,7 @@ export function CustomPromptInput({
       maxFileSize={undefined}
       onError={undefined}
       className={cn(
-        "mt-4 relative overflow-hidden dark:bg-[#222124] shadow-[0_0_7px_1px_rgba(0,0,0,0.1)] w-full border-0",
+        "mt-4 relative overflow-hidden dark:bg-[#222124]  border border-gray-300/50 dark:border-stone-700/40",
         className
       )}
     >
@@ -115,14 +115,6 @@ export function CustomPromptInput({
                 className="rounded-2xl dark:hover:bg-[#292929]  dark:text-white"
                 label="Add Image"
               />
-              <DropdownMenuItem>
-                <img
-                  src="/google-icon-logo-svgrepo-com.svg"
-                  alt="Google"
-                  className="h-5 w-5 mr-1"
-                />
-                Fetch Google Events
-              </DropdownMenuItem>
             </PromptInputActionMenuContent>
           </PromptInputActionMenu>
         </PromptInputTools>
@@ -144,14 +136,14 @@ export function CustomPromptInput({
           </Button>
         )}
       </PromptInputToolbar>
-      {isBorderShine && (
+      {/* {isBorderShine && (
         <ShineBorder
           className="opacity-80"
           borderWidth={1.5}
           duration={60}
           shineColor={["#643c9f", "#c084fc"]}
         />
-      )}
+      )} */}
     </PromptInput>
   );
 }

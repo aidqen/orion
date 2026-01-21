@@ -16,16 +16,16 @@ export function HomepageHeader() {
                 // onSave={handleAppearanceSave}
             />
             <div className="w-full z-10 absolute flex flex-row gap-4 items-center justify-end px-4 py-2 top-0">
-                {!open && (
+                {/* {!open && (
                     <button
                         type="button"
                         onClick={toggleSidebar}
-                        className="absolute left-4 flex h-7 w-7 items-center justify-center rounded-md border border-[#E5E7EB] bg-white text-[#111827] shadow-sm transition hover:bg-[#F3F4F6] dark:border-white/10 dark:bg-[#161A20] dark:text-white dark:hover:bg-white/10"
+                        className="absolute left-4 flex h-7 w-7 items-center justify-center rounded-md border  bg-white text-[#111827] shadow-sm transition hover:bg-[#F3F4F6] dark:border-white/10 dark:bg-[#161A20] dark:text-white dark:hover:bg-white/10"
                         aria-label="Open sidebar"
                     >
                         <PanelLeft className="size-5" />
                     </button>
-                )}
+                )} */}
                 <button
                     onClick={() => setIsAppearanceModalOpen(true)}
                     className="cursor-pointer px-2 h-7 flex flex-row items-center gap-1 dark:bg-[#222124] dark:hover:bg-[#292929] bg-gray-100 hover:bg-gray-200 transition-colors duration-200 rounded-sm text-[0.8rem] text-stone-600 dark:text-stone-300"

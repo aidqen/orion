@@ -13,26 +13,11 @@ export async function signUpWithPassword(email: string, password: string, name?:
   const timezone = typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function'
     ? Intl.DateTimeFormat().resolvedOptions().timeZone
     : undefined;
-  console.log("🚀 ~ signUpWithPassword ~ timezone:", timezone)
 
-  const metadata: Record<string, string | undefined> = {
-    name,
-    timezone,
-  };
-  console.log("🚀 ~ signUpWithPassword ~ metadata:", metadata)
-
-  // const { data, error } = await supabase.auth.signUp({
-  //   email,
-  //   password,
-  //   options: {
-  //     emailRedirectTo: typeof window !== 'undefined'
-  //       ? `${window.location.origin}${process.env.NEXT_PUBLIC_AUTH_REDIRECT ?? '/experimental/home'}`
-  //       : undefined,
-  //     data: metadata,
-  //   }
-  // });
-  // if (error) throw error;
-  // return data;
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  })
 }
 
 export async function signInWithGoogle() {

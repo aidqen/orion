@@ -2,17 +2,29 @@ import React, { useState, useEffect, useRef, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { motion, AnimatePresence } from 'motion/react';
+import { UIMessage } from 'ai';
 
-export const MessageBubble = memo(function MessageBubble({ message, speed = 5, isAssistantBgVisible = false }) {
+// AI SDK UIMessage structure - flexible to accept any message format
+interface MessageBubbleProps {
+  message: UIMessage | any;
+  speed?: number;
+  isAssistantBgVisible?: boolean;
+}
+
+export const MessageBubble = memo(function MessageBubble({ 
+  message, 
+  speed = 5, 
+  isAssistantBgVisible = false 
+}: MessageBubbleProps) {
   const isUser = message?.role === 'user';
 
   const [displayedContent, setDisplayedContent] = useState('');
   const [typewriterFinished, setTypewriterFinished] = useState(false);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check if any parts have streaming state
   const isStreaming = message?.parts && Array.isArray(message.parts)
-    ? message.parts.some(part => part.state === 'streaming')
+    ? message.parts.some((part: any) => part.state === 'streaming')
     : false;
 
   // Get timestamp from message metadata
@@ -23,21 +35,21 @@ export const MessageBubble = memo(function MessageBubble({ message, speed = 5, i
 
   // Define markdown components for consistent styling
   const markdownComponents = {
-    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-    ul: ({ children }) => <ul className="mb-2 ml-4 list-disc">{children}</ul>,
-    ol: ({ children }) => <ol className="mb-2 ml-4 list-decimal">{children}</ol>,
-    li: ({ children }) => <li className="mb-1">{children}</li>,
-    code: ({ inline, children }) => inline
+    p: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
+    ul: ({ children }: any) => <ul className="mb-2 ml-4 list-disc">{children}</ul>,
+    ol: ({ children }: any) => <ol className="mb-2 ml-4 list-decimal">{children}</ol>,
+    li: ({ children }: any) => <li className="mb-1">{children}</li>,
+    code: ({ inline, children }: any) => inline
       ? <code className="px-1 text-gray-800 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-200">{children}</code>
       : <pre className="overflow-x-auto p-2 my-2 text-white bg-gray-800 rounded dark:bg-gray-900"><code>{children}</code></pre>,
-    blockquote: ({ children }) => (
+    blockquote: ({ children }: any) => (
       <blockquote className="pl-4 my-2 italic border-l-4 border-gray-300 dark:border-gray-600">{children}</blockquote>
     ),
   };
 
-  const textParts = message?.parts ? message.parts.filter(part => part.type === 'text') : [];
+  const textParts = message?.parts ? message.parts.filter((part: any) => part.type === 'text') : [];
 
-  const messageContent = textParts.map(part => part.text).join('');
+  const messageContent = textParts.map((part: any) => part.text).join('');
   const hasText = typeof messageContent === 'string' && messageContent.length >= 1;
 
   useEffect(() => {
@@ -112,7 +124,7 @@ export const MessageBubble = memo(function MessageBubble({ message, speed = 5, i
               <div className="text-xs max-sm:text-sm lg:text-sm markdown-content">
                 {/* Render content based on typewriter state */}
                 {typewriterFinished ? (
-                  textParts.map((part, index) => (
+                  textParts.map((part: any, index: number) => (
                     <ReactMarkdown key={index} remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {part.text}
                     </ReactMarkdown>
@@ -134,7 +146,7 @@ export const MessageBubble = memo(function MessageBubble({ message, speed = 5, i
       </div>
     </AnimatePresence>
   );
-}, (prevProps, nextProps) => {
+}, (prevProps: MessageBubbleProps, nextProps: MessageBubbleProps) => {
   // Only re-render if the message object reference changes
   return prevProps.message === nextProps.message && prevProps.speed === nextProps.speed;
 });

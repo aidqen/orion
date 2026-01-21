@@ -12,8 +12,7 @@ export type MenuItem = {
 }
 
 export const PRIMARY_NAV: MenuItem[] = [
-  { icon: Home, text: 'Home', href: '#' },
-  { icon: Globe, text: 'Explore Synapse AI', href: '#' }
+  { icon: Home, text: 'Home', href: '/' },
 ]
 
 export const FOLDERS: MenuItem[] = [
