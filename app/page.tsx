@@ -8,12 +8,12 @@ import {
   CalendarRange,
   Lightbulb,
   ListChecks,
-  PanelLeft,
   PenLine,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import AuthCard from "@/components/auth/AuthCard";
-import { useSidebarStore } from "@/store/useSidebarStore";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useUser } from "@/hooks/useUser";
 
 const quickActions = [
   { id: "plan-day", label: "Plan my day", icon: CalendarRange },
@@ -33,8 +33,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [showRecentChats, setShowRecentChats] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
-  const { toggleSidebar } = useSidebarStore();
-  const user: User | null = null; // UI-only placeholder
+  const { user, authenticated } = useUser();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowRecentChats(true), 850);
@@ -44,25 +43,23 @@ export default function Home() {
   // UI-only placeholder function
   const startChat = (message: any) => {
     console.log("Start chat with:", message);
-    setOpenLogin(true);
+    if (!authenticated) {
+      setOpenLogin(true);
+    } else {
+      
+    }
   };
 
   return (
     <div className=" w-full h-full flex flex-col justify-center items-center dark:bg-[#161618] bg-white text-black dark:text-white">
       {/* Sidebar Toggle Button */}
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-100 dark:bg-[#222124] hover:bg-gray-200 dark:hover:bg-[#292929] transition-colors"
-        aria-label="Toggle Sidebar"
-      >
-        <PanelLeft className="w-5 h-5" />
-      </button>
+      <SidebarTrigger className="fixed top-4 left-4 z-5" />
 
       <AnimatePresence>
         {openLogin && (
           <motion.div
             onClick={() => setOpenLogin(false)}
-            className="fixed inset-0 backdrop-brightness-50 backdrop-blur-sm z-[1000]"
+            className="fixed inset-0 backdrop-brightness-50 backdrop-blur-sm z-1000"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

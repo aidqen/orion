@@ -27,7 +27,7 @@ export default function OAuthButtons() {
         type="button"
         onClick={onGoogle}
         disabled={loading}
-        className="cursor-pointer flex flex-row items-center gap-2 justify-center h-11 w-full rounded-xl border border-gray-200 dark:border-[#2A2F3A] bg-gray-50 dark:bg-[#1B1F27] text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-[#20242E] disabled:opacity-70"
+        className="cursor-pointer flex flex-row items-center gap-2 justify-center h-11 w-full rounded-lg border border-gray-200 dark:border-[#2A2F3A] bg-gray-50 dark:bg-[#1B1F27] text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-[#20242E] disabled:opacity-70"
       >
         <img
           src="/google-icon-logo-svgrepo-com.svg"

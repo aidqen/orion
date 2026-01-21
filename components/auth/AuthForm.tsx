@@ -133,7 +133,7 @@ export default function AuthForm({
         <button
           type="submit"
           disabled={loading}
-          className="cursor-pointer mt-1 h-11 w-full rounded-xl bg-[#1E6BFF] font-semibold text-white hover:bg-[#2D7DFF] disabled:opacity-70"
+          className="cursor-pointer mt-1 h-11 w-full rounded-lg bg-[#1E6BFF] font-semibold text-white hover:bg-[#2D7DFF] disabled:opacity-70"
         >
           {loading
             ? "Please wait…"
