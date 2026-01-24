@@ -1,26 +1,20 @@
 "use client";
 
-import { createContext, useContext, useCallback, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useCallback, useEffect, useState, ReactNode, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
+import * as auth from "@/lib/supabase/auth";
 
 // Infer User type from Supabase client
 type SupabaseClient = ReturnType<typeof createClient>;
 type SessionResponse = Awaited<ReturnType<SupabaseClient["auth"]["getSession"]>>["data"]["session"];
 type User = NonNullable<SessionResponse>["user"];
 
-const scopes = [
-    'openid',
-    'email',
-    'profile',
-    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-    'https://www.googleapis.com/auth/calendar.events',
-  ].join(' ');
-
 interface UserContextType {
   user: User | null;
   authenticated: boolean;
   loading: boolean;
   error: Error | null;
+  isGoogleConnected: boolean;
   signInWithPassword: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -32,6 +26,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  const isGoogleConnected = useMemo(() => 
+    user?.identities?.some(i => i.provider === 'google') ?? false,
+    [user]
+  )
 
   useEffect(() => {
     const supabase = createClient();
@@ -65,14 +64,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signInWithPassword = useCallback(async (email: string, password: string) => {
-    const supabase = createClient();
+  const handleSignInWithPassword = useCallback(async (email: string, password: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      if (signInError) throw signInError;
+      await auth.signInWithPassword(email, password);
     } catch (err) {
       setError(err as Error);
       throw err;
@@ -81,43 +78,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const signInWithGoogle = useCallback(async () => {
-    const supabase = createClient();
+  const handleSignInWithGoogle = useCallback(async () => {
     setError(null);
 
     try {
-      const redirectTo = typeof window !== 'undefined'
-        ? `${window.location.origin}${process.env.NEXT_PUBLIC_AUTH_REDIRECT ?? '/'}`
-        : undefined;
-
-      // Request required Google scopes: basic profile + Calendar list + Calendar events
-
-
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo,
-          scopes,
-          // Ask for consent to ensure refresh token and extended scopes
-          queryParams: { access_type: 'offline', prompt: 'consent', include_granted_scopes: 'true' },
-        }
-      });
-
-      if (oauthError) throw oauthError;
+      await auth.signInWithGoogle();
     } catch (err) {
       setError(err as Error);
       throw err;
     }
   }, []);
 
-  const signOut = useCallback(async () => {
-    const supabase = createClient();
+  const handleSignOut = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const { error: signOutError } = await supabase.auth.signOut();
-      if (signOutError) throw signOutError;
+      await auth.signOut();
       setUser(null);
     } catch (err) {
       setError(err as Error);
@@ -130,15 +107,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const authenticated = user !== null;
 
   return (
-    <UserContext.Provider 
-      value={{ 
-        user, 
-        authenticated, 
-        loading, 
-        error, 
-        signInWithPassword, 
-        signInWithGoogle, 
-        signOut 
+    <UserContext.Provider
+      value={{
+        user,
+        authenticated,
+        loading,
+        error,
+        isGoogleConnected,
+        signInWithPassword: handleSignInWithPassword,
+        signInWithGoogle: handleSignInWithGoogle,
+        signOut: handleSignOut
       }}
     >
       {children}

@@ -26,7 +26,7 @@ export function useChatMessages(chatId: string) {
   async function appendPendingMessage() {
     if (pendingMessage && !hasSentPendingMessage.current) {
       hasSentPendingMessage.current = true;
-      sendMessage({ text: pendingMessage });
+      handleSendMessage(pendingMessage);
       setPendingMessage(null);
     }
   }

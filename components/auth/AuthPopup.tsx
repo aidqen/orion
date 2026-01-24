@@ -1,15 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import AuthCard from "@/components/auth/AuthCard";
+import { useAuthPopupStore } from "@/store/useAuthPopupStore";
 
-interface AuthPopupProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
 
-export function AuthPopup({ open, setOpen }: AuthPopupProps) {
+
+export function AuthPopup() {
+  const { isOpen, setOpen } = useAuthPopupStore()
   return (
     <AnimatePresence>
-      {open && (
+      {isOpen && (
         <motion.div
           onClick={() => setOpen(false)}
           className="fixed inset-0 backdrop-brightness-50 backdrop-blur-sm z-1000"

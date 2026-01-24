@@ -1,4 +1,4 @@
-import { MessageBubble } from "@/components/MessageBubble";
+import { Message } from "@/components/Message";
 import { ChatError } from "@/components/ChatError";
 
 interface MessagesListProps {
@@ -11,10 +11,9 @@ export function MessagesList({ messages, error, reload }: MessagesListProps) {
   return (
     <div className="flex flex-col mb-5 gap-3 py-4">
       {messages.map((msg) => (
-        <MessageBubble
+        <Message
           key={msg.id}
           message={msg}
-          speed={5}
         />
       ))}
       <ChatError error={error} reload={reload} />

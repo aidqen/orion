@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import ErrorBanner from "@/components/ui/ErrorBanner";
-import OAuthButtons from "@/components/OAuthButtons";
+import GoogleButton from "@/components/GoogleButton";
 import {
   signInWithPassword,
   signUpWithPassword,
@@ -20,7 +20,6 @@ export default function AuthForm({
   mode: Mode;
   setOpen?: (open: boolean) => void;
 }) {
-  const router = useRouter();
   const TextInput = Input as any;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,11 +44,9 @@ export default function AuthForm({
       if (mode === "login") {
         await signInWithPassword(email, password);
         if (setOpen) setOpen(false);
-        // router.push('/experimental/home');
       } else {
         await signUpWithPassword(email, password, name);
         if (setOpen) setOpen(false);
-        // router.push('/experimental/home');
       }
     } catch (e) {
       setErr(normalizeAuthError(e));
@@ -149,7 +146,7 @@ export default function AuthForm({
         <div className="h-px flex-1 bg-gray-200 dark:bg-[#2A2F3A]" />
       </div>
 
-      <OAuthButtons />
+      <GoogleButton />
     </>
   );
 }

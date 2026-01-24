@@ -16,6 +16,7 @@ import { SidebarTitle } from "./SidebarTitle"
 export function SidebarHeader() {
   const router = useRouter()
   const { open, toggleSidebar } = useSidebar()
+  console.log("🚀 ~ SidebarHeader ~ open:", open)
 
   return (
     <SidebarGroup>

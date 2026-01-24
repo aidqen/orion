@@ -10,16 +10,13 @@ import {
   PromptInputAttachment,
   PromptInputAttachments,
   PromptInputBody,
-  PromptInputSubmit,
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
   usePromptInputAttachments,
 } from "@/components/ai-elements/prompt-input";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ArrowUp } from "lucide-react";
-import { ShineBorder } from "@/components/ui/shine-border";
 import { cn } from "@/lib/utils";
 
 // optional: safe logger that reads attachments *inside* the PromptInput tree
@@ -35,7 +32,6 @@ export function CustomPromptInput({
   input,
   setInput,
   placeholder = "Ask Planwise AI...",
-  isBorderShine = true,
   className = "",
   textAnimation = true,
   onSubmit,
@@ -45,7 +41,6 @@ export function CustomPromptInput({
   input: string;
   setInput: (value: string) => void;
   placeholder?: string;
-  isBorderShine?: boolean;
   className?: string;
   textAnimation?: boolean;
   onSubmit?: (message: any) => void;
@@ -136,14 +131,6 @@ export function CustomPromptInput({
           </Button>
         )}
       </PromptInputToolbar>
-      {/* {isBorderShine && (
-        <ShineBorder
-          className="opacity-80"
-          borderWidth={1.5}
-          duration={60}
-          shineColor={["#643c9f", "#c084fc"]}
-        />
-      )} */}
     </PromptInput>
   );
 }

@@ -31,7 +31,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F7F7F8] text-[#111827] dark:bg-[#0E1116] dark:text-[#E5E7EB]`}
       >
         <Providers>
-          <Sidebar />
           <main className="relative flex h-dvh w-dvw flex-1 flex-col">
             <HomepageHeader />
             {children}

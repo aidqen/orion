@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RecentChats } from "@/components/RecentChats";
 import { CustomPromptInput } from "@/components/CustomPromptInput";
 import { QuickActionButtons } from "@/components/QuickActionButtons";
-import { AuthPopup } from "@/components/auth/AuthPopup";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useUser } from "@/contexts";
 import { createChat } from "@/lib/supabase/chats";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useChats } from "@/hooks";
 import { useChatStore } from "@/store/useChatStore";
+import { useAuthPopupStore } from "@/store/useAuthPopupStore";
 
 type User = {
   user_metadata?: {
@@ -22,11 +22,11 @@ type User = {
 export default function Home() {
   const isMobile = useIsMobile()
   const [input, setInput] = useState("");
-  const [openLogin, setOpenLogin] = useState(false);
   const { user, authenticated } = useUser();
   const { chats, loading, refetch } = useChats();
   const router = useRouter();
   const { setPendingMessage } = useChatStore();
+  const { open: openAuthPopup } = useAuthPopupStore();
 
   const startChat = async (message: any) => {
     console.log("🚀 ~ startChat ~ message:", message)
@@ -38,7 +38,7 @@ export default function Home() {
     // 6. Call AI → stream response
     // 7. Append assistant message (when complete)
     if (!authenticated || !user) {
-      setOpenLogin(true)
+      openAuthPopup()
       return
     }
     const chatId = await createChat(user.id)
@@ -51,7 +51,6 @@ export default function Home() {
     <div className="w-full h-full flex flex-col pt-[20vh] md:pt-[25vh] justify-start items-center dark:bg-[#161618] bg-white text-black dark:text-white">
       {isMobile && <SidebarTrigger className="fixed top-4 left-4 z-10" />}
 
-      <AuthPopup open={openLogin} setOpen={setOpenLogin} />
       <div className="w-full max-w-[680px] px-5 flex flex-col items-center gap-2">
         <div className="flex flex-col items-center text-black dark:text-white mb-4">
           <h1 className="text-4xl font-medium tracking-tight mb-1">

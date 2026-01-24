@@ -15,7 +15,6 @@ export function AppearanceModal({ isOpen, onClose, onSave }: AppearanceModalProp
   const [backgroundEnabled, setBackgroundEnabled] = useState(false);
   const [chatColorEnabled, setChatColorEnabled] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
-  console.log("🚀 ~ AppearanceModal ~ resolvedTheme:", resolvedTheme)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -34,7 +33,6 @@ export function AppearanceModal({ isOpen, onClose, onSave }: AppearanceModalProp
 
   useEffect(() => {
     if (isOpen) {
-      // Load settings from localStorage
       const saved = localStorage.getItem('appearance-settings');
       if (saved) {
         try {
@@ -46,7 +44,6 @@ export function AppearanceModal({ isOpen, onClose, onSave }: AppearanceModalProp
           console.warn('Failed to parse appearance settings', err);
         }
       } else {
-        // If no saved settings, sync with current theme
         if (resolvedTheme) {
           setThemeMode(resolvedTheme as ThemeMode);
         }
@@ -61,13 +58,10 @@ export function AppearanceModal({ isOpen, onClose, onSave }: AppearanceModalProp
       chatColorEnabled,
     };
 
-    // Save to localStorage
     localStorage.setItem('appearance-settings', JSON.stringify(settings));
 
-    // Apply theme using next-themes
     setTheme(themeMode);
 
-    // onSave(settings);
     onClose();
   };
 
@@ -105,7 +99,6 @@ export function AppearanceModal({ isOpen, onClose, onSave }: AppearanceModalProp
                 onSelect={setThemeMode}
               />
 
-              {/* Options List */}
               <div className="space-y-4">
                 <h3 className="text-[16px] font-medium text-[#111827] dark:text-[#E5E7EB]">
                   Customization

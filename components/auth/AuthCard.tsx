@@ -1,20 +1,30 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AuthForm, { Mode } from '@/components/auth/AuthForm';
 import ModeSwitch from '@/components/auth/ModeSwitch';
 
-export default function AuthCard({setOpen}: {setOpen?: (open: boolean) => void}) {
-  const search = useMemo(() => typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null, []);
-  const initialMode = (search?.get('mode') === 'signup' ? 'signup' : 'login') as Mode;
-  const [mode, setMode] = useState<Mode>(initialMode);
+function getInitialMode(): Mode {
+  if (typeof window === 'undefined') return 'login';
+  
+  const params = new URLSearchParams(window.location.search);
+  return params.get('mode') === 'signup' ? 'signup' : 'login';
+}
 
-  // keep the URL in sync when toggling
+function syncModeToURL(mode: Mode) {
+  if (typeof window === 'undefined') return;
+  
+  const url = new URL(window.location.href);
+  url.searchParams.set('mode', mode);
+  window.history.replaceState(null, '', url.toString());
+}
+
+export default function AuthCard({ setOpen }: { setOpen?: (open: boolean) => void }) {
+  const [mode, setMode] = useState<Mode>(getInitialMode);
+
+  // Keep URL in sync when mode changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const url = new URL(window.location.href);
-    url.searchParams.set('mode', mode);
-    window.history.replaceState(null, '', url.toString());
+    syncModeToURL(mode);
   }, [mode]);
 
   return (

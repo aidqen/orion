@@ -1,5 +1,14 @@
 import { createClient } from '@/lib/supabase/client';
 
+// Google Calendar scopes for OAuth
+const GOOGLE_SCOPES = [
+  'openid',
+  'email',
+  'profile',
+  'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
+  'https://www.googleapis.com/auth/calendar.events',
+].join(' ');
+
 export async function signInWithPassword(email: string, password: string) {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -10,40 +19,39 @@ export async function signInWithPassword(email: string, password: string) {
 export async function signUpWithPassword(email: string, password: string, name?: string) {
   // Supabase prevents duplicate users. It returns error: "User already registered"
   const supabase = createClient();
-  const timezone = typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function'
-    ? Intl.DateTimeFormat().resolvedOptions().timeZone
-    : undefined;
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-  })
+  });
+  if (error) throw error;
+  return data;
 }
 
 export async function signInWithGoogle() {
   const supabase = createClient();
-  const redirectTo = typeof window !== 'undefined'
-    ? `${window.location.origin}${process.env.NEXT_PUBLIC_AUTH_REDIRECT ?? '/'}`
-    : undefined;
-
-  // Request required Google scopes: basic profile + Calendar list + Calendar events
-  const scopes = [
-    'openid',
-    'email',
-    'profile',
-    'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
-    'https://www.googleapis.com/auth/calendar.events',
-  ].join(' ');
+  // Redirect to auth callback to capture and save Google tokens
+  const redirectTo = `${window.location.origin}/auth/callback`;
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo,
-      scopes,
+      scopes: GOOGLE_SCOPES,
       // Ask for consent to ensure refresh token and extended scopes
-      queryParams: { access_type: 'offline', prompt: 'consent', include_granted_scopes: 'true' },
+      queryParams: { 
+        access_type: 'offline', 
+        prompt: 'consent', 
+        include_granted_scopes: 'true' 
+      },
     }
   });
+  if (error) throw error;
+}
+
+export async function signOut() {
+  const supabase = createClient();
+  const { error } = await supabase.auth.signOut();
   if (error) throw error;
 }
 

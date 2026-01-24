@@ -1,19 +1,24 @@
 'use client'
-import { Palette, PanelLeft,  Settings } from "lucide-react"
+import { Palette, PanelLeft, Settings } from "lucide-react"
 import { useState } from "react"
 
 import { AppearanceModal } from "@/components/AppearanceModal/AppearanceModal"
+import { SettingsModal } from "@/components/SettingsModal/SettingsModal"
 import { useSidebar } from "./ui/sidebar"
 
 export function HomepageHeader() {
     const [isAppearanceModalOpen, setIsAppearanceModalOpen] = useState(false)
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
     const { open, toggleSidebar } = useSidebar()
     return (
         <>
             <AppearanceModal
                 isOpen={isAppearanceModalOpen}
                 onClose={() => setIsAppearanceModalOpen(false)}
-                // onSave={handleAppearanceSave}
+            />
+            <SettingsModal
+                isOpen={isSettingsModalOpen}
+                onClose={() => setIsSettingsModalOpen(false)}
             />
             <div className="w-full z-10 absolute flex flex-row gap-4 items-center justify-end px-4 py-2 top-0">
                 {/* {!open && (
@@ -33,7 +38,9 @@ export function HomepageHeader() {
                     <Palette className="h-4 w-4" />
                     Appearance
                 </button>
-                <button className="rounded-sm h-7 w-7 flex justify-center items-center cursor-pointer hover:bg-gray-200 dark:hover:bg-[#292929] transition-color duration-200">
+                <button className="rounded-sm h-7 w-7 flex justify-center items-center cursor-pointer hover:bg-gray-200 dark:hover:bg-[#292929] transition-color duration-200"
+                    onClick={() => setIsSettingsModalOpen(true)}
+                >
                     <Settings className="h-5 w-5 text-stone-600 dark:text-stone-300" />
                 </button>
             </div>

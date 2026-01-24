@@ -3,8 +3,13 @@
 import { useState } from "react";
 import { signInWithGoogle, normalizeAuthError } from "@/lib/supabase/auth";
 import ErrorBanner from "@/components/ui/ErrorBanner";
+import Image from "next/image";
 
-export default function OAuthButtons() {
+interface GoogleButtonProps {
+  text?: string;
+}
+
+export default function GoogleButton({ text = "Continue with Google" }: GoogleButtonProps) {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,13 +34,16 @@ export default function OAuthButtons() {
         disabled={loading}
         className="cursor-pointer flex flex-row items-center gap-2 justify-center h-11 w-full rounded-lg border border-gray-200 dark:border-[#2A2F3A] bg-gray-50 dark:bg-[#1B1F27] text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-[#20242E] disabled:opacity-70"
       >
-        <img
+        <Image
           src="/google-icon-logo-svgrepo-com.svg"
           alt="Google"
           className="h-5 w-5"
+          width={20}
+          height={20}
         />
-        Continue with Google
+        {text}
       </button>
     </>
   );
 }
+
