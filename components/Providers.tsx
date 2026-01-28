@@ -7,6 +7,8 @@ import { UserProvider } from "@/contexts/UserContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthPopup } from "@/components/auth/AuthPopup";
 import { Sidebar } from "./sidebar/Sidebar";
+import { BackgroundImage } from "./BackgroundImage";
+import { Toaster } from "./ui/sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +26,8 @@ export function Providers({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <UserProvider>
           <SidebarProvider>
+            <Toaster />
+            <BackgroundImage />
             <Sidebar />
             {children}
             <AuthPopup />

@@ -63,7 +63,7 @@ export const AddEventButton: React.FC<AddEventButtonProps> = ({
                 onClick={onClick}
                 disabled={isDisabled}
                 size="lg"
-                className={`w-fit gap-2 font-medium transition-colors ${
+                className={`w-fit gap-2 font-medium transition-colors disabled:opacity-80 ${
                     isSuccess
                         ? 'bg-green-700 hover:bg-green-700 text-white cursor-default'
                         : 'bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600'

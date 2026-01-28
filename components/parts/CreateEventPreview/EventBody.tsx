@@ -1,11 +1,12 @@
 import React from 'react';
-import { MapPin, AlignLeft } from 'lucide-react';
+import { MapPin, AlignLeft, User } from 'lucide-react';
 
 interface EventBodyProps {
     start?: string | null;
     end?: string | null;
     location?: string;
     description?: string;
+    attendees?: {email: string}[];
 }
 
 const formatDate = (dateStr: string) => {
@@ -32,7 +33,7 @@ const formatTime = (dateStr: string) => {
     }
 };
 
-export const EventBody: React.FC<EventBodyProps> = ({ start, end, location, description }) => (
+export const EventBody: React.FC<EventBodyProps> = ({ start, end, location, description, attendees }) => (
     <div className="grid gap-3 p-4 text-sm">
         <div className="flex flex-col items-start gap-1">
                 {start &&<span className="font-medium">
@@ -44,7 +45,7 @@ export const EventBody: React.FC<EventBodyProps> = ({ start, end, location, desc
         </div>
 
         {location && (
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="wrap-break-word text-muted-foreground">
                     {location}
@@ -53,10 +54,18 @@ export const EventBody: React.FC<EventBodyProps> = ({ start, end, location, desc
         )}
 
         {description && (
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-2">
                 <AlignLeft className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <p className="wrap-break-word text-muted-foreground">
                     {description}
+                </p>
+            </div>
+        )}
+        {attendees && attendees.length > 0 && (
+            <div className="flex items-start gap-2">
+                <User className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                <p className="wrap-break-word text-muted-foreground">
+                    {attendees.map((attendee: {email: string}) => attendee.email).join(', ')}
                 </p>
             </div>
         )}

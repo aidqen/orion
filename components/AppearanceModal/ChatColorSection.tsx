@@ -1,13 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { Switch } from './Switch';
 
-interface ChatColorSectionProps {
-  enabled: boolean;
-  onChange: (enabled: boolean) => void;
-}
-
-export function ChatColorSection({ enabled, onChange }: ChatColorSectionProps) {
+export function ChatColorSection() {
+  const [enabled, setEnabled] = useState(false);
   return (
     <div className="flex items-center justify-between py-3">
       <div>
@@ -20,7 +17,7 @@ export function ChatColorSection({ enabled, onChange }: ChatColorSectionProps) {
       </div>
       <Switch
         checked={enabled}
-        onChange={onChange}
+        onChange={setEnabled}
         disabled={false}
       />
     </div>

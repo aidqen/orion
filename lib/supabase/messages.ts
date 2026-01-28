@@ -16,6 +16,7 @@ import { TextUIPart } from 'ai';
 export interface Message {
   id?: string;
   role: 'user' | 'assistant' | 'system';
+  tempId?: string;
   parts: TextUIPart[];
   metadata?: Record<string, any>;
   model?: string;
@@ -59,6 +60,7 @@ export async function saveMessages(chatId: string, messages: Message[]) {
 
   const messagesToInsert = messages.map((msg) => ({
     chat_id: chatId,
+    temp_id: msg.tempId,
     role: msg.role,
     parts_json: msg.parts || [],
     metadata: msg.metadata || {},
@@ -92,6 +94,7 @@ export async function getChatMessages(chatId: string) {
 
   return (data || []).map((msg) => ({
     id: msg.id,
+    tempId: msg.temp_id,
     role: msg.role as 'user' | 'assistant' | 'system',
     parts: (msg.parts_json as TextUIPart[]) || [],
     metadata: msg.metadata || {},

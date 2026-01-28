@@ -22,6 +22,7 @@ export function formatCalendarEvent(input: CreateEventInput, timezone: string): 
             dateTime: input.endDateTime,
             timeZone: timezone,
         },
+        attendees: input.attendees?.map(attendee => ({ email: attendee })) || [],
     };
 }
 

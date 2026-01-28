@@ -27,6 +27,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import {
   Children,
   createContext,
@@ -65,7 +66,7 @@ export function PromptInputAttachment({
       key={data.id}
       {...props}>
       {data.mediaType?.startsWith("image/") && data.url ? (
-        <img
+        <Image
           alt={data.filename || "attachment"}
           className="size-full rounded-md object-cover"
           height={56}
@@ -79,7 +80,7 @@ export function PromptInputAttachment({
       )}
       <Button
         aria-label="Remove attachment"
-        className="-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100"
+        className="-right-1.5 -top-1.5 absolute h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
         onClick={() => attachments.remove(data.id)}
         size="icon"
         type="button"
@@ -224,6 +225,7 @@ export const PromptInput = ({
         next.push({
           id: nanoid(),
           type: "file",
+          file: file,
           url: URL.createObjectURL(file),
           mediaType: file.type,
           filename: file.name,
@@ -331,6 +333,7 @@ export const PromptInput = ({
     }));
 
     onSubmit({ text: event.currentTarget.message.value, files }, event);
+    clear();
   };
 
   const ctx = useMemo(() => ({
@@ -354,7 +357,7 @@ export const PromptInput = ({
         type="file" />
       <form
         className={cn(
-          "w-full  overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950",
+          "w-full  overflow-hidden rounded-xl border border-neutral-200 shadow-sm ",
           className
         )}
         onSubmit={handleSubmit}

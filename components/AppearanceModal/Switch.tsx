@@ -15,10 +15,10 @@ export function Switch({ checked, onChange, disabled = false }: SwitchProps) {
       disabled={disabled}
       className={cn(
         'relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition-colors',
-        'focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-offset-2',
+        'focus:outline-none focus:ring-2 focus-within:ring-[#6366F1] focus-within:ring-offset-2',
         checked
           ? 'bg-[#111827] dark:bg-[#E5E7EB]'
-          : 'bg-[#E5E7EB] dark:bg-[rgba(255,255,255,0.08)]',
+          : 'bg-gray-400/70 dark:bg-[rgba(255,255,255,0.08)]',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
     >

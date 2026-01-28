@@ -42,7 +42,7 @@ export function QuickActionButtons({
             ...buttonAnimationConfig,
             delay: buttonAnimationConfig.baseDelay + buttonAnimationConfig.staggerDelay * index,
           }}
-          className="rounded-full flex flex-row gap-1 dark:text-stone-200 text-stone-600 items-center justify-center dark:bg-[#222124] dark:hover:bg-[#292929] hover:bg-stone-100 bg-gray-100 px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
+          className="rounded-full flex flex-row gap-1 dark:text-stone-200 text-black items-center justify-center bg-(--panel) hover:bg-(--panel-hover) backdrop-blur-md px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
         >
           <action.icon className="w-4 h-4" />
           {action.label}
@@ -51,4 +51,3 @@ export function QuickActionButtons({
     </div>
   )
 }
-

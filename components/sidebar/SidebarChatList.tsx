@@ -8,18 +8,35 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Chat } from "@/types/chat"
+import { AnimatePresence, motion } from "motion/react";
 
 interface SidebarChatListProps {
   chats: Chat[]
+  loading: boolean
 }
 
-export function SidebarChatList({ chats }: SidebarChatListProps) {
+function ChatSkeleton({number}: {number: number}) {
+  return (
+    <>
+    {Array.from({ length: number }).map((_, index) => (
+      <SidebarMenuItem key={index}>
+        <div className="flex w-full items-center gap-2 rounded-md p-2">
+          <div className="size-4 rounded-full bg-muted animate-pulse" />
+          <div className="h-4 flex-1 rounded bg-muted animate-pulse" />
+        </div>
+      </SidebarMenuItem>
+    ))}
+    </>
+  );
+}
+
+export function SidebarChatList({ chats, loading }: SidebarChatListProps) {
   const params = useParams()
   const currentChatId = params?.chatId as string | undefined
 
   return (
     <>
-      {chats.map((item) => {
+      {chats.map((item, index) => {
         const isActive = currentChatId === item.id
 
         return (
@@ -40,6 +57,11 @@ export function SidebarChatList({ chats }: SidebarChatListProps) {
           </SidebarMenuItem>
         )
       })}
+      {loading  && (
+        <>
+          <ChatSkeleton number={10} />
+        </>
+      )}
     </>
   )
 }

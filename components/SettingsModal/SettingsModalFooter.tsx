@@ -10,7 +10,7 @@ interface SettingsModalFooterProps {
 }
 
 export function SettingsModalFooter({ onClose, onLogout, isAuthenticated }: SettingsModalFooterProps) {
-  const { open: openAuthPopup } = useAuthPopupStore()
+  const openAuthPopup = useAuthPopupStore(state => state.open)
   return (
     <div className="flex justify-between items-center pt-3">
       {isAuthenticated ? (

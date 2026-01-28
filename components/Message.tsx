@@ -1,16 +1,17 @@
 import { memo } from 'react';
 import { UIMessage } from 'ai';
+import Image from 'next/image';
 import { TextPart } from './parts/TextPart';
-import { CreateEventPreview } from './parts/CreateEventPreview';
-import { EventList } from './parts/EventList';
+import { CreateEventPreview } from './parts/CreateEventPreview/CreateEventPreview';
+import { EventList } from './parts/EventList/EventList';
 import { AI_TOOLS } from '@/constants/chat.constant';
+import { WebSearchResults } from './parts/WebSearchResults/WebSearchResults';
+import { ArtifactPreview } from './parts/ArtifactPreview';
 
 interface MessageProps {
   message: UIMessage | any;
-  isAssistantBgVisible?: boolean;
 }
 
-// Renders each part based on its type
 function RenderPart(
   part: any,
   index: number,
@@ -19,7 +20,7 @@ function RenderPart(
   messageId: string
 ) {
   switch (part.type) {
-    case 'text':
+    case AI_TOOLS.TEXT:
       return (
         <TextPart
           key={index}
@@ -29,6 +30,23 @@ function RenderPart(
           isStreaming={part.state === 'streaming' || isStreaming}
         />
       );
+    case AI_TOOLS.IMAGE:
+      return (
+        <div key={index} className="relative w-full max-w-xs">
+          <Image
+            src={part.url}
+            alt={part.filename || 'Uploaded image'}
+            width={300}
+            height={200}
+            className="rounded-lg object-contain"
+            unoptimized
+          />
+        </div>
+      );
+    case AI_TOOLS.WEB_SEARCH:
+      return (
+        <WebSearchResults data={part} key={index} />
+      )
 
     case AI_TOOLS.CREATE_NEW_EVENT:
       return (
@@ -45,6 +63,15 @@ function RenderPart(
           data={part.output}
         />
       );
+    case AI_TOOLS.CREATE_DOCUMENT:
+      return (
+        <ArtifactPreview
+          key={index}
+          data={part.output}
+          toolCallId={part.toolCallId}
+          isStreaming={part.state === 'streaming'}
+        />
+      );
 
     default:
       return null;
@@ -53,15 +80,13 @@ function RenderPart(
 
 export const Message = memo(function Message({
   message,
-  isAssistantBgVisible = false
 }: MessageProps) {
-  console.log("🚀 ~ Message ~ message:", message)
   const isUser = message?.role === 'user';
   const parts = message?.parts || [];
 
   const isStreaming = parts.some((part: any) => part.state === 'streaming');
 
-  const validTypes = Object.values(AI_TOOLS);
+  const validTypes = ['text', 'file', ...Object.values(AI_TOOLS)];
   const hasContent = parts.some((part: any) =>
     validTypes.includes(part.type)
   );
@@ -70,14 +95,13 @@ export const Message = memo(function Message({
 
   return (
     <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`flex flex-col gap-1 sm:max-w-[85%] transition-all duration-300 ease-out transform w-fit
+      <div className={`flex flex-col gap-1.5  transition-all duration-300 ease-out transform 
       ${isUser
-          ? 'text-white bg-blue-500 rounded-2xl rounded-tr-sm dark:bg-blue-600'
-          : `${isAssistantBgVisible ? 'dark:bg-gray-800 bg-gray-100' : ''} 
-          text-gray-800 rounded-xl dark:text-gray-100`
+          ? 'text-white w-fit sm:max-w-[90%]'
+          : 'text-gray-800 dark:text-gray-100 w-full'
         }`}>
         {parts.map((part: any, index: number) =>
-          RenderPart(part, index, isUser, isStreaming, message.id)
+          RenderPart(part, index, isUser, isStreaming, message.tempId || message.id)
         )}
       </div>
     </div>

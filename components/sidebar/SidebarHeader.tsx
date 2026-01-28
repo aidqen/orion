@@ -15,8 +15,7 @@ import { SidebarTitle } from "./SidebarTitle"
 
 export function SidebarHeader() {
   const router = useRouter()
-  const { open, toggleSidebar } = useSidebar()
-  console.log("🚀 ~ SidebarHeader ~ open:", open)
+  const { open, toggleSidebar, } = useSidebar()
 
   return (
     <SidebarGroup>
@@ -25,11 +24,13 @@ export function SidebarHeader() {
           <SidebarTitle open={open} toggleSidebar={toggleSidebar} />
           <SidebarMenuItem>
             <SidebarMenuButton
-              variant="outline"
+              size="default"
+              className="dark:bg-sidebar-accent bg-white hover:bg-sidebar-accent/70 text-sidebar-accent-foreground transition-all border border-sidebar-border mt-2 group text-center py-2"
+
               onClick={() => router.push('/')}
             >
-              <MessageSquarePlus />
-              <span>New Chat</span>
+              <MessageSquarePlus className="text-primary transition-transform duration-200" />
+              {open && <span className="font-medium">New Chat</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

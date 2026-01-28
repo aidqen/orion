@@ -80,7 +80,6 @@ export async function getUserChats(userId: string): Promise<Chat[]> {
   .eq('user_id', userId)
   .order('created_at', { ascending: false })
   .limit(10);
-  console.log("🚀 ~ getUserChats ~ data:", data)
 
   if (error) throw error;
 

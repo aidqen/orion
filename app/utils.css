@@ -1,0 +1,59 @@
+@layer utilities {
+  /* Default width - when artifact is closed */
+  .prompt-input-width-default {
+    max-width: 90%;
+  }
+
+  @media (min-width: 640px) {
+    .prompt-input-width-default {
+      max-width: 85%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .prompt-input-width-default {
+      max-width: 70%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .prompt-input-width-default {
+      max-width: 60%;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .prompt-input-width-default {
+      max-width: 60%;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .prompt-input-width-default {
+      max-width: 50%;
+    }
+  }
+
+  /* Narrower width - when artifact is open */
+  .prompt-input-width-artifact-open {
+    max-width: 90%;
+  }
+
+  @media (min-width: 768px) {
+    .prompt-input-width-artifact-open {
+      max-width: 90%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .prompt-input-width-artifact-open {
+      max-width: 85%;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .prompt-input-width-artifact-open {
+      max-width: 75%;
+    }
+  }
+}

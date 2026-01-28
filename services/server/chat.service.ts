@@ -1,5 +1,5 @@
 import { getSupabaseServerClient } from '@/lib/google-token';
-import { AI_TOOL_IDS } from '@/constants/chat.constant';
+import { AI_TOOLS } from '@/constants/chat.constant';
 
 /**
  * Updates the event creation status to "confirmed" for a specific message
@@ -8,11 +8,11 @@ import { AI_TOOL_IDS } from '@/constants/chat.constant';
 export async function updateEventStatusToConfirmed(messageId: string): Promise<void> {
     const supabase = await getSupabaseServerClient();
 
-    // Fetch the message
+    // Fetch the message by temp_id
     const { data: message, error: fetchError } = await supabase
         .from('chat_messages')
-        .select('parts_json')
-        .eq('id', messageId)
+        .select('parts_json, id')
+        .eq('temp_id', messageId)
         .single();
 
     if (fetchError || !message) {
@@ -23,7 +23,7 @@ export async function updateEventStatusToConfirmed(messageId: string): Promise<v
     // Find and update the CREATE_NEW_EVENT part
     const parts = message.parts_json as any[];
     const updatedParts = parts.map((part) => {
-        if (part.type === AI_TOOL_IDS.CREATE_NEW_EVENT && part.output) {
+        if (part.type === AI_TOOLS.CREATE_NEW_EVENT && part.output) {
             return {
                 ...part,
                 output: {
@@ -35,11 +35,11 @@ export async function updateEventStatusToConfirmed(messageId: string): Promise<v
         return part;
     });
 
-    // Update the message with the modified parts
+    // Update the message with the modified parts using the actual database id
     const { error: updateError } = await supabase
         .from('chat_messages')
         .update({ parts_json: updatedParts })
-        .eq('id', messageId);
+        .eq('id', message.id);
 
     if (updateError) {
         console.error('Failed to update message:', updateError);

@@ -3,29 +3,30 @@
 import { useEffect, useState } from 'react';
 import AuthForm, { Mode } from '@/components/auth/AuthForm';
 import ModeSwitch from '@/components/auth/ModeSwitch';
+import { useAuthPopupStore } from '@/store/useAuthPopupStore';
 
 function getInitialMode(): Mode {
   if (typeof window === 'undefined') return 'login';
-  
+
   const params = new URLSearchParams(window.location.search);
   return params.get('mode') === 'signup' ? 'signup' : 'login';
 }
 
-function syncModeToURL(mode: Mode) {
-  if (typeof window === 'undefined') return;
-  
-  const url = new URL(window.location.href);
-  url.searchParams.set('mode', mode);
-  window.history.replaceState(null, '', url.toString());
-}
-
-export default function AuthCard({ setOpen }: { setOpen?: (open: boolean) => void }) {
+export default function AuthCard() {
   const [mode, setMode] = useState<Mode>(getInitialMode);
+  const setOpen = useAuthPopupStore(state => state.setOpen);
 
-  // Keep URL in sync when mode changes
   useEffect(() => {
-    syncModeToURL(mode);
+    syncModeToURL();
   }, [mode]);
+
+  function syncModeToURL() {
+    if (typeof window === 'undefined') return;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', mode);
+    window.history.replaceState(null, '', url.toString());
+  }
 
   return (
     <div className="w-[360px] rounded-2xl border border-gray-200 dark:border-[#1E222B] bg-white dark:bg-[#14161A] p-8 shadow-[0_12px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.55)]">

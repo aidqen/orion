@@ -5,7 +5,8 @@ import { useAuthPopupStore } from "@/store/useAuthPopupStore";
 
 
 export function AuthPopup() {
-  const { isOpen, setOpen } = useAuthPopupStore()
+  const isOpen = useAuthPopupStore(state => state.isOpen)
+  const setOpen = useAuthPopupStore(state => state.setOpen)
   return (
     <AnimatePresence>
       {isOpen && (
@@ -37,7 +38,8 @@ export function AuthPopup() {
                 duration: 0.4,
               }}
             >
-              <AuthCard setOpen={setOpen} />
+              
+              <AuthCard />
             </motion.div>
           </div>
         </motion.div>

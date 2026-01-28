@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { HomepageHeader } from "@/components/HomepageHeader";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F7F7F8] text-[#111827] dark:bg-[#0E1116] dark:text-[#E5E7EB]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-[#111827]  dark:text-[#E5E7EB]`}
       >
         <Providers>
           <main className="relative flex h-dvh w-dvw flex-1 flex-col">
-            <HomepageHeader />
+          <SidebarTrigger className="fixed md:hidden block top-4 left-4 z-10" />
             {children}
           </main>
         </Providers>

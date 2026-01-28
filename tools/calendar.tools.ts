@@ -10,7 +10,7 @@ export function createCalendarTools(userId: string) {
     };
 }
 
-function getCalendarEventsTool(userId: string) {
+export function getCalendarEventsTool(userId: string) {
     return tool({
         description: 'Get calendar events for a specific date range. Use this to check the user\'s schedule, find free time, or list upcoming events.',
         inputSchema: jsonSchema<{ minDate: string; maxDate: string; isVisible: boolean }>({
@@ -39,7 +39,7 @@ function getCalendarEventsTool(userId: string) {
     });
 }
 
-function createNewEventTool() {
+export function createNewEventTool() {
     return tool({
         description: 'Format a new calendar event for preview. Returns the formatted event data that can be confirmed by the user before actually creating it.',
         inputSchema: jsonSchema<CreateEventInput>({
@@ -50,6 +50,7 @@ function createNewEventTool() {
                 endDateTime: { type: 'string', description: 'End date and time in ISO format (e.g., 2026-01-21T11:00:00)' },
                 description: { type: 'string', description: 'Optional description of the event' },
                 location: { type: 'string', description: 'Optional location of the event' },
+                attendees: { type: 'array', description: 'Optional list of attendees email addresses', items: { type: 'string' } },
             },
             required: ['title', 'startDateTime', 'endDateTime'],
         }),

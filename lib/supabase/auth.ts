@@ -7,6 +7,7 @@ const GOOGLE_SCOPES = [
   'profile',
   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
   'https://www.googleapis.com/auth/calendar.events',
+  'https://www.googleapis.com/auth/docs',
 ].join(' ');
 
 export async function signInWithPassword(email: string, password: string) {
@@ -28,17 +29,19 @@ export async function signUpWithPassword(email: string, password: string, name?:
   return data;
 }
 
+function redirectToSaveToken() {
+  return `${window.location.origin}/auth/callback`;
+}
+
 export async function signInWithGoogle() {
   const supabase = createClient();
-  // Redirect to auth callback to capture and save Google tokens
-  const redirectTo = `${window.location.origin}/auth/callback`;
+  const redirectTo = redirectToSaveToken();
 
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo,
       scopes: GOOGLE_SCOPES,
-      // Ask for consent to ensure refresh token and extended scopes
       queryParams: { 
         access_type: 'offline', 
         prompt: 'consent', 
@@ -47,6 +50,27 @@ export async function signInWithGoogle() {
     }
   });
   if (error) throw error;
+}
+
+export async function linkGoogleIdentity() {
+  const supabase = createClient();
+  const redirectTo = redirectToSaveToken();
+
+  const { data, error } = await supabase.auth.linkIdentity({
+    provider: 'google',
+    options: {
+      redirectTo,
+      scopes: GOOGLE_SCOPES,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+        include_granted_scopes: 'true',
+      },
+    },
+  });
+
+  if (error) throw error;
+  return data;
 }
 
 export async function signOut() {

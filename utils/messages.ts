@@ -12,6 +12,7 @@ export function formatUserMessage(
   incomingMessage: UIMessage
 ): Message {
   return {
+    tempId: incomingMessage.id,
     role: MESSAGE_ROLES.USER,
     parts: incomingMessage.parts as TextUIPart[] || [],
     metadata: incomingMessage.metadata as Record<string, any> || {},
@@ -36,6 +37,7 @@ export function formatAssistantMessage(
   }
 ): Message {
   return {
+    tempId: responseMessage.id,
     role: MESSAGE_ROLES.ASSISTANT,
     parts: responseMessage.parts as TextUIPart[] || [],
     metadata: {},
@@ -46,32 +48,31 @@ export function formatAssistantMessage(
 
 /**
  * Handles saving conversation messages to the database
- * 
+ * Saves the last user message and last assistant message from the array
+ *
  * @param chatId - The chat ID to save messages to
- * @param originalMessages - The original messages from the request body
- * @param allMessages - All messages including the new assistant response
+ * @param messages - All messages including the new assistant response
  * @param model - The AI model used for the response
  */
 export async function saveLatestMessages(
   chatId: string,
-  originalMessages: UIMessage[],
-  allMessages: UIMessage[],
+  messages: UIMessage[],
   model: string
-): Promise<void> {
-  const messagesToSave = [];
+): Promise<UIMessage[] | void> {
+  const messagesToSave: Message[] = [];
 
-  const newUserMessage = originalMessages[originalMessages.length - 1];
-  if (newUserMessage?.role === MESSAGE_ROLES.USER) {
-    messagesToSave.push(formatUserMessage(newUserMessage));
+  const lastUserMessage = messages.findLast(msg => msg?.role === MESSAGE_ROLES.USER);
+  const lastAssistantMessage = messages.findLast(msg => msg?.role === MESSAGE_ROLES.ASSISTANT);
+
+  if (lastUserMessage) {
+    messagesToSave.push(formatUserMessage(lastUserMessage));
   }
 
-  const newAssistantMessage = allMessages[allMessages.length - 1];
-  if (newAssistantMessage?.role === MESSAGE_ROLES.ASSISTANT) {
-    messagesToSave.push(formatAssistantMessage(newAssistantMessage, model));
+  if (lastAssistantMessage) {
+    messagesToSave.push(formatAssistantMessage(lastAssistantMessage, model));
   }
 
   if (messagesToSave.length > 0) {
-    await saveMessages(chatId, messagesToSave);
-    console.log(`✅ Saved ${messagesToSave.length} message(s)`);
+    return await saveMessages(chatId, messagesToSave);
   }
 }

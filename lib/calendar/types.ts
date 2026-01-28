@@ -18,5 +18,6 @@ export interface CreateEventInput {
     endDateTime: string;    // ISO format: "2026-01-21T11:00:00"
     description?: string;
     location?: string;
+    attendees?: string[];
     calendarId?: string;    // defaults to 'primary'
 }

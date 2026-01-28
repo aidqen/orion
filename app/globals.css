@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./utils.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -37,6 +38,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-bubble-user: var(--bubble-user);
+  --color-panel: var(--panel);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -49,6 +52,7 @@
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+  --card-secondary: oklch(0.97 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
@@ -68,7 +72,7 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: oklch(96.7% 0.003 264.542);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -77,13 +81,17 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --sidebar-transition-duration: 0ms;
+  --panel: oklch(1 0 0);
+  --panel-hover: oklch(0.97 0 0);
+  --bubble-user: oklch(0.96 0 0);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.2011 0.0039 286.04);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
+  --card-secondary: oklch(0.269 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
@@ -96,14 +104,14 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --input: oklch(0.2393 0 0);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --sidebar: oklch(0.24 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -111,6 +119,33 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --panel: oklch(0.205 0 0);
+  --panel-hover: oklch(0.269 0 0);
+  --bubble-user: oklch(0.269 0 0);
+}
+
+:root.has-bg-image {
+  --background: oklch(1 0 0 / 0.5);
+  --card: oklch(1 0 0 / 0.75);
+  --card-secondary: oklch(1 0 0 / 0.6);
+  --input: oklch(1 0 0 / 0.9);
+  --panel: oklch(1 0 0 / 0.5);
+  --panel-hover: oklch(1 0 0 / 0.65);
+  --sidebar: oklch(96.7% 0.003 264.542 / 0.85);
+  --popover: oklch(1 0 0 / 0.9);
+  --bubble-user: oklch(1 0 0 / 0.8);
+}
+
+:root.dark.has-bg-image {
+  --background: oklch(0.2011 0.0039 286.04 / 0.6);
+  --card: oklch(0.205 0 0 / 0.75);
+  --card-secondary: oklch(0.205 0 0 / 0.6);
+  --input: oklch(0.205 0 0 / 0.8);
+  --panel: oklch(0.205 0 0 / 0.6);
+  --panel-hover: oklch(0.205 0 0 / 0.7);
+  --sidebar: oklch(0.24 0 0 / 0.85);
+  --popover: oklch(0.205 0 0 / 0.95);
+  --bubble-user: oklch(0 0 0 / 0.6);
 }
 
 body {
@@ -119,6 +154,39 @@ body {
 
 button {
   cursor: pointer
+}
+
+/* body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(var(--bg-blur, 0px));
+  will-change: filter;
+} */
+
+/* Ensure backdrop-blur works properly with background images */
+:root.has-bg-image .backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+:root.has-bg-image .backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1); /* or dark variant */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @layer base {
