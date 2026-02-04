@@ -92,7 +92,6 @@ export function useMessages(chatId: string) {
 			setDataStream((ds) => [...ds, data]);
 		},
 	});
-	console.log("🚀 ~ useMessages ~ messages:", messages);
 
 	useEffect(() => {
 		hasFetchedMessages.current = false;

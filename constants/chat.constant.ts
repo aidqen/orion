@@ -4,7 +4,7 @@ export const MESSAGE_ROLES = {
 	SYSTEM: "system",
 } as const;
 
-export const AI_MODEL = 'claude-sonnet-4-5-20250929' as const;
+export const AI_MODEL = "claude-sonnet-4-5-20250929" as const;
 // export const AI_MODEL = "claude-3-5-haiku-20241022" as const;
 export const SIMPLE_FAST_MODEL = "claude-3-5-haiku-20241022" as const;
 export const EMBEDDING_MODEL = "text-embedding-3-small" as const;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { DataUIPart } from "ai";
 import { useEffect, useRef } from "react";
 import { useDataStream } from "@/contexts/DataStreamContext";
 import { useArtifactStore } from "@/store/useArtifactStore";
@@ -23,7 +24,8 @@ export function DataStreamHandler() {
 
 		for (const delta of newDeltas) {
 			// The delta itself contains type and data from CustomUIDataTypes
-			const streamData = delta as unknown as CustomUIDataTypes;
+			const streamData = delta as DataUIPart<CustomUIDataTypes>;
+			console.log("🚀 ~ DataStreamHandler ~ streamData:", streamData);
 
 			if (streamData.type === "data-id") {
 				console.log("🔵 Setting artifactId:", streamData.data);
@@ -32,10 +34,6 @@ export function DataStreamHandler() {
 
 			if (streamData.type === "data-title") {
 				if (artifactIdRef.current) {
-					console.log("🔵 Creating artifact:", {
-						id: artifactIdRef.current,
-						title: streamData.data,
-					});
 					artifactStore.createArtifact(artifactIdRef.current, streamData.data);
 				}
 			}
@@ -47,7 +45,6 @@ export function DataStreamHandler() {
 			}
 
 			if (streamData.type === "data-finish") {
-				console.log("🔵 Completing artifact:", streamData.data);
 				artifactStore.completeArtifact(streamData.data.id);
 				artifactIdRef.current = null;
 			}

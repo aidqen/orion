@@ -19,35 +19,38 @@ export function RenderPart({
 	isStreaming,
 	messageId,
 }: RenderPartProps) {
-	if (part.type === AI_TOOLS.TEXT) {
-		return (
-			<TextPart
-				text={part.text}
-				speed={5}
-				isUser={isUser}
-				isStreaming={part.state === "streaming" || isStreaming}
-			/>
-		);
-	}
-
-	if (part.type === AI_TOOLS.WEB_SEARCH) {
-		return <WebSearchResults data={part} />;
-	}
-
-	if (!("output" in part) || !part.output) return null;
-
 	switch (part.type) {
-		case AI_TOOLS.CREATE_NEW_EVENTS:
-			return <CreateEventPreview data={part.output} messageId={messageId} />;
-		case AI_TOOLS.GET_CALENDAR_EVENTS:
-			return <EventList data={part.output} />;
+		case AI_TOOLS.TEXT:
+			return (
+				<TextPart
+					text={part.text}
+					speed={5}
+					isUser={isUser}
+					isStreaming={part.state === "streaming" || isStreaming}
+				/>
+			);
+
+		case AI_TOOLS.WEB_SEARCH:
+			return <WebSearchResults data={part} />;
+
 		case AI_TOOLS.CREATE_DOCUMENT:
 			return (
 				<ArtifactPreview
-					data={part.output}
+					data={
+						part.output || { id: "", title: "", description: "", content: "" }
+					}
 					isStreaming={part.state !== "output-available"}
 				/>
 			);
+
+		case AI_TOOLS.CREATE_NEW_EVENTS:
+			if (!part.output) return null;
+			return <CreateEventPreview data={part.output} messageId={messageId} />;
+
+		case AI_TOOLS.GET_CALENDAR_EVENTS:
+			if (!part.output) return null;
+			return <EventList data={part.output} />;
+
 		default:
 			return null;
 	}

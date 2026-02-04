@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
 	SidebarGroup,
 	SidebarGroupContent,
@@ -8,7 +9,6 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { PRIMARY_NAV } from "./constants";
-import Link from "next/link";
 
 export function SidebarNav() {
 	return (

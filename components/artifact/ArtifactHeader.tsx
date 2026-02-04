@@ -2,13 +2,11 @@ import { File } from "lucide-react";
 import { ArtifactToolbar } from "@/components/Artifact/ArtifactToolbar/ArtifactToolbar";
 
 interface ArtifactHeaderProps {
-	status: "streaming" | "completed";
 	title: string;
 	closeArtifact: () => void;
 }
 
 export function ArtifactHeader({
-	status,
 	title,
 	closeArtifact,
 }: ArtifactHeaderProps) {
