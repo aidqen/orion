@@ -63,7 +63,7 @@ const AssistantResponse = memo(function AssistantResponse({
   const contentToRender = isFinished ? text : displayedContent;
 
   return (
-    <div className="text-xs sm:text-sm lg:text-base leading-loose font-medium py-2">
+    <div className="text-xs sm:text-sm lg:text-base leading-loose font-normal py-2">
       <Streamdown isAnimating={isStreaming && !isFinished}>
         {contentToRender}
       </Streamdown>

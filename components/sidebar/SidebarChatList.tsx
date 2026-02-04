@@ -8,7 +8,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Chat } from "@/types/chat"
-import { AnimatePresence, motion } from "motion/react";
 
 interface SidebarChatListProps {
   chats: Chat[]
@@ -43,12 +42,12 @@ export function SidebarChatList({ chats, loading }: SidebarChatListProps) {
           <SidebarMenuItem key={item.id}>
             <SidebarMenuButton asChild isActive={isActive}>
               {isActive ? (
-                <span className="cursor-default">
+                <span className="cursor-default ps-4">
                   <MessageCircle size={4} />
                   <span>{item.title}</span>
                 </span>
               ) : (
-                <Link href={`/chat/${item.id}`}>
+                <Link href={`/chat/${item.id}`} className="ps-4">
                   <MessageCircle size={4} />
                   <span>{item.title}</span>
                 </Link>

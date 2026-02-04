@@ -1,15 +1,12 @@
 import { generateUUID } from "@/lib/utils";
-import { CustomUIDataTypes } from "@/types/chat";
-import { tool } from "ai";
+import { ChatMessage } from "@/types/chat";
+import { tool, UIMessageStreamWriter } from "ai";
 import { z } from "zod";
-import { onCreateDocument } from "@/app/artifacts/server";
+import { onCreateDocument } from "@/artifacts/server";
 
-type DataStreamWriter = {
-    write: (data: CustomUIDataTypes & { transient?: boolean }) => void;
-}
 
 type CreateDocumentToolProps = {
-    dataStream: DataStreamWriter;
+    dataStream: UIMessageStreamWriter<ChatMessage>;
 }
 
 export function createDocumentTool({dataStream}: CreateDocumentToolProps) {

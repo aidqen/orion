@@ -7,7 +7,7 @@ const GOOGLE_SCOPES = [
   'profile',
   'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
   'https://www.googleapis.com/auth/calendar.events',
-  'https://www.googleapis.com/auth/docs',
+  'https://www.googleapis.com/auth/documents',
 ].join(' ');
 
 export async function signInWithPassword(email: string, password: string) {
@@ -54,7 +54,8 @@ export async function signInWithGoogle() {
 
 export async function linkGoogleIdentity() {
   const supabase = createClient();
-  const redirectTo = redirectToSaveToken();
+  const currentPath = window.location.pathname;
+  const redirectTo = `${window.location.origin}/auth/callback?returnUrl=${encodeURIComponent(currentPath)}`;
 
   const { data, error } = await supabase.auth.linkIdentity({
     provider: 'google',
@@ -80,7 +81,7 @@ export async function signOut() {
 }
 
 export function normalizeAuthError(err: unknown): string {
-  const msg = (err as any)?.message?.toString?.() ?? 'Authentication error';
+  const msg = (err as Error)?.message?.toString?.() ?? 'Authentication error';
   if (msg.toLowerCase().includes('already registered')) {
     return 'Email already registered. Try logging in or reset your password.';
   }

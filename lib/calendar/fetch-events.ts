@@ -1,6 +1,6 @@
 import { calendar_v3, auth } from '@googleapis/calendar';
 import { getGoogleAccessToken } from '@/lib/google-token';
-import { CalendarEvent } from './types';
+import { CalendarEvent } from '../../types/types';
 
 
 

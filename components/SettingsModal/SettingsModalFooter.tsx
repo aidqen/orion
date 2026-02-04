@@ -1,5 +1,6 @@
 'use client';
 
+import { AUTH_POPUP_MODES } from '@/constants/auth.constant';
 import { useAuthPopupStore } from '@/store/useAuthPopupStore';
 import { LogOut, LogIn } from 'lucide-react';
 
@@ -7,9 +8,10 @@ interface SettingsModalFooterProps {
   onClose: () => void;
   onLogout: () => void;
   isAuthenticated: boolean;
+  onLogin: () => void;
 }
 
-export function SettingsModalFooter({ onClose, onLogout, isAuthenticated }: SettingsModalFooterProps) {
+export function SettingsModalFooter({ onClose, onLogout, isAuthenticated, onLogin }: SettingsModalFooterProps) {
   const openAuthPopup = useAuthPopupStore(state => state.open)
   return (
     <div className="flex justify-between items-center pt-3">
@@ -23,7 +25,7 @@ export function SettingsModalFooter({ onClose, onLogout, isAuthenticated }: Sett
         </button>
       ) : (
         <button
-          onClick={openAuthPopup}
+          onClick={onLogin}
           className="flex items-center gap-2 px-4 py-2 h-9 rounded-[12px] border border-blue-200 bg-blue-50 dark:bg-blue-900/10 dark:border-blue-800/30 text-blue-600 dark:text-blue-400 text-[14px] font-medium hover:bg-blue-100 dark:hover:bg-blue-900/20 transition-colors"
         >
           <LogIn className="w-4 h-4" />

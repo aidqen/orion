@@ -17,7 +17,7 @@ const formatDate = (dateStr: string) => {
             day: 'numeric',
             year: 'numeric'
         });
-    } catch (e) {
+    } catch (_error: unknown) {
         return dateStr;
     }
 };
@@ -28,7 +28,7 @@ const formatTime = (dateStr: string) => {
             hour: 'numeric',
             minute: '2-digit',
         });
-    } catch (e) {
+    } catch (_error: unknown) {
         return '';
     }
 };

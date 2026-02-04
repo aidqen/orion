@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react';
-import { FileText, Loader2 } from 'lucide-react';
+import { FileText, Loader2, Maximize2 } from 'lucide-react';
 import { useArtifactStore } from '@/store/useArtifactStore';
+import { Streamdown } from 'streamdown';
 
 interface ArtifactPreviewProps {
   data: {
@@ -11,57 +12,73 @@ interface ArtifactPreviewProps {
     description: string;
     content: string;
   };
-  toolCallId: string;
   isStreaming: boolean;
 }
 
 export const ArtifactPreview: React.FC<ArtifactPreviewProps> = ({
   data,
-  toolCallId,
   isStreaming
 }) => {
   const openArtifact = useArtifactStore(state => state.openArtifact);
+  const artifactFromStore = useArtifactStore(state => {
 
-  if (!data?.id) return null;
+    if (data?.id) {
+      return state.artifacts.get(data.id);
+    }
+    for (const artifact of state.artifacts.values()) {
+      if (artifact.status === 'streaming') {
+        return artifact;
+      }
+    }
+    return null;
+  });
 
-  const handleClick = () => {
-    openArtifact(data.id);
+  const displayData = artifactFromStore || data;
+
+  if (!displayData) return null;
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openArtifact(displayData.id);
   };
+
+  const isCurrentlyStreaming = artifactFromStore?.status === 'streaming' || isStreaming;
+  
 
   return (
     <div
-      className="w-fit min-w-[250px] sm:min-w-[400px] max-w-full my-2 cursor-pointer"
+      className="relative w-full max-w-[450px] cursor-pointer group"
       onClick={handleClick}
     >
-      {/* <div className="w-full overflow-hidden rounded-xl border bg-card backdrop-blur-md text-card-foreground shadow-sm hover:shadow-md transition-shadow"> */}
-        <div className="border-b bg-muted/40 p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              {isStreaming ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <FileText className="h-5 w-5" />
-              )}
-            </div>
-            <div className="grid gap-1">
-              <h3 className="font-semibold leading-none tracking-tight">
-                {data.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {isStreaming ? 'Generating...' : 'Document'}
-              </p>
-            </div>
+      {/* Overlay with Maximize Button */}
+      <div className="absolute top-[13px] right-[9px] rounded-md p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-muted-foreground transition-colors">
+        <Maximize2 className="h-4 w-4" />
+      </div>
+
+      {/* Header */}
+      <div className="flex flex-row items-start justify-between gap-2 rounded-t-2xl border border-b-0 p-4 sm:items-center bg-card dark:border-zinc-700 dark:bg-muted">
+        <div className="flex flex-row items-start gap-3 sm:items-center">
+          <div className="text-muted-foreground">
+            {isCurrentlyStreaming ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <FileText className="h-4 w-4" />
+            )}
+          </div>
+          <div className="-translate-y-1 font-medium sm:translate-y-0">
+            {displayData.title}
           </div>
         </div>
+      </div>
 
-        {data.description && (
-          <div className="p-4">
-            <p className="text-sm text-muted-foreground">
-              {data.description}
-            </p>
-          </div>
-        )}
-      {/* </div> */}
+      {/* Content Body */}
+      <div className="h-[257px] overflow-y-hidden rounded-b-2xl border border-t-0 bg-card dark:border-zinc-700 dark:bg-muted p-4 sm:px-8 ">
+        <div className="prose dark:prose-invert relative w-full">
+          <Streamdown className="text-sm text-muted-foreground whitespace-pre-wrap">
+            {displayData.content || ''}
+          </Streamdown>
+        </div>
+      </div>
     </div>
   );
 };

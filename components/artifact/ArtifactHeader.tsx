@@ -8,21 +8,17 @@ interface ArtifactHeaderProps {
 }
 
 export function ArtifactHeader({ status, title, closeArtifact }: ArtifactHeaderProps) {
-    
-    return (
-        <div className="border-b p-4 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-2">
 
-                <div className="flex items-center gap-3">
-                    {status === 'streaming' && (
-                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                    )}
-                    <File className="size-5" />
-                    <h2 className="font-semibold text-lg whitespace-nowrap">{title}</h2>
-                </div>
+    return (
+        <div className="border-b p-4 items-center gap-4 shrink-0 grid grid-cols-[minmax(0,1fr)_auto]">
+            <div className="flex items-center gap-3 overflow-hidden">
+                <File className="size-5 shrink-0" />
+                <h2 className="font-semibold text-lg truncate min-w-0">{title}</h2>
             </div>
 
-            <ArtifactToolbar closeArtifact={closeArtifact} />
+            <div className="flex shrink-0 min-w-[150px] justify-end">
+                <ArtifactToolbar closeArtifact={closeArtifact} />
+            </div>
         </div>
     )
 }

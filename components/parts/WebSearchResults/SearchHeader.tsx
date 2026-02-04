@@ -2,17 +2,16 @@
 
 import { Shimmer } from '@/components/ai-elements/shimmer';
 import { Search } from 'lucide-react';
-import { motion } from 'motion/react';
 
 interface SearchHeaderProps {
-  query: string;
-  isOutputAvailable: boolean;
+  query?: string;
+  isOutputAvailable?: boolean;
 }
 
 export function SearchHeader({ query, isOutputAvailable }: SearchHeaderProps) {
-  const loadingText = `Searching data for ${query}`;
-  const successText = `Found results for ${query}`;
-  const words = loadingText.split(' ');
+  const searchQuery = query ?? 'your query';
+  const loadingText = `Searching data for ${searchQuery}`;
+  const successText = `Found results for ${searchQuery}`;
 
   return (
     <div className="px-3 py-3.5 flex items-center gap-2 text-sm text-text-300 overflow-hidden">

@@ -1,24 +1,12 @@
 import { createClient } from '@/lib/supabase/client';
 import { TextUIPart } from 'ai';
 
-/**
- * Message part structure matching your UI message format
-//  */
-// export interface MessagePart {
-//   text?: string;
-//   type: string;
-//   [key: string]: any; // Allow additional properties like toolName, toolCallId, etc.
-// }
-
-/**
- * Message structure matching your UI message format
- */
 export interface Message {
   id?: string;
   role: 'user' | 'assistant' | 'system';
   tempId?: string;
   parts: TextUIPart[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   model?: string;
   tokenUsage?: {
     promptTokens?: number;
@@ -110,7 +98,7 @@ export async function getChatMessages(chatId: string) {
 export async function updateMessage(messageId: string, updates: Partial<Message>) {
   const supabase = createClient();
 
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, unknown> = {};
   
   if (updates.parts !== undefined) updateData.parts_json = updates.parts;
   if (updates.metadata !== undefined) updateData.metadata = updates.metadata;

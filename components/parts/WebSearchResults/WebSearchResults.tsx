@@ -8,14 +8,22 @@ import { SearchHeader } from './SearchHeader';
 import { ResultsToggleButton } from './ResultsToggleButton';
 import { ResultsList } from './ResultsList';
 
+interface WebSearchData {
+  input?: { query?: string };
+  output?: { type: string; title: string | null; url: string; pageAge: string | null; encryptedContent: string }[];
+}
+
 interface WebSearchFetchProps {
-  data: any;
+  data: WebSearchData;
 }
 
 export function WebSearchResults({ data }: WebSearchFetchProps) {
   const [showResults, setShowResults] = useState(false);
   const [ref, bounds] = useMeasure();
-  const outputAvailable = useMemo(() => data?.output && data?.output?.length > 0, [data]);
+  
+  const query = data?.input?.query;
+  const output = data?.output;
+  const outputAvailable = output && output.length > 0;
 
   return (
     <motion.div
@@ -24,19 +32,21 @@ export function WebSearchResults({ data }: WebSearchFetchProps) {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
       <div ref={ref}>
-        <SearchHeader query={data?.input?.query} isOutputAvailable={outputAvailable}/>
+        <SearchHeader query={query} isOutputAvailable={!!outputAvailable} />
 
-        {outputAvailable && (
+        {outputAvailable && query ? (
           <div className={cn("px-3 py-2 overflow-hidden", showResults ? "bg-muted/50" : "bg-transparent")}>
             <ResultsToggleButton
-              query={data.input.query}
-              resultCount={data.output.length}
+              query={query}
+              resultCount={output.length}
               isExpanded={showResults}
               onToggle={() => setShowResults(!showResults)}
             />
 
-            {showResults && <ResultsList results={data.output} />}
+            {showResults && <ResultsList results={output} />}
           </div>
+        ) : (
+          <p className="px-3 py-2 text-sm text-muted-foreground">No results available</p>
         )}
       </div>
     </motion.div>

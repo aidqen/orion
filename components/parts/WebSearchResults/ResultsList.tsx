@@ -3,8 +3,11 @@
 import { WebSearchResultItem } from './WebSearchItem';
 
 interface Result {
-  title: string;
+  type: string;
+  title: string | null;
   url: string;
+  pageAge: string | null;
+  encryptedContent: string;
 }
 
 interface ResultsListProps {

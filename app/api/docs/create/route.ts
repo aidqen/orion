@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from '@/lib/google-token';
 import { createGoogleDoc } from '@/lib/docs/docs';
+import { GaxiosError } from 'gaxios';
 
 export async function POST(req: Request) {
   const supabase = await getSupabaseServerClient();
@@ -34,12 +35,22 @@ export async function POST(req: Request) {
       headers: { 'Content-Type': 'application/json' }
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating Google Doc:', error);
 
+    if (error instanceof GaxiosError) {
+      return new Response(JSON.stringify({
+        error: error.message,
+        code: error.code,
+        status: error.status
+      }), {
+        status: error.status || 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     return new Response(JSON.stringify({
-      error: error.message || 'Failed to create Google Doc',
-      code: error?.code
+      error: error instanceof Error ? error.message : 'Failed to create Google Doc'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

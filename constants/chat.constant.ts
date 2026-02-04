@@ -4,14 +4,15 @@ export const MESSAGE_ROLES = {
   SYSTEM: 'system',
 } as const;
 
-export const AI_MODEL = 'claude-sonnet-4-5-20250929';
-// export const AI_MODEL = 'gpt-4o';
+// export const AI_MODEL = 'claude-sonnet-4-5-20250929' as const;
+export const AI_MODEL = 'claude-3-5-haiku-20241022' as const;
+export const SIMPLE_FAST_MODEL = 'claude-3-5-haiku-20241022' as const;
+export const EMBEDDING_MODEL = 'text-embedding-3-small' as const;
 
 export const AI_TOOLS = {
   GET_CALENDAR_EVENTS: 'tool-getCalendarEvents',
-  CREATE_NEW_EVENT: 'tool-createNewEvent',
-  WEB_SEARCH: 'tool-webSearchTool',
+  CREATE_NEW_EVENTS: 'tool-createNewEvents',
+  WEB_SEARCH: 'tool-webSearch',
   CREATE_DOCUMENT: 'tool-createDocument',
   TEXT: 'text',
-  IMAGE: 'file'
 } as const;

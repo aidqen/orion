@@ -7,7 +7,6 @@ export interface Artifact {
   title: string;
   content: string;
   status: 'streaming' | 'completed';
-  toolCallId?: string;
 }
 
 interface ArtifactStore {
@@ -18,7 +17,7 @@ interface ArtifactStore {
   // Core actions
   createArtifact: (id: string, title: string) => void;
   appendContent: (id: string, textDelta: string) => void;
-  completeArtifact: (id: string, toolCallId: string) => void;
+  completeArtifact: (id: string) => void;
 
   // UI actions
   setActiveArtifact: (id: string | null) => void;
@@ -67,7 +66,7 @@ export const useArtifactStore = create<ArtifactStore>((set, get) => ({
   },
 
   // Mark artifact as completed when tool execution finishes
-  completeArtifact: (id: string, toolCallId: string) => {
+  completeArtifact: (id: string) => {
     set((state) => {
       const artifact = state.artifacts.get(id);
       if (!artifact) {
@@ -79,7 +78,6 @@ export const useArtifactStore = create<ArtifactStore>((set, get) => ({
       newArtifacts.set(id, {
         ...artifact,
         status: 'completed',
-        toolCallId,
       });
       return { artifacts: newArtifacts };
     });
@@ -100,13 +98,10 @@ export const useArtifactStore = create<ArtifactStore>((set, get) => ({
     set({ activeArtifactId: id, isOpen: true });
   },
 
-  // Close artifact side panel (artifacts remain in memory)
   closeArtifact: () => {
     set({ isOpen: false });
-    // Note: We keep activeArtifactId and artifacts in memory for quick re-opening
   },
 
-  // Reconstruct artifacts from chat history (called on chat load)
   reconstructArtifacts: (messages: UIMessage[]) => {
     const newArtifacts = new Map<string, Artifact>();
 
@@ -129,7 +124,6 @@ export const useArtifactStore = create<ArtifactStore>((set, get) => ({
               title,
               content,
               status: 'completed',
-              toolCallId: part.toolCallId,
             });
           }
         }

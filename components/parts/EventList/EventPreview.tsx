@@ -39,7 +39,7 @@ export const EventPreview: React.FC<EventPreviewProps> = ({ event }) => {
             const timeStr = format(startDate, 'h:mm a');
             
             return timeStr;
-        } catch (e) {
+        } catch (error: unknown) {
             return null;
         }
     };

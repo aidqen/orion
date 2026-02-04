@@ -13,7 +13,7 @@ export interface ChatMessage {
  */
 export async function createChat(userId: string) {
   const supabase = createClient();
-  
+
   const { data, error } = await supabase
     .from('chats')
     .insert({
@@ -71,22 +71,34 @@ export async function getUserChats(userId: string): Promise<Chat[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase
-  .from('chats')
-  .select(`
+    .from('chats')
+    .select(`
     id,
     created_at,
     title
   `)
-  .eq('user_id', userId)
-  .order('created_at', { ascending: false })
-  .limit(10);
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(10);
 
   if (error) throw error;
 
-  return (data || []).map((chat: any) => ({
+  return (data || []).map((chat) => ({
     id: chat.id,
     title: chat.title || 'New Chat',
     createdAt: chat.created_at,
   }));
 }
+
+export async function updateChatTitle(chatId: string, title: string): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('chats')
+    .update({ title })
+    .eq('id', chatId);
+
+  if (error) throw error;
+}
+
 

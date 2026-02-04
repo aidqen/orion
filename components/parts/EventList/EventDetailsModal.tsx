@@ -1,10 +1,5 @@
 import React from 'react';
 import { 
-    X, 
-    MoreVertical, 
-    Mail, 
-    Trash2, 
-    Pencil, 
     MapPin, 
     AlignLeft, 
     Bell, 
@@ -14,9 +9,7 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-    DialogClose
 } from "@/components/ui/dialog";
-import { Button } from '@/components/ui/button';
 import { EventData } from '@/types/event';
 import { format, parseISO } from 'date-fns';
 
@@ -66,7 +59,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({ event, isO
                     {timeText && <span className="text-sm text-muted-foreground">{timeText}</span>}
                 </div>
             );
-        } catch (e) {
+        } catch (_error: unknown) {
             return startStr;
         }
     };

@@ -1,7 +1,10 @@
-import { EventData } from "@/types/event";
+import { EventWithStatus } from "@/types/event";
 
-
-export async function createCalendarEvent(payload: { event: EventData; timezone: string; messageId: string }) {
+export async function createCalendarEvents(payload: { 
+    events: EventWithStatus[]; 
+    timezone: string; 
+    messageId: string 
+}) {
     const response = await fetch('/api/calendar/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -11,9 +14,13 @@ export async function createCalendarEvent(payload: { event: EventData; timezone:
     const result = await response.json();
 
     if (!response.ok) {
-        throw new Error(result.error || 'Failed to create event');
+        throw new Error(result.error || 'Failed to create events');
     }
 
-    return result;
+    return result as { 
+        success: boolean; 
+        events: EventWithStatus[]; 
+        summary: { confirmed: number; failed: number } 
+    };
 }
 

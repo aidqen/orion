@@ -7,12 +7,15 @@ import { SettingsModalFooter } from './SettingsModalFooter';
 import { UserDetailsSection } from './UserDetailsSection';
 import { useUser } from '@/contexts/UserContext';
 import { useRouter } from 'next/navigation';
+import { AUTH_POPUP_MODES } from '@/constants/auth.constant';
+import { useAuthPopupStore } from '@/store/useAuthPopupStore';
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const router = useRouter()
+    const openAuthPopup = useAuthPopupStore(state => state.open)
     const { signOut, authenticated } = useUser();
-
-    const handleLogout = async () => {
+    
+    async function handleLogout() {
         try {
             await signOut();
             router.push('/');
@@ -22,10 +25,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         }
     };
 
-    const handleLogin = () => {
-        router.push('/login');
-        onClose();
-    };
+    async function handleLogin() {
+        openAuthPopup(AUTH_POPUP_MODES.SIGN_IN)
+    }
 
     return (
         <AnimatePresence mode="wait">
@@ -59,6 +61,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                             onClose={onClose}
                             onLogout={handleLogout}
                             isAuthenticated={authenticated}
+                            onLogin={handleLogin}
                         />
                     </motion.div>
                 </div>

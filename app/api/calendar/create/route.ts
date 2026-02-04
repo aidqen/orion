@@ -1,47 +1,71 @@
+import { NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/google-token';
 import { createCalendarEvent } from '@/lib/calendar/create-events';
-import { EventData } from '@/types/event';
-import { updateEventStatusToConfirmed } from '@/services/server/chat.service';
+import { EventData, EventWithStatus } from '@/types/event';
+import { updateEventsStatuses } from '@/services/server/chat.service';
 
 export async function POST(req: Request) {
     const supabase = await getSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-            status: 401,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
         const body = await req.json();
-        const { event, messageId } = body as { event: EventData; timezone: string; messageId: string };
+        const { events, messageId } = body;
 
-        const createdEvent = await createCalendarEvent(user.id, event as EventData);
+        // Validate required fields
+        if (!Array.isArray(events) || !messageId) {
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        }
 
-        // Update the message status to confirmed
-        await updateEventStatusToConfirmed(messageId);
+        const toProcess = events
+            .map((item, index) => ({ item, index }))
+            .filter(({ item }) => item.status !== 'confirmed');
 
-        return new Response(JSON.stringify({ 
-            success: true, 
-            event: createdEvent 
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
+        const results = await Promise.allSettled(
+            toProcess.map(({ item }) => createCalendarEvent(user.id, item.event))
+        );
+
+        const updatedEvents: EventWithStatus[] = events.map((item, index) => {
+            if (item.status === 'confirmed') {
+                return item;
+            }
+
+            const processIndex = toProcess.findIndex(p => p.index === index);
+            const result = results[processIndex];
+
+            if (result.status === 'fulfilled') {
+                return { 
+                    status: 'confirmed' as const, 
+                    event: result.value as EventData
+                };
+            }
+            
+            return { 
+                status: 'failed' as const, 
+                event: item.event,
+                error: result.reason?.message || 'Unknown error'
+            };
         });
 
-    } catch (error: any) {
-        console.error('Error creating calendar event:', error);
+        await updateEventsStatuses(messageId, updatedEvents);
 
+        const confirmedCount = updatedEvents.filter(e => e.status === 'confirmed').length;
+        const failedCount = updatedEvents.filter(e => e.status === 'failed').length;
 
-        return new Response(JSON.stringify({ 
-            error: error.message,
-            code: error?.code 
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
+        return NextResponse.json({ 
+            success: failedCount === 0,
+            events: updatedEvents,
+            summary: { confirmed: confirmedCount, failed: failedCount },
         });
+
+    } catch (error: unknown) {
+        console.error('Error creating calendar events:', error);
+        
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }
-

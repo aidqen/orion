@@ -3,6 +3,8 @@ import {
   Globe,
   Home,
   MessageCircle,
+  MessageCirclePlus,
+  MessageSquarePlus,
 } from "lucide-react"
 
 export type MenuItem = {
@@ -12,7 +14,8 @@ export type MenuItem = {
 }
 
 export const PRIMARY_NAV: MenuItem[] = [
-  { icon: Home, text: 'Home', href: '/' },
+  // { icon: Home, text: 'Home', href: '/' },
+  { icon: MessageSquarePlus, text: 'New Chat', href: '/' },
 ]
 
 export const FOLDERS: MenuItem[] = [

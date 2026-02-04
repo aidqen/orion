@@ -22,5 +22,11 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(new URL('/', requestUrl.origin));
+  let returnUrl = requestUrl.searchParams.get('returnUrl') || '/';
+
+  if (!returnUrl.startsWith('/') || returnUrl.includes('://')) {
+    returnUrl = '/';
+  }
+
+  return NextResponse.redirect(new URL(returnUrl, requestUrl.origin));
 }

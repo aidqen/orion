@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from "motion/react"
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/useMediaQuery"
 import { quickActions } from "./constants"
 
 const buttonAnimationVariants = {
@@ -32,7 +32,7 @@ export function QuickActionButtons({
   const displayedActions = isMobile ? quickActions.slice(0, 3) : quickActions
 
   return (
-    <div className="flex flex-row items-center justify-between w-full gap-2 mt-4">
+    <div className="flex flex-row items-center justify-between w-full gap-2 mt-0">
       {displayedActions.map((action, index: number) => (
         <motion.button
           key={action.id}
@@ -42,7 +42,7 @@ export function QuickActionButtons({
             ...buttonAnimationConfig,
             delay: buttonAnimationConfig.baseDelay + buttonAnimationConfig.staggerDelay * index,
           }}
-          className="rounded-full flex flex-row gap-1 dark:text-stone-200 text-black items-center justify-center bg-(--panel) hover:bg-(--panel-hover) backdrop-blur-md px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
+          className="rounded-full flex flex-row gap-1 font-medium dark:text-stone-200 text-stone-600 items-center justify-center bg-[hsl(120,4%,95.1%)] hover:bg-(--panel-hover) px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
         >
           <action.icon className="w-4 h-4" />
           {action.label}

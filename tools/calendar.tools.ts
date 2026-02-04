@@ -1,12 +1,12 @@
 import { tool, jsonSchema } from 'ai';
 import { fetchCalendarEvents } from '@/lib/calendar/fetch-events';
 import { formatCalendarEvent, getUserTimezone } from '@/lib/calendar/create-events';
-import { CreateEventInput } from '@/lib/calendar/types';
+import { CreateEventInput } from '@/types/types';
 
 export function createCalendarTools(userId: string) {
     return {
         getCalendarEvents: getCalendarEventsTool(userId),
-        createNewEvent: createNewEventTool(),
+        createNewEvents: createNewEventsTool(),
     };
 }
 
@@ -39,28 +39,41 @@ export function getCalendarEventsTool(userId: string) {
     });
 }
 
-export function createNewEventTool() {
+export function createNewEventsTool() {
     return tool({
-        description: 'Format a new calendar event for preview. Returns the formatted event data that can be confirmed by the user before actually creating it.',
-        inputSchema: jsonSchema<CreateEventInput>({
+        description: 'Format one or more calendar events for preview. Can create one or multiple events. Returns formatted events that can be confirmed by the user before actually creating them.',
+        inputSchema: jsonSchema<{ events: CreateEventInput[] }>({
             type: 'object',
             properties: {
-                title: { type: 'string', description: 'Title/summary of the event' },
-                startDateTime: { type: 'string', description: 'Start date and time in ISO format (e.g., 2026-01-21T10:00:00)' },
-                endDateTime: { type: 'string', description: 'End date and time in ISO format (e.g., 2026-01-21T11:00:00)' },
-                description: { type: 'string', description: 'Optional description of the event' },
-                location: { type: 'string', description: 'Optional location of the event' },
-                attendees: { type: 'array', description: 'Optional list of attendees email addresses', items: { type: 'string' } },
+                events: {
+                    type: 'array',
+                    description: 'List of events to create (use single-item array for one event)',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            title: { type: 'string', description: 'Title/summary of the event' },
+                            startDateTime: { type: 'string', description: 'Start date and time in ISO format (e.g., 2026-01-21T10:00:00)' },
+                            endDateTime: { type: 'string', description: 'End date and time in ISO format (e.g., 2026-01-21T11:00:00)' },
+                            description: { type: 'string', description: 'Optional description of the event' },
+                            location: { type: 'string', description: 'Optional location of the event' },
+                            attendees: { type: 'array', description: 'Optional list of attendee email addresses', items: { type: 'string' } },
+                        },
+                        required: ['title', 'startDateTime', 'endDateTime'],
+                    },
+                    minItems: 1,
+                },
             },
-            required: ['title', 'startDateTime', 'endDateTime'],
+            required: ['events'],
         }),
-        execute: async (input: CreateEventInput) => {
+        execute: async ({ events }: { events: CreateEventInput[] }) => {
             const timezone = getUserTimezone();
-            const formattedEvent = formatCalendarEvent(input, timezone);
+            const formattedEvents = events.map(event => ({
+                status: 'pending_confirmation' as const,
+                event: formatCalendarEvent(event, timezone),
+            }));
             
             return {
-                status: 'pending_confirmation',
-                event: formattedEvent,
+                events: formattedEvents,
                 timezone,
             };
         },

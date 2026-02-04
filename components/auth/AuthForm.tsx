@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import ErrorBanner from "@/components/ui/ErrorBanner";
-import GoogleButton from "@/components/GoogleButton";
+import GoogleButton from "@/components/auth/GoogleButton";
 import {
   signInWithPassword,
   signUpWithPassword,
   normalizeAuthError,
 } from "@/lib/supabase/auth";
-import { useRouter } from "next/navigation";
 
 export type Mode = "login" | "signup";
 
@@ -20,7 +19,6 @@ export default function AuthForm({
   mode: Mode;
   setOpen?: (open: boolean) => void;
 }) {
-  const TextInput = Input as any;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -63,10 +61,10 @@ export default function AuthForm({
         {mode === "signup" && (
           <label className="block">
             <span className="sr-only">Display name</span>
-            <TextInput
+            <Input
               type="text"
               value={name}
-              onChange={(e: any) => setName(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
               placeholder="Display name"
               autoComplete="name"
               className={`h-12 bg-gray-50 dark:bg-[#0E1013] border ${
@@ -79,10 +77,10 @@ export default function AuthForm({
         )}
         <label className="block">
           <span className="sr-only">Email address</span>
-          <TextInput
+          <Input
             type="email"
             value={email}
-            onChange={(e: any) => setEmail(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             placeholder="Email Address"
             autoComplete="email"
             className={`h-12 bg-gray-50 dark:bg-[#0E1013] border ${
@@ -94,10 +92,10 @@ export default function AuthForm({
         </label>
         <label className="block">
           <span className="sr-only">Password</span>
-          <TextInput
+          <Input
             type="password"
             value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             placeholder="Password"
             autoComplete={
               mode === "login" ? "current-password" : "new-password"
@@ -112,10 +110,10 @@ export default function AuthForm({
         {mode === "signup" && (
           <label className="block">
             <span className="sr-only">Confirm password</span>
-            <TextInput
+            <Input
               type="password"
               value={confirm}
-              onChange={(e: any) => setConfirm(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirm(e.target.value)}
               placeholder="Confirm password"
               autoComplete="new-password"
               className={`h-12 bg-gray-50 dark:bg-[#0E1013] border ${

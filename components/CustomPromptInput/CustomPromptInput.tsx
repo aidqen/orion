@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { FileUploader } from "./FileUploader";
 import { PasteHandler } from "./PasteHandler";
 import { DragOverlay } from "./DragOverlay";
-import { useArtifactStore } from "@/store/useArtifactStore";
+import { FileUIPartWithId, MessageInput } from "@/types/chat";
 
 export function CustomPromptInput({
   input,
@@ -39,13 +39,12 @@ export function CustomPromptInput({
   placeholder?: string;
   className?: string;
   textAnimation?: boolean;
-  onSubmit?: (message: any) => void;
+  onSubmit?: (message: MessageInput) => void;
   status?: string;
   stop?: () => void;
   chatId?: string;
   userId?: string;
 }) {
-  const isArtifactOpen = useArtifactStore(state => state.isOpen);
   const [typedPlaceholder, setTypedPlaceholder] = useState("");
   const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 
@@ -80,16 +79,17 @@ export function CustomPromptInput({
     return () => window.clearInterval(id);
   }, [placeholder, textAnimation]);
 
-  const handleSubmit = (message: { text: string; files: any[] }) => {
-    const transformedFiles = message.files
+  const handleSubmit = (message: MessageInput) => {
+    let transformedFiles: FileUIPartWithId[] = [];
+    if (message.files && message.files.length > 0) {
+      transformedFiles = message.files
       .filter((f) => !failedIds.has(f.id))
       .map((f) => ({
         ...f,
         url: uploadedUrlsRef.current.get(f.id) || f.url,
       }));
-
+    }
     onSubmit?.({ ...message, files: transformedFiles });
-
     uploadedUrlsRef.current.clear();
     setFailedIds(new Set());
   };
@@ -107,8 +107,8 @@ export function CustomPromptInput({
         maxFileSize={undefined}
         onError={undefined}
         className={cn(
-          "mt-4 relative overflow-hidden bg-input border border-gray-300/50 dark:border-stone-700/40 backdrop-blur-sm mx-auto mb-4",
-          
+          "mb-2 relative overflow-hidden bg-background shadow-[0_0_5px_2px_rgba(0,0,0,0.05)] border border-gray-300/50 dark:border-stone-700/40 mx-auto transition-[max-width] duration-300 ease-out ",
+
           className
         )}
       >

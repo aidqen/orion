@@ -1,8 +1,9 @@
+import { MessageInput } from '@/types/chat';
 import { create } from 'zustand';
 
 interface ChatStore {
-  pendingMessage: string | null;
-  setPendingMessage: (message: string | null) => void;
+  pendingMessage: MessageInput | null;
+  setPendingMessage: (message: MessageInput | null) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({

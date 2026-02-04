@@ -9,7 +9,7 @@ const letterVariants = {
         opacity: 0,
         // filter: "blur(10px)"
     },
-    visible: (i: number) => ({
+    visible: () => ({
         opacity: 1,
         // filter: "blur(0px)",
         transition: {
@@ -18,7 +18,7 @@ const letterVariants = {
             //   delay: i * 0.015
         }
     }),
-    exit: (i: number) => ({
+    exit: () => ({
         opacity: 0,
         // filter: "blur(10px)",
         transition: {

@@ -5,7 +5,10 @@ import { useArtifactStore } from "@/store/useArtifactStore";
 import { getChatMessages } from "@/lib/supabase/messages";
 import { generateId, UIMessage } from "ai";
 import { saveLatestMessages } from "@/utils/messages";
-import { AI_MODEL, AI_TOOLS } from "@/constants/chat.constant";
+import { AI_MODEL } from "@/constants/chat.constant";
+import { FileUIPartWithId, MessageInput } from "@/types/chat";
+import { useDataStream } from "@/contexts/DataStreamContext";
+import { useChats } from "./useChats";
 
 interface MessagePart {
   type: 'file' | 'text';
@@ -15,55 +18,46 @@ interface MessagePart {
 }
 
 /** Builds message parts from files (already uploaded) and text */
-function buildMessageParts(files: any[], text?: string): MessagePart[] {
+function buildMessageParts(files: FileUIPartWithId[], text?: string): MessagePart[] {
   const parts: MessagePart[] = [];
-  
+
   // Add file parts (URLs are already Supabase URLs from CustomPromptInput)
   for (const file of files) {
     if (file.mediaType?.startsWith('image/')) {
-      parts.push({ 
-        type: 'file', 
+      parts.push({
+        type: 'file',
         url: file.url,
         mediaType: file.mediaType,
       });
     }
   }
-  
+
   // Add text part
   if (text?.trim()) {
     parts.push({ type: 'text', text: text.trim() });
   }
-  
+
   return parts;
 }
 
 export function useMessages(chatId: string) {
   const [input, setInput] = useState("");
-  const setPendingMessage = useChatStore(state => state.setPendingMessage);
   const pendingMessage = useChatStore(state => state.pendingMessage);
-
-  const hasSentPendingMessage = useRef(false);
+  const isNewChatInitialized = useRef(false);
   const hasFetchedMessages = useRef(false);
   const savedMessageIds = useRef(new Set<string>());
   const artifactIdRef = useRef<string | null>(null);
+  
+  const setPendingMessage = useChatStore(state => state.setPendingMessage);
+  const closeArtifact = useArtifactStore(state => state.closeArtifact);
+  const reconstructArtifacts = useArtifactStore(state => state.reconstructArtifacts);
+  const { setDataStream } = useDataStream()
+  const { generateChatTitle } = useChats();
 
   const { messages, status, stop, sendMessage, setMessages, error, regenerate } = useChat({
     id: chatId,
     generateId: () => generateId(),
     onFinish: async ({ messages: allMessages }) => {
-      // Mark streaming artifacts as completed
-      const artifactStore = useArtifactStore.getState();
-      const lastMessage = allMessages[allMessages.length - 1];
-
-      if (lastMessage?.role === 'assistant') {
-        const parts = lastMessage.parts || [];
-        for (const part of parts) {
-          if (part.type === AI_TOOLS.CREATE_DOCUMENT && part.state === 'output-available' && (part as any).output?.id) {
-            artifactStore.completeArtifact((part as any).output.id, (part as any).toolCallId);
-          }
-        }
-      }
-      // Get the last assistant message ID to check if already saved
       const lastAssistantMessage = allMessages
         .slice()
         .reverse()
@@ -78,69 +72,58 @@ export function useMessages(chatId: string) {
         }
       }
     },
-    onData: (data: any) => {
-      const artifactStore = useArtifactStore.getState();
-
-      if (data.type === 'data-id') {
-        artifactIdRef.current = data.data as string;
-      }
-
-      if (data.type === 'data-title') {
-        if (artifactIdRef.current) {
-          artifactStore.createArtifact(artifactIdRef.current, data.data as string);
-          // artifactStore.openArtifact(artifactIdRef.current);
-        }
-      }
-
-      if (data.type === 'data-textDelta') {
-        if (artifactIdRef.current) {
-          artifactStore.appendContent(artifactIdRef.current, data.data as string);
-        }
-      }
+    onData: (data) => {
+      setDataStream((ds) => [...ds, data])
     }
   });
 
   useEffect(() => {
-    if (pendingMessage && !hasSentPendingMessage.current) {
-      appendPendingMessage();
+    hasFetchedMessages.current = false;
+    savedMessageIds.current = new Set();
+    artifactIdRef.current = null;
+    closeArtifact();
+
+    if (pendingMessage && !isNewChatInitialized.current) {
+      initializeNewChat();
     } else {
       fetchChatMessages();
     }
-  }, [chatId, pendingMessage, sendMessage, setPendingMessage, setMessages]);
+  }, [chatId, closeArtifact]);
 
-  async function appendPendingMessage() {
-    if (pendingMessage && !hasSentPendingMessage.current) {
-      hasSentPendingMessage.current = true;
-      handleSendMessage(pendingMessage);
-      setPendingMessage(null);
-    }
+  async function initializeNewChat() {
+    isNewChatInitialized.current = true;
+    handleSendMessage(pendingMessage as MessageInput);
+    generateChatTitle(chatId, pendingMessage as MessageInput);
+    setPendingMessage(null);
   }
+
 
   async function fetchChatMessages() {
     if (!hasFetchedMessages.current) {
-      hasFetchedMessages.current = true;
       try {
         const fetchedMessages = await getChatMessages(chatId);
         if (fetchedMessages.length > 0) {
           setMessages(fetchedMessages as UIMessage[]);
-          // Reconstruct artifacts from history
-          useArtifactStore.getState().reconstructArtifacts(fetchedMessages as UIMessage[]);
+
+          reconstructArtifacts(fetchedMessages as UIMessage[]);
         }
       } catch (error) {
         console.error('Error fetching chat messages:', error);
+      } finally {
+        hasFetchedMessages.current = true;
       }
     }
   }
 
-  function handleSendMessage(message: any) {
+  function handleSendMessage(message: MessageInput) {
     const messageText = message.text || input;
     const files = message.files || [];
-    
+
     const parts = buildMessageParts(files, messageText);
-    
+
     if (parts.length > 0) {
       setInput("");
-      sendMessage({ parts } as any, { body: { chatId } });
+      sendMessage({ parts } as UIMessage, { body: { chatId } });
     }
   }
 

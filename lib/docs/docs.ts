@@ -1,5 +1,4 @@
 import { docs } from '@googleapis/docs';
-import { createClient } from '@supabase/supabase-js';
 import { getGoogleAccessToken } from '../google-token';
 
 

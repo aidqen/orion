@@ -56,4 +56,65 @@
       max-width: 75%;
     }
   }
+
+  /* Custom Scrollbar for Memories Modal */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  /* Light mode thumb */
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Dark mode thumb */
+  :is(.dark .custom-scrollbar)::-webkit-scrollbar-thumb {
+    background: #424242;
+  }
+  :is(.dark .custom-scrollbar)::-webkit-scrollbar-thumb:hover {
+    background: #525252;
+  }
+
+  /* Increase hit area using ::before pseudo-element */
+  .hit-area-lg {
+    position: relative;
+  }
+  .hit-area-lg::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+  }
+}
+
+.gesture-grabbing {
+  cursor: grabbing;
+  user-select: none;
+  /* Safari compatibility */
+  -webkit-user-select: none;
+
+  * {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+.gesture-col-resize {
+  cursor: col-resize;
+  user-select: none;
+  /* Safari compatibility */
+  -webkit-user-select: none;
+
+  * {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }

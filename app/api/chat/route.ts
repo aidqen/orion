@@ -11,6 +11,9 @@ import { SYSTEM_PROMPT } from "@/constants/prompt.constant";
 import { createCalendarTools } from "@/tools/calendar.tools";
 import { createDocumentTool } from "@/tools/document.tools";
 import { getSupabaseServerClient } from "@/lib/google-token";
+import { fetchAllMemories } from "@/lib/memory";
+import { formatMemoryContext, processMemoryExtraction } from "@/services/server/memory.service";
+import { getLastUserMessageText } from "@/utils/messages";
 
 export const maxDuration = 30;
 
@@ -36,29 +39,34 @@ export async function POST(req: Request) {
       return new Response("Chat ID is required", { status: 400 });
     }
 
+    const memories = await fetchAllMemories(supabase, user.id);
+
+    const lastUserMessageText = getLastUserMessageText(messages);
+
+    // Fire and forget: extract memories in background (don't await)
+    processMemoryExtraction(supabase, user.id, lastUserMessageText, memories.slice(0, 3));
+
     const modelMessages = await convertToModelMessages(messages);
-    const calendarTools = createCalendarTools(user.id);
     const webSearchTool = anthropic.tools.webSearch_20250305({ maxUses: 3 });
 
     const uiStream = createUIMessageStream({
       originalMessages: messages,
       execute: async ({ writer: dataStream }) => {
-        // Start the LLM streaming
         const result = streamText({
           model: anthropic(AI_MODEL),
-          system: SYSTEM_PROMPT,
+          system: SYSTEM_PROMPT + formatMemoryContext(memories),
           messages: modelMessages,
-          tools: { ...calendarTools, webSearchTool, createDocument: createDocumentTool({ dataStream }) },
+          tools: {
+            ...createCalendarTools(user.id),
+            webSearchTool,
+            createDocument: createDocumentTool({ dataStream })
+          },
           temperature: 0.7,
           stopWhen: stepCountIs(5),
         });
 
         dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
 
-        dataStream.write({
-          type: "message-metadata",
-          messageMetadata: { message: "Done!" },
-        });
       },
     });
 
@@ -77,3 +85,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

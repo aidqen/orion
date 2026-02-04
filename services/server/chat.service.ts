@@ -1,11 +1,19 @@
 import { getSupabaseServerClient } from '@/lib/google-token';
-import { AI_TOOLS } from '@/constants/chat.constant';
+import { AI_TOOLS, SIMPLE_FAST_MODEL } from '@/constants/chat.constant';
+import { GENERATE_TITLE_PROMPT } from '@/constants/prompt.constant';
+import { anthropic } from "@ai-sdk/anthropic";
+import { generateText, UIMessagePart } from "ai";
+import { EventWithStatus } from '@/types/event';
+import { ChatTools, CustomUIDataTypes } from '@/types/chat';
 
 /**
- * Updates the event creation status to "confirmed" for a specific message
- * Finds the part with type CREATE_NEW_EVENT and updates its output.status
+ * Updates the events statuses for a specific message
+ * Finds the part with type CREATE_NEW_EVENTS and updates its output.events with new statuses
  */
-export async function updateEventStatusToConfirmed(messageId: string): Promise<void> {
+export async function updateEventsStatuses(
+    messageId: string, 
+    updatedEvents: EventWithStatus[]
+): Promise<void> {
     const supabase = await getSupabaseServerClient();
 
     // Fetch the message by temp_id
@@ -20,15 +28,15 @@ export async function updateEventStatusToConfirmed(messageId: string): Promise<v
         throw new Error('Message not found');
     }
 
-    // Find and update the CREATE_NEW_EVENT part
-    const parts = message.parts_json as any[];
+    // Find and update the CREATE_NEW_EVENTS part
+    const parts = message.parts_json as UIMessagePart<CustomUIDataTypes, ChatTools>[];
     const updatedParts = parts.map((part) => {
-        if (part.type === AI_TOOLS.CREATE_NEW_EVENT && part.output) {
+        if (part.type === AI_TOOLS.CREATE_NEW_EVENTS && part.output) {
             return {
                 ...part,
                 output: {
                     ...part.output,
-                    status: 'confirmed',
+                    events: updatedEvents,
                 },
             };
         }
@@ -43,7 +51,37 @@ export async function updateEventStatusToConfirmed(messageId: string): Promise<v
 
     if (updateError) {
         console.error('Failed to update message:', updateError);
-        throw new Error('Failed to update event status');
+        throw new Error('Failed to update event statuses');
     }
+}
+
+/**
+ * Generates a concise title for a chat conversation using AI
+ * @param firstMessage - The first user message in the chat
+ * @returns A 3-6 word title for the chat
+ */
+export async function generateChatTitle(firstMessage: string): Promise<string> {
+    const result = await generateText({
+        model: anthropic(SIMPLE_FAST_MODEL),
+        temperature: 0.5,
+        system: GENERATE_TITLE_PROMPT.system,
+        prompt: GENERATE_TITLE_PROMPT.prompt(firstMessage),
+    });
+
+    return result.text.trim();
+}
+
+/**
+ * Updates the title of a chat in the database
+ */
+export async function updateChatTitle(chatId: string, title: string): Promise<void> {
+    const supabase = await getSupabaseServerClient();
+
+    const { error } = await supabase
+        .from('chats')
+        .update({ title })
+        .eq('id', chatId);
+
+    if (error) throw error;
 }
 

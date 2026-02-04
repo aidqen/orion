@@ -1,35 +1,44 @@
 'use client'
 
 import {
-  Sidebar as ShadcnSidebar,
   SidebarContent,
   useSidebar,
+  Sidebar as ShadcnSidebar
 } from "@/components/ui/sidebar"
-import { SidebarHeader } from "./SidebarHeader"
-import { SidebarNav } from "./SidebarNav"
-// import { SidebarFolders } from "./SidebarFolders"
-import { SidebarHistory } from "./SidebarHistory"
+import { SidebarHeader } from "../Sidebar/SidebarHeader"
+import { SidebarNav } from "../Sidebar/SidebarNav"
+import { SidebarHistory } from "../Sidebar/SidebarHistory"
 import { useArtifactStore } from "@/store/useArtifactStore"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { SearchChatsModal } from "../SearchChatsModal"
+import { useChats } from "@/hooks"
+import { motion } from "motion/react";
+import { SidebarFooter } from "./SidebarFooter"
 
 export function Sidebar() {
-  const { setOpen } = useSidebar()
+  const { setOpen, state } = useSidebar()
   const isArtifactOpen = useArtifactStore(state => state.isOpen)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const { chats, loading } = useChats()
+
   useEffect(() => {
-    console.log("🚀 ~ Sidebar ~ isArtifactOpen:", isArtifactOpen)
     if (isArtifactOpen) {
       setOpen(false)
     }
   }, [isArtifactOpen])
   return (
-    <ShadcnSidebar collapsible="icon" className="backdrop-blur-lg">
-      <SidebarHeader />
+    <>
+      <ShadcnSidebar className="flex flex-col justify-between h-full">
 
-      <SidebarContent>
-        <SidebarNav />
-        {/* <SidebarFolders /> */}
-        <SidebarHistory />
-      </SidebarContent>
-    </ShadcnSidebar>
+        <div>
+          <SidebarHeader onSearchClick={() => setIsSearchModalOpen(true)} />
+
+          <SidebarNav />
+          <SidebarHistory chats={chats} loading={loading} />
+        </div>
+        <SidebarFooter />
+      </ShadcnSidebar>
+      <SearchChatsModal open={isSearchModalOpen} onOpenChange={setIsSearchModalOpen} chats={chats} />
+    </>
   )
 }

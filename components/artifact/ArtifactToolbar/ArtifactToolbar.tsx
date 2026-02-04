@@ -7,17 +7,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createDocumentFromArtifact } from "@/services/client/docs.service";
-import { useUser } from "@/contexts";
+import { useUser } from "@/contexts/UserContext";
 import { useArtifactStore } from "@/store/useArtifactStore";
 import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useAuthPopupStore } from "@/store/useAuthPopupStore";
+import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
 
 interface ArtifactToolbarProps {
     closeArtifact: () => void;
 }
 
 export function ArtifactToolbar({ closeArtifact }: ArtifactToolbarProps) {
+    const openAuthPopup = useAuthPopupStore(state => state.open)
     const { user, isGoogleConnected } = useUser();
     const { activeArtifactId, artifacts } = useArtifactStore();
     const activeArtifact = activeArtifactId ? artifacts.get(activeArtifactId) : null;
@@ -49,7 +52,7 @@ export function ArtifactToolbar({ closeArtifact }: ArtifactToolbarProps) {
     }
 
     function onCreateGoogleDoc() {
-        // if (!isGoogleConnected)
+        if (!isGoogleConnected) return openAuthPopup(AUTH_POPUP_MODES.CONNECT_GOOGLE)
         if (!user?.id || !activeArtifact) return;
 
         createDoc({

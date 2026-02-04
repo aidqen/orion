@@ -78,7 +78,7 @@ export function DragOverlay({ className }: DragOverlayProps) {
         <div
             className={cn(
                 "fixed inset-0 z-50 flex items-center justify-center",
-                "bg-black/60 backdrop-blur-sm",
+                "bg-black/80",
                 "transition-opacity duration-200 ease-out",
                 "will-change-[opacity]",
                 isDragging
@@ -92,7 +92,7 @@ export function DragOverlay({ className }: DragOverlayProps) {
                 className={cn(
                     "flex flex-col items-center justify-center gap-4 p-8",
                     "rounded-2xl border-2 border-dashed border-white/40",
-                    "bg-white/10 backdrop-blur-md",
+                    "bg-white/10 backdrop-blur-sm",
                     "min-w-[280px] min-h-[200px]",
                     "transition-transform duration-200 ease-out",
                     isDragging ? "scale-100" : "scale-95"

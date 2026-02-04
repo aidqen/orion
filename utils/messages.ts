@@ -2,12 +2,17 @@ import { Message, saveMessages } from '@/lib/supabase/messages';
 import { MESSAGE_ROLES } from '@/constants/chat.constant';
 import { TextUIPart, UIMessage } from 'ai';
 
-/**
- * Formats an incoming user message for database storage
- * 
- * @param incomingMessage - The message from the client
- * @returns The formatted user message
- */
+export function getLastUserMessageText(messages: UIMessage[]): string {
+  const lastUserMessage = messages
+    .filter((m) => m.role === 'user')
+    .pop();
+
+  return lastUserMessage?.parts
+    ?.filter((p): p is TextUIPart => p.type === 'text')
+    ?.map((p) => p.text)
+    ?.join(' ') || '';
+}
+
 export function formatUserMessage(
   incomingMessage: UIMessage
 ): Message {
@@ -15,18 +20,10 @@ export function formatUserMessage(
     tempId: incomingMessage.id,
     role: MESSAGE_ROLES.USER,
     parts: incomingMessage.parts as TextUIPart[] || [],
-    metadata: incomingMessage.metadata as Record<string, any> || {},
+    metadata: incomingMessage.metadata as Record<string, unknown> || {},
   };
 }
 
-/**
- * Formats an assistant response message for database storage
- * 
- * @param responseMessage - The response message from the AI SDK
- * @param model - The model name used for the response
- * @param tokenUsage - Optional token usage statistics
- * @returns The formatted assistant message
- */
 export function formatAssistantMessage(
   responseMessage: UIMessage,
   model: string,

@@ -1,7 +1,7 @@
 import { calendar_v3 } from "@googleapis/calendar";
 import { getGoogleAccessToken } from "../google-token";
 import { createCalendarClient } from "./fetch-events";
-import { CalendarEvent, CreateEventInput } from "./types";
+import { CalendarEvent, CreateEventInput } from "../../types/types";
 
 
 

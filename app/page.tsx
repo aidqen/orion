@@ -2,18 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RecentChats } from "@/components/RecentChats";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
 import { QuickActionButtons } from "@/components/QuickActionButtons";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useUser } from "@/contexts";
+import { HomeWidgets } from "@/components/Homepage/HomeWidgets";
+import { useUser } from "@/contexts/UserContext";
 import { createChat } from "@/lib/supabase/chats";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useChats } from "@/hooks";
 import { useChatStore } from "@/store/useChatStore";
 import { useAuthPopupStore } from "@/store/useAuthPopupStore";
-import { motion } from "motion/react";
-import { HomepageHeader } from "@/components/HomepageHeader";
+import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
+import { MessageInput } from "@/types/chat";
+import { HomepageHeader } from "@/components/Homepage/HomepageHeader";
 
 type User = {
   user_metadata?: {
@@ -22,7 +21,6 @@ type User = {
 };
 
 export default function Home() {
-  const isMobile = useIsMobile()
   const [input, setInput] = useState("");
   const { user, authenticated } = useUser();
   const { chats, loading, refetch } = useChats();
@@ -30,9 +28,9 @@ export default function Home() {
   const setPendingMessage = useChatStore(state => state.setPendingMessage);
   const openAuthPopup = useAuthPopupStore(state => state.open)
 
-  const startChat = async (message: any) => {
+  const startChat = async (message: MessageInput) => {
     if (!authenticated || !user) {
-      openAuthPopup()
+      openAuthPopup(AUTH_POPUP_MODES.SIGN_IN)
       return
     }
     const chatId = await createChat(user.id)
@@ -42,11 +40,11 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col pt-[20vh] md:pt-[25vh] justify-start items-center bg-background text-black dark:text-white">
+    <div className="w-full h-full flex flex-col pt-[20vh] md:pt-[20vh] justify-start items-center bg-background text-black dark:text-white">
       <HomepageHeader />
 
-      <div className="w-full max-w-[680px] px-5 flex flex-col items-center gap-2">
-        <div className="flex flex-col items-center text-black dark:text-white mb-4">
+      <div className="w-full max-w-[720px] px-5 flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center text-black dark:text-white mb-8">
           <h1 className="text-3xl font-medium tracking-tight mb-1">
             Good evening,{" "}
             <span className="capitalize">
@@ -59,8 +57,9 @@ export default function Home() {
         </div>
         <CustomPromptInput setInput={setInput} input={input} onSubmit={startChat} chatId={""} userId={user?.id} />
         <QuickActionButtons />
-        <RecentChats chats={chats} loading={loading} />
+        <HomeWidgets chats={chats} loading={loading} />
       </div>
+
     </div>
   );
 }

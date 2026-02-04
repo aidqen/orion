@@ -1,20 +1,20 @@
 'use client'
 
-import { MessageSquarePlus } from "lucide-react"
 import {
-  SidebarHeader as ShadcnSidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton,
   useSidebar
 } from "@/components/ui/sidebar"
-import { useRouter } from "next/navigation"
-import { SidebarTitle } from "./SidebarTitle"
+import { SidebarTitle } from "../Sidebar/SidebarTitle"
+import { CmdKSearch } from "../ui/cmd-k-search"
 
-export function SidebarHeader() {
-  const router = useRouter()
+interface SidebarHeaderProps {
+  onSearchClick?: () => void
+}
+
+export function SidebarHeader({ onSearchClick }: SidebarHeaderProps) {
   const { open, toggleSidebar, } = useSidebar()
 
   return (
@@ -22,17 +22,30 @@ export function SidebarHeader() {
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarTitle open={open} toggleSidebar={toggleSidebar} />
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="default"
-              className="dark:bg-sidebar-accent bg-white hover:bg-sidebar-accent/70 text-sidebar-accent-foreground transition-all border border-sidebar-border mt-2 group text-center py-2"
 
+          <SidebarMenuItem>
+
+            {/* <button
+              type="button"
+              className={cn(
+                "inline-flex w-full da items-center gap-2 whitespace-nowrap rounded-lg border bg-secondary px-2 py-1 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+            )}
               onClick={() => router.push('/')}
             >
-              <MessageSquarePlus className="text-primary transition-transform duration-200" />
-              {open && <span className="font-medium">New Chat</span>}
-            </SidebarMenuButton>
+              <MessageSquarePlus className="h-4 w-4" aria-hidden="true" />
+              {open && 
+              <>
+                <span>New Chat</span>
+                <div className="ms-auto inline-flex gap-0.5">
+                </div>
+              </>}
+            </button> */}
           </SidebarMenuItem>
+          <SidebarMenuItem className="mt-1">
+
+            <CmdKSearch open={open} onClick={onSearchClick}/>
+          </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

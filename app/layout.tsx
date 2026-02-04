@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/Providers";
-import { Sidebar } from "@/components/sidebar/Sidebar";
-import { HomepageHeader } from "@/components/HomepageHeader";
+import { Providers } from "@/app/providers";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
@@ -33,7 +31,8 @@ export default function RootLayout({
       >
         <Providers>
           <main className="relative flex h-dvh w-dvw flex-1 flex-col">
-          <SidebarTrigger className="fixed md:hidden block top-4 left-4 z-10" />
+            {/* <HomepageHeader /> */}
+            <SidebarTrigger className="fixed top-4 left-4 z-5 flex justify-center items-center" />
             {children}
           </main>
         </Providers>

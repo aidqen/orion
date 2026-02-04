@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface WebSearchResultItemProps {
-  title: string;
+  title: string | null;
   url: string;
 }
 
@@ -26,7 +26,7 @@ export function WebSearchResultItem({ title, url }: WebSearchResultItemProps) {
         className="size-4"
         unoptimized
       />
-      <span className="truncate text-text-300 sm:max-w-full">{title}</span>
+      <span className="truncate text-text-300 sm:max-w-full">{title ?? 'Untitled'}</span>
     </Link>
   );
 }

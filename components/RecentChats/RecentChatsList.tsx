@@ -27,7 +27,7 @@ export function RecentChatsList({ chats, onChatClick }: RecentChatsListProps) {
             duration: 0.15,
           }}
           key={chat.id}
-          className="flex flex-col gap-4 bg-sidebar hover:bg-sidebar/50 dark:hover:bg-[#292929]  transition-colors p-3 border dark:border-stone-700/60 border-stone-300 rounded-2xl cursor-pointer"
+          className="flex flex-col gap-4 bg-[#FAFBF9] hover:bg-sidebar/50 dark:hover:bg-[#292929] transition-colors p-3 border dark:border-stone-700/60 border-stone-300 rounded-2xl cursor-pointer"
         >
           <IconMessageCircle
             style={{ transform: "rotateY(180deg)" }}
@@ -35,7 +35,7 @@ export function RecentChatsList({ chats, onChatClick }: RecentChatsListProps) {
           />
           <div>
 
-            <h4 className="text-sm text-black dark:text-white font-medium">
+            <h4 className="text-sm text-black truncate dark:text-white font-medium">
               {chat.title}
             </h4>
             <span className="text-xs text-stone-500 dark:text-stone-300">
