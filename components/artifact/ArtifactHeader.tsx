@@ -1,24 +1,27 @@
-import { File, Loader2 } from "lucide-react";
+import { File } from "lucide-react";
 import { ArtifactToolbar } from "@/components/Artifact/ArtifactToolbar/ArtifactToolbar";
 
 interface ArtifactHeaderProps {
-    status: 'streaming' | 'completed';
-    title: string;
-    closeArtifact: () => void;
+	status: "streaming" | "completed";
+	title: string;
+	closeArtifact: () => void;
 }
 
-export function ArtifactHeader({ status, title, closeArtifact }: ArtifactHeaderProps) {
+export function ArtifactHeader({
+	status,
+	title,
+	closeArtifact,
+}: ArtifactHeaderProps) {
+	return (
+		<div className="border-b p-4 items-center gap-4 shrink-0 grid grid-cols-[minmax(0,1fr)_auto]">
+			<div className="flex items-center gap-3 overflow-hidden">
+				<File className="size-5 shrink-0" />
+				<h2 className="font-semibold text-lg truncate min-w-0">{title}</h2>
+			</div>
 
-    return (
-        <div className="border-b p-4 items-center gap-4 shrink-0 grid grid-cols-[minmax(0,1fr)_auto]">
-            <div className="flex items-center gap-3 overflow-hidden">
-                <File className="size-5 shrink-0" />
-                <h2 className="font-semibold text-lg truncate min-w-0">{title}</h2>
-            </div>
-
-            <div className="flex shrink-0 min-w-[150px] justify-end">
-                <ArtifactToolbar closeArtifact={closeArtifact} />
-            </div>
-        </div>
-    )
+			<div className="flex shrink-0 min-w-[150px] justify-end">
+				<ArtifactToolbar closeArtifact={closeArtifact} />
+			</div>
+		</div>
+	);
 }

@@ -1,21 +1,23 @@
-import { AUTH_POPUP_MODES, AuthPopupModesType } from '@/constants/auth.constant';
-import { create } from 'zustand';
+import { create } from "zustand";
+import {
+	AUTH_POPUP_MODES,
+	type AuthPopupModesType,
+} from "@/constants/auth.constant";
 
 interface AuthPopupStore {
-  isOpen: boolean;
-  open: (mode: AuthPopupModesType) => void;
-  close: () => void;
-  setOpen: (isOpen: boolean) => void;
-  mode: AuthPopupModesType;
-  setMode: (mode: AuthPopupModesType) => void;
+	isOpen: boolean;
+	open: (intent: AuthPopupModesType) => void;
+	close: () => void;
+	setOpen: (isOpen: boolean) => void;
+	intent: AuthPopupModesType;
+	setIntent: (intent: AuthPopupModesType) => void;
 }
 
 export const useAuthPopupStore = create<AuthPopupStore>((set) => ({
-  isOpen: false,
-  open: (mode: AuthPopupModesType) => set({ isOpen: true, mode }),
-  close: () => set({ isOpen: false }),
-  setOpen: (isOpen) => set({ isOpen }),
-  mode: AUTH_POPUP_MODES.SIGN_IN,
-  setMode: (mode) => set({ mode }),
+	isOpen: false,
+	open: (intent: AuthPopupModesType) => set({ isOpen: true, intent }),
+	close: () => set({ isOpen: false }),
+	setOpen: (isOpen) => set({ isOpen }),
+	intent: AUTH_POPUP_MODES.SIGN_IN,
+	setIntent: (intent) => set({ intent }),
 }));
-

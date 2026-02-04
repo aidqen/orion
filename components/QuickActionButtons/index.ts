@@ -1,3 +1,2 @@
-export { QuickActionButtons } from "./QuickActionButtons"
-export { quickActions } from "./constants"
-
+export { quickActions } from "./constants";
+export { QuickActionButtons } from "./QuickActionButtons";

@@ -25,19 +25,25 @@ Write the content in clean Markdown format using:
 - proper paragraphs
 - AVOID using - at all for bullet points.
 Do not include stray or broken bullets. Output exactly valid Markdown.
-`
+`;
 
 export const createDocumentPrompt = {
-    system: "You are a helpful writing assistant. Write a concise documentabout the given topic. Use markdown formatting with headings, lists, and emphasis where appropriate. Be clear, concise, and informative.",
-    prompt:(title: string, description: string) => `Write a document about: ${title}\n\nDescription: ${description}`
-}
+	system:
+		"You are a helpful writing assistant. Write a concise documentabout the given topic. Use markdown formatting with headings, lists, and emphasis where appropriate. Be clear, concise, and informative.",
+	prompt: (title: string, description: string) =>
+		`Write a document about: ${title}\n\nDescription: ${description}`,
+};
 
 export const GENERATE_TITLE_PROMPT = {
-    system: "Generate a concise, descriptive title (3-6 words) for a chat conversation. Return ONLY the title, no quotes or punctuation.",
-    prompt: (firstMessage: string) => `First message: "${firstMessage}"`
-}
+	system:
+		"Generate a concise, descriptive title (3-6 words) for a chat conversation. Return ONLY the title, no quotes or punctuation.",
+	prompt: (firstMessage: string) => `First message: "${firstMessage}"`,
+};
 
-export const createMemoryExtractionPrompt = (recentMemoriesText: string, userMessage: string) => `You are a memory extraction system. Analyze this user message and extract important information about them.
+export const createMemoryExtractionPrompt = (
+	recentMemoriesText: string,
+	userMessage: string,
+) => `You are a memory extraction system. Analyze this user message and extract important information about them.
 
 EXTRACT ONLY if the message reveals:
 - User preferences (likes, dislikes, how they prefer things)
@@ -55,14 +61,17 @@ RECENT MEMORIES (last few things saved):
 ${recentMemoriesText}
 
 USER MESSAGE:
-${userMessage}`
+${userMessage}`;
 
-export const createShouldExtractMemoryPrompt = (message: string, memories: { memory_text: string }[]) => `Does this message contain personal information, preferences, or facts about the user that would be worth remembering for future conversations?
+export const createShouldExtractMemoryPrompt = (
+	message: string,
+	memories: { memory_text: string }[],
+) => `Does this message contain personal information, preferences, or facts about the user that would be worth remembering for future conversations?
 
 Message: "${message}"
 
 Existing memories:
-${memories.length > 0 ? memories.map(m => `- ${m.memory_text}`).join('\n') : 'None'}
+${memories.length > 0 ? memories.map((m) => `- ${m.memory_text}`).join("\n") : "None"}
 
 Return false if the information already exists in the memories above.
-Return true or false only.`
+Return true or false only.`;

@@ -1,142 +1,169 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-import { generateText, Output } from 'ai';
-import OpenAI from 'openai';
-import { z } from 'zod';
-import { anthropic } from '@ai-sdk/anthropic';
-import { createMemoryExtractionPrompt, createShouldExtractMemoryPrompt } from '@/constants/prompt.constant';
-import { EMBEDDING_MODEL, SIMPLE_FAST_MODEL } from '@/constants/chat.constant';
+import { anthropic } from "@ai-sdk/anthropic";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { generateText, Output } from "ai";
+import OpenAI from "openai";
+import { z } from "zod";
+import { EMBEDDING_MODEL, SIMPLE_FAST_MODEL } from "@/constants/chat.constant";
+import {
+	createMemoryExtractionPrompt,
+	createShouldExtractMemoryPrompt,
+} from "@/constants/prompt.constant";
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+	apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function saveMemory(
-    supabase: SupabaseClient,
-    userId: string,
-    memoryText: string,
-    category?: string
+	supabase: SupabaseClient,
+	userId: string,
+	memoryText: string,
+	category?: string,
 ) {
-    if (!memoryText) {
-        return null;
-    }
-    const response = await openai.embeddings.create({
-        model: EMBEDDING_MODEL,
-        input: memoryText,
-    });
-    
-    const embedding = response.data[0].embedding;
+	if (!memoryText) {
+		return null;
+	}
+	const response = await openai.embeddings.create({
+		model: EMBEDDING_MODEL,
+		input: memoryText,
+	});
 
-    // Save to database
-    const { data, error } = await supabase
-        .from('memories')
-        .insert({
-            user_id: userId,
-            memory_text: memoryText,
-            embedding: embedding,
-            category: category || null,
-        })
-        .select()
-        .single();
+	const embedding = response.data[0].embedding;
 
-    if (error) {
-        console.error('Error saving memory:', error);
-        return null;
-    }
+	// Save to database
+	const { data, error } = await supabase
+		.from("memories")
+		.insert({
+			user_id: userId,
+			memory_text: memoryText,
+			embedding: embedding,
+			category: category || null,
+		})
+		.select()
+		.single();
 
-    return data;
+	if (error) {
+		console.error("Error saving memory:", error);
+		return null;
+	}
+
+	return data;
 }
 
 const memorySchema = z.object({
-    memory_text: z.string().describe('A short, clear statement about the user'),
-    category: z.enum(['preference', 'fact', 'habit', 'goal']).describe('The type of memory'),
+	memory_text: z.string().describe("A short, clear statement about the user"),
+	category: z
+		.enum(["preference", "fact", "habit", "goal"])
+		.describe("The type of memory"),
 });
 
 export async function extractAndSaveMemories(
-    supabase: SupabaseClient,
-    userId: string,
-    userMessage: string,
-    recentMemories: { memory_text: string }[],
+	supabase: SupabaseClient,
+	userId: string,
+	userMessage: string,
+	recentMemories: { memory_text: string }[],
 ) {
-    const recentMemoriesText = recentMemories.length > 0
-        ? recentMemories.map(m => `- ${m.memory_text}`).join('\n')
-        : 'None yet.';
+	const recentMemoriesText =
+		recentMemories.length > 0
+			? recentMemories.map((m) => `- ${m.memory_text}`).join("\n")
+			: "None yet.";
 
-    const { output } = await generateText({
-        model: anthropic(SIMPLE_FAST_MODEL),
-        output: Output.array({ element: memorySchema }),
-        prompt: createMemoryExtractionPrompt(recentMemoriesText, userMessage),
-    });
+	const { output } = await generateText({
+		model: anthropic(SIMPLE_FAST_MODEL),
+		output: Output.array({ element: memorySchema }),
+		prompt: createMemoryExtractionPrompt(recentMemoriesText, userMessage),
+	});
 
-    if (!output || !Array.isArray(output)) {
-        console.log('No memories extracted');
-        return;
-    }
+	if (!output || !Array.isArray(output)) {
+		console.log("No memories extracted");
+		return;
+	}
 
-    for (const memory of output) {
-        if (memory?.memory_text) {
-            await saveMemory(supabase, userId, memory.memory_text, memory.category);
-        }
-    }
+	for (const memory of output) {
+		if (memory?.memory_text) {
+			await saveMemory(supabase, userId, memory.memory_text, memory.category);
+		}
+	}
 }
 
 const MEMORY_KEYWORDS = [
-    'love', 'hate', 'like', 'dislike', 'prefer', 'favorite', 'favourite',
-    'my', 'i', "i'm", 'my',
-    'always', 'never', 'usually', 'every ', 'every ',
-    'remember', 'don\'t forget', 'keep in mind', 'note that', 'save',
+	"love",
+	"hate",
+	"like",
+	"dislike",
+	"prefer",
+	"favorite",
+	"favourite",
+	"my",
+	"i",
+	"i'm",
+	"my",
+	"always",
+	"never",
+	"usually",
+	"every ",
+	"every ",
+	"remember",
+	"don't forget",
+	"keep in mind",
+	"note that",
+	"save",
 ];
 
 export function hasMemoryKeywords(message: string): boolean {
-    const lowercaseMessage = message.toLowerCase();
-    return MEMORY_KEYWORDS.some(keyword => lowercaseMessage.includes(keyword));
+	const lowercaseMessage = message.toLowerCase();
+	return MEMORY_KEYWORDS.some((keyword) => lowercaseMessage.includes(keyword));
 }
 
 const shouldExtractSchema = z.object({
-    shouldExtract: z.boolean().describe('Whether the message contains personal information worth remembering'),
+	shouldExtract: z
+		.boolean()
+		.describe(
+			"Whether the message contains personal information worth remembering",
+		),
 });
 
-async function shouldExtractMemory(message: string, memories: { memory_text: string }[]): Promise<boolean> {
-    const { output } = await generateText({
-        model: anthropic(SIMPLE_FAST_MODEL),
-        output: Output.object({ schema: shouldExtractSchema }),
-        prompt: createShouldExtractMemoryPrompt(message, memories),
-    });
+async function shouldExtractMemory(
+	message: string,
+	memories: { memory_text: string }[],
+): Promise<boolean> {
+	const { output } = await generateText({
+		model: anthropic(SIMPLE_FAST_MODEL),
+		output: Output.object({ schema: shouldExtractSchema }),
+		prompt: createShouldExtractMemoryPrompt(message, memories),
+	});
 
-    return output.shouldExtract;
+	return output.shouldExtract;
 }
 
 export async function processMemoryExtraction(
-    supabase: SupabaseClient,
-    userId: string,
-    userMessage: string,
-    memories: { memory_text: string }[]
+	supabase: SupabaseClient,
+	userId: string,
+	userMessage: string,
+	memories: { memory_text: string }[],
 ) {
-    try {
-        // Stage 1a: Keyword check (instant)
-        if (!hasMemoryKeywords(userMessage)) {
-            return;
-        }
+	try {
+		// Stage 1a: Keyword check (instant)
+		if (!hasMemoryKeywords(userMessage)) {
+			return;
+		}
 
-        // Stage 1b: Haiku yes/no check (fast)
-        const shouldExtract = await shouldExtractMemory(userMessage, memories);
-        if (!shouldExtract) {
-            return;
-        }
+		// Stage 1b: Haiku yes/no check (fast)
+		const shouldExtract = await shouldExtractMemory(userMessage, memories);
+		if (!shouldExtract) {
+			return;
+		}
 
-        // Stage 2: Full extraction with Sonnet
-        await extractAndSaveMemories(
-            supabase,
-            userId,
-            userMessage,
-            memories,
-        );
-    } catch (error) {
-        console.error('Error processing memory extraction:', error);
-    }
+		// Stage 2: Full extraction with Sonnet
+		await extractAndSaveMemories(supabase, userId, userMessage, memories);
+	} catch (error) {
+		console.error("Error processing memory extraction:", error);
+	}
 }
 
-export function formatMemoryContext(memories: { memory_text: string }[]): string {
-    if (memories.length === 0) return '';
+export function formatMemoryContext(
+	memories: { memory_text: string }[],
+): string {
+	if (memories.length === 0) return "";
 
-    return `\n\n--- User Memories ---\nThe following are things you know about the user. Use them to personalize your responses naturally, without explicitly saying "based on your memories":\n${memories.map(m => `- ${m.memory_text}`).join('\n')}\n--- End Memories ---\n`;
+	return `\n\n--- User Memories ---\nThe following are things you know about the user. Use them to personalize your responses naturally, without explicitly saying "based on your memories":\n${memories.map((m) => `- ${m.memory_text}`).join("\n")}\n--- End Memories ---\n`;
 }

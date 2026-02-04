@@ -1,43 +1,47 @@
-import { docs } from '@googleapis/docs';
-import { getGoogleAccessToken } from '../google-token';
+import { docs } from "@googleapis/docs";
+import { getGoogleAccessToken } from "../google-token";
 
+export async function createGoogleDoc(
+	userId: string,
+	title: string,
+	content: string,
+) {
+	const accessToken = await getGoogleAccessToken(userId);
 
+	if (!accessToken) {
+		throw new Error("No Google access token");
+	}
 
-export async function createGoogleDoc(userId: string, title: string, content: string) {
-  const accessToken = await getGoogleAccessToken(userId);
+	const client = docs({ version: "v1" });
 
-  if (!accessToken) {   
-    throw new Error('No Google access token');
-  }
+	// Create document - pass access_token directly
+	const createRes = await client.documents.create({
+		access_token: accessToken,
+		requestBody: { title },
+	});
 
-  const client = docs({ version: 'v1' });
+	const documentId = createRes.data.documentId!;
 
-  // Create document - pass access_token directly
-  const createRes = await client.documents.create({
-    access_token: accessToken,
-    requestBody: { title }
-  });
+	// Insert content
+	if (content) {
+		await client.documents.batchUpdate({
+			access_token: accessToken,
+			documentId,
+			requestBody: {
+				requests: [
+					{
+						insertText: {
+							location: { index: 1 },
+							text: content,
+						},
+					},
+				],
+			},
+		});
+	}
 
-  const documentId = createRes.data.documentId!;
-
-  // Insert content
-  if (content) {
-    await client.documents.batchUpdate({
-      access_token: accessToken,
-      documentId,
-      requestBody: {
-        requests: [{
-          insertText: {
-            location: { index: 1 },
-            text: content
-          }
-        }]
-      }
-    });
-  }
-
-  return {
-    documentId,
-    url: `https://docs.google.com/document/d/${documentId}/edit`
-  };
+	return {
+		documentId,
+		url: `https://docs.google.com/document/d/${documentId}/edit`,
+	};
 }

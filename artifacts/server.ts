@@ -1,62 +1,65 @@
-import { smoothStream, streamText, UIMessageStreamWriter } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
+import { smoothStream, streamText, type UIMessageStreamWriter } from "ai";
 import { AI_MODEL } from "@/constants/chat.constant";
 import { createDocumentPrompt } from "@/constants/prompt.constant";
-import { ChatMessage } from "@/types/chat";
+import type { ChatMessage } from "@/types/chat";
 
 const anthropic = createAnthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
+	apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 type OnCreateDocumentProps = {
-    id: string;
-    title: string;
-    description: string;
-    dataStream: UIMessageStreamWriter<ChatMessage>;
+	id: string;
+	title: string;
+	description: string;
+	dataStream: UIMessageStreamWriter<ChatMessage>;
 };
 
 export async function onCreateDocument({
-    id,
-    title,
-    description,
-    dataStream,
+	id,
+	title,
+	description,
+	dataStream,
 }: OnCreateDocumentProps) {
-    console.log("🚀 onCreateDocument called with:", { id, title, description });
-    let draftContent = "";
+	console.log("🚀 onCreateDocument called with:", { id, title, description });
+	let draftContent = "";
 
-    const { fullStream } = streamText({
-        model: anthropic(AI_MODEL),
-        system: createDocumentPrompt.system,
-        prompt: createDocumentPrompt.prompt(title, description),
-        experimental_transform: smoothStream({ chunking: "word" }),
-        onError: (error) => {
-            console.error("❌ Error streaming document content:", error);
-        }
-    });
+	const { fullStream } = streamText({
+		model: anthropic(AI_MODEL),
+		system: createDocumentPrompt.system,
+		prompt: createDocumentPrompt.prompt(title, description),
+		experimental_transform: smoothStream({ chunking: "word" }),
+		onError: (error) => {
+			console.error("❌ Error streaming document content:", error);
+		},
+	});
 
-    console.log("📝 Starting to stream document content...");
+	console.log("📝 Starting to stream document content...");
 
-    for await (const delta of fullStream) {
-        const { type } = delta;
+	for await (const delta of fullStream) {
+		const { type } = delta;
 
-        if (type === "text-delta") {
-            const { text } = delta;
+		if (type === "text-delta") {
+			const { text } = delta;
 
-            draftContent += text;
-            console.log("✍️ Text delta:", text);
+			draftContent += text;
+			console.log("✍️ Text delta:", text);
 
-            dataStream.write({
-                type: "data-textDelta",
-                data: text,
-                transient: true
-            });
-        }
-    }
-    dataStream.write({
-        type: "data-finish", 
-        data: { id },
-        transient: true
-    })
-    console.log("✅ Document streaming complete. Total length:", draftContent.length);
-    return draftContent;
+			dataStream.write({
+				type: "data-textDelta",
+				data: text,
+				transient: true,
+			});
+		}
+	}
+	dataStream.write({
+		type: "data-finish",
+		data: { id },
+		transient: true,
+	});
+	console.log(
+		"✅ Document streaming complete. Total length:",
+		draftContent.length,
+	);
+	return draftContent;
 }

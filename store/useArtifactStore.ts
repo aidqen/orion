@@ -1,136 +1,140 @@
-import { create } from 'zustand';
-import { UIMessage } from 'ai';
-import { AI_TOOLS } from '@/constants/chat.constant';
+import type { UIMessage } from "ai";
+import { create } from "zustand";
+import { AI_TOOLS } from "@/constants/chat.constant";
 
 export interface Artifact {
-  id: string;
-  title: string;
-  content: string;
-  status: 'streaming' | 'completed';
+	id: string;
+	title: string;
+	content: string;
+	status: "streaming" | "completed";
 }
 
 interface ArtifactStore {
-  artifacts: Map<string, Artifact>;
-  activeArtifactId: string | null;
-  isOpen: boolean;
+	artifacts: Map<string, Artifact>;
+	activeArtifactId: string | null;
+	isOpen: boolean;
 
-  // Core actions
-  createArtifact: (id: string, title: string) => void;
-  appendContent: (id: string, textDelta: string) => void;
-  completeArtifact: (id: string) => void;
+	// Core actions
+	createArtifact: (id: string, title: string) => void;
+	appendContent: (id: string, textDelta: string) => void;
+	completeArtifact: (id: string) => void;
 
-  // UI actions
-  setActiveArtifact: (id: string | null) => void;
-  openArtifact: (id: string) => void;
-  closeArtifact: () => void;
+	// UI actions
+	setActiveArtifact: (id: string | null) => void;
+	openArtifact: (id: string) => void;
+	closeArtifact: () => void;
 
-  // History reconstruction
-  reconstructArtifacts: (messages: UIMessage[]) => void;
+	// History reconstruction
+	reconstructArtifacts: (messages: UIMessage[]) => void;
 }
 
 export const useArtifactStore = create<ArtifactStore>((set, get) => ({
-  artifacts: new Map(),
-  activeArtifactId: null,
-  isOpen: false,
-  
-  // Create a new artifact when data-id and data-title arrive
-  createArtifact: (id: string, title: string) => {
-    set((state) => {
-      const newArtifacts = new Map(state.artifacts);
-      newArtifacts.set(id, {
-        id,
-        title,
-        content: '',
-        status: 'streaming',
-      });
-      return { artifacts: newArtifacts };
-    });
-  },
+	artifacts: new Map(),
+	activeArtifactId: null,
+	isOpen: false,
 
-  // Append streaming text content as data-textDelta arrives
-  appendContent: (id: string, textDelta: string) => {
-    set((state) => {
-      const artifact = state.artifacts.get(id);
-      if (!artifact) {
-        console.warn(`Artifact ${id} not found for content append`);
-        return state;
-      }
+	// Create a new artifact when data-id and data-title arrive
+	createArtifact: (id: string, title: string) => {
+		set((state) => {
+			const newArtifacts = new Map(state.artifacts);
+			newArtifacts.set(id, {
+				id,
+				title,
+				content: "",
+				status: "streaming",
+			});
+			return { artifacts: newArtifacts };
+		});
+	},
 
-      const newArtifacts = new Map(state.artifacts);
-      newArtifacts.set(id, {
-        ...artifact,
-        content: artifact.content + textDelta,
-      });
-      return { artifacts: newArtifacts };
-    });
-  },
+	// Append streaming text content as data-textDelta arrives
+	appendContent: (id: string, textDelta: string) => {
+		set((state) => {
+			const artifact = state.artifacts.get(id);
+			if (!artifact) {
+				console.warn(`Artifact ${id} not found for content append`);
+				return state;
+			}
 
-  // Mark artifact as completed when tool execution finishes
-  completeArtifact: (id: string) => {
-    set((state) => {
-      const artifact = state.artifacts.get(id);
-      if (!artifact) {
-        console.warn(`Artifact ${id} not found for completion`);
-        return state;
-      }
+			const newArtifacts = new Map(state.artifacts);
+			newArtifacts.set(id, {
+				...artifact,
+				content: artifact.content + textDelta,
+			});
+			return { artifacts: newArtifacts };
+		});
+	},
 
-      const newArtifacts = new Map(state.artifacts);
-      newArtifacts.set(id, {
-        ...artifact,
-        status: 'completed',
-      });
-      return { artifacts: newArtifacts };
-    });
-  },
+	// Mark artifact as completed when tool execution finishes
+	completeArtifact: (id: string) => {
+		set((state) => {
+			const artifact = state.artifacts.get(id);
+			if (!artifact) {
+				console.warn(`Artifact ${id} not found for completion`);
+				return state;
+			}
 
-  // Set the currently active artifact (null to clear)
-  setActiveArtifact: (id: string | null) => {
-    set({ activeArtifactId: id });
-  },
+			const newArtifacts = new Map(state.artifacts);
+			newArtifacts.set(id, {
+				...artifact,
+				status: "completed",
+			});
+			return { artifacts: newArtifacts };
+		});
+	},
 
-  // Open artifact in side panel
-  openArtifact: (id: string) => {
-    const artifact = get().artifacts.get(id);
-    if (!artifact) {
-      console.warn(`Artifact ${id} not found for opening`);
-      return;
-    }
-    set({ activeArtifactId: id, isOpen: true });
-  },
+	// Set the currently active artifact (null to clear)
+	setActiveArtifact: (id: string | null) => {
+		set({ activeArtifactId: id });
+	},
 
-  closeArtifact: () => {
-    set({ isOpen: false });
-  },
+	// Open artifact in side panel
+	openArtifact: (id: string) => {
+		const artifact = get().artifacts.get(id);
+		if (!artifact) {
+			console.warn(`Artifact ${id} not found for opening`);
+			return;
+		}
+		set({ activeArtifactId: id, isOpen: true });
+	},
 
-  reconstructArtifacts: (messages: UIMessage[]) => {
-    const newArtifacts = new Map<string, Artifact>();
+	closeArtifact: () => {
+		set({ isOpen: false });
+	},
 
-    for (const message of messages) {
-      if (message.role !== 'assistant') continue;
+	reconstructArtifacts: (messages: UIMessage[]) => {
+		const newArtifacts = new Map<string, Artifact>();
 
-      const parts = message.parts || [];
-      for (const part of parts) {
-        // Look for completed document tool results
-        if (
-          part.type === AI_TOOLS.CREATE_DOCUMENT &&
-          part.state === 'output-available' &&
-          part.output
-        ) {
-          const { id, title, content } = part.output as { id: string, title: string, content: string };
+		for (const message of messages) {
+			if (message.role !== "assistant") continue;
 
-          if (id && title && content) {
-            newArtifacts.set(id, {
-              id,
-              title,
-              content,
-              status: 'completed',
-            });
-          }
-        }
-      }
-    }
+			const parts = message.parts || [];
+			for (const part of parts) {
+				// Look for completed document tool results
+				if (
+					part.type === AI_TOOLS.CREATE_DOCUMENT &&
+					part.state === "output-available" &&
+					part.output
+				) {
+					const { id, title, content } = part.output as {
+						id: string;
+						title: string;
+						content: string;
+					};
 
-    console.log(`📚 Reconstructed ${newArtifacts.size} artifacts from history`);
-    set({ artifacts: newArtifacts });
-  },
+					if (id && title && content) {
+						newArtifacts.set(id, {
+							id,
+							title,
+							content,
+							status: "completed",
+						});
+					}
+				}
+			}
+		}
+
+		console.log(`📚 Reconstructed ${newArtifacts.size} artifacts from history`);
+		set({ artifacts: newArtifacts });
+	},
 }));

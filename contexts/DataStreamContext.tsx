@@ -1,55 +1,54 @@
 "use client";
 
 import {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  useCallback,
-  type ReactNode,
-  type Dispatch,
-  type SetStateAction,
+	createContext,
+	type Dispatch,
+	type ReactNode,
+	type SetStateAction,
+	useCallback,
+	useContext,
+	useMemo,
+	useState,
 } from "react";
 
 // Flexible type that matches what the SDK actually sends
 export type DataStreamPart = {
-  type: `data-${string}`;
-  id?: string;
-  data: unknown;
+	type: `data-${string}`;
+	id?: string;
+	data: unknown;
 };
 
 interface DataStreamContextValue {
-  dataStream: DataStreamPart[];
-  setDataStream: Dispatch<SetStateAction<DataStreamPart[]>>;
-  clearDataStream: () => void;
+	dataStream: DataStreamPart[];
+	setDataStream: Dispatch<SetStateAction<DataStreamPart[]>>;
+	clearDataStream: () => void;
 }
 
 const DataStreamContext = createContext<DataStreamContextValue | null>(null);
 
 export function DataStreamProvider({ children }: { children: ReactNode }) {
-  const [dataStream, setDataStream] = useState<DataStreamPart[]>([]);
+	const [dataStream, setDataStream] = useState<DataStreamPart[]>([]);
 
-  const clearDataStream = useCallback(() => {
-    setDataStream([]);
-  }, []);
+	const clearDataStream = useCallback(() => {
+		setDataStream([]);
+	}, []);
 
-  const value = useMemo(
-    () => ({ dataStream, setDataStream, clearDataStream }),
-    [dataStream, clearDataStream]
-  );
+	const value = useMemo(
+		() => ({ dataStream, setDataStream, clearDataStream }),
+		[dataStream, clearDataStream],
+	);
 
-  return (
-    <DataStreamContext.Provider value={value}>
-      {children}
-    </DataStreamContext.Provider>
-  );
+	return (
+		<DataStreamContext.Provider value={value}>
+			{children}
+		</DataStreamContext.Provider>
+	);
 }
 
 export function useDataStream() {
-  const context = useContext(DataStreamContext);
-  if (!context) {
-    throw new Error("useDataStream must be used within DataStreamProvider");
-  }
-  return context;
+	const context = useContext(DataStreamContext);
+	if (!context) {
+		throw new Error("useDataStream must be used within DataStreamProvider");
+	}
+	return context;
 }
-

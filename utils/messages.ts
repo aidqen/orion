@@ -1,46 +1,44 @@
-import { Message, saveMessages } from '@/lib/supabase/messages';
-import { MESSAGE_ROLES } from '@/constants/chat.constant';
-import { TextUIPart, UIMessage } from 'ai';
+import type { TextUIPart, UIMessage } from "ai";
+import { MESSAGE_ROLES } from "@/constants/chat.constant";
+import { type Message, saveMessages } from "@/lib/supabase/messages";
 
 export function getLastUserMessageText(messages: UIMessage[]): string {
-  const lastUserMessage = messages
-    .filter((m) => m.role === 'user')
-    .pop();
+	const lastUserMessage = messages.filter((m) => m.role === "user").pop();
 
-  return lastUserMessage?.parts
-    ?.filter((p): p is TextUIPart => p.type === 'text')
-    ?.map((p) => p.text)
-    ?.join(' ') || '';
+	return (
+		lastUserMessage?.parts
+			?.filter((p): p is TextUIPart => p.type === "text")
+			?.map((p) => p.text)
+			?.join(" ") || ""
+	);
 }
 
-export function formatUserMessage(
-  incomingMessage: UIMessage
-): Message {
-  return {
-    tempId: incomingMessage.id,
-    role: MESSAGE_ROLES.USER,
-    parts: incomingMessage.parts as TextUIPart[] || [],
-    metadata: incomingMessage.metadata as Record<string, unknown> || {},
-  };
+export function formatUserMessage(incomingMessage: UIMessage): Message {
+	return {
+		tempId: incomingMessage.id,
+		role: MESSAGE_ROLES.USER,
+		parts: (incomingMessage.parts as TextUIPart[]) || [],
+		metadata: (incomingMessage.metadata as Record<string, unknown>) || {},
+	};
 }
 
 export function formatAssistantMessage(
-  responseMessage: UIMessage,
-  model: string,
-  tokenUsage?: {
-    promptTokens?: number;
-    completionTokens?: number;
-    totalTokens?: number;
-  }
+	responseMessage: UIMessage,
+	model: string,
+	tokenUsage?: {
+		promptTokens?: number;
+		completionTokens?: number;
+		totalTokens?: number;
+	},
 ): Message {
-  return {
-    tempId: responseMessage.id,
-    role: MESSAGE_ROLES.ASSISTANT,
-    parts: responseMessage.parts as TextUIPart[] || [],
-    metadata: {},
-    model,
-    tokenUsage,
-  };
+	return {
+		tempId: responseMessage.id,
+		role: MESSAGE_ROLES.ASSISTANT,
+		parts: (responseMessage.parts as TextUIPart[]) || [],
+		metadata: {},
+		model,
+		tokenUsage,
+	};
 }
 
 /**
@@ -52,24 +50,28 @@ export function formatAssistantMessage(
  * @param model - The AI model used for the response
  */
 export async function saveLatestMessages(
-  chatId: string,
-  messages: UIMessage[],
-  model: string
+	chatId: string,
+	messages: UIMessage[],
+	model: string,
 ): Promise<UIMessage[] | void> {
-  const messagesToSave: Message[] = [];
+	const messagesToSave: Message[] = [];
 
-  const lastUserMessage = messages.findLast(msg => msg?.role === MESSAGE_ROLES.USER);
-  const lastAssistantMessage = messages.findLast(msg => msg?.role === MESSAGE_ROLES.ASSISTANT);
+	const lastUserMessage = messages.findLast(
+		(msg) => msg?.role === MESSAGE_ROLES.USER,
+	);
+	const lastAssistantMessage = messages.findLast(
+		(msg) => msg?.role === MESSAGE_ROLES.ASSISTANT,
+	);
 
-  if (lastUserMessage) {
-    messagesToSave.push(formatUserMessage(lastUserMessage));
-  }
+	if (lastUserMessage) {
+		messagesToSave.push(formatUserMessage(lastUserMessage));
+	}
 
-  if (lastAssistantMessage) {
-    messagesToSave.push(formatAssistantMessage(lastAssistantMessage, model));
-  }
+	if (lastAssistantMessage) {
+		messagesToSave.push(formatAssistantMessage(lastAssistantMessage, model));
+	}
 
-  if (messagesToSave.length > 0) {
-    return await saveMessages(chatId, messagesToSave);
-  }
+	if (messagesToSave.length > 0) {
+		return await saveMessages(chatId, messagesToSave);
+	}
 }

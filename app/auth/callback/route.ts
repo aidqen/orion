@@ -1,32 +1,35 @@
 // app/api/auth/callback/route.ts
-import { createClient } from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
-  const cookieStore = cookies()
-  
-  if (code) {
-    const supabase = await createClient(cookieStore);
-    const { data: { session } } = await supabase.auth.exchangeCodeForSession(code);
+	const requestUrl = new URL(request.url);
+	const code = requestUrl.searchParams.get("code");
+	const cookieStore = cookies();
 
-    if (session?.provider_token) {
-      await supabase.from('user_google_tokens').upsert({
-        user_id: session.user.id,
-        access_token: session.provider_token,
-        refresh_token: session.provider_refresh_token,
-        updated_at: new Date().toISOString(),
-      });
-    }
-  }
+	if (code) {
+		const supabase = await createClient(cookieStore);
+		const {
+			data: { session },
+		} = await supabase.auth.exchangeCodeForSession(code);
 
-  let returnUrl = requestUrl.searchParams.get('returnUrl') || '/';
+		if (session?.provider_token) {
+			await supabase.from("user_google_tokens").upsert({
+				user_id: session.user.id,
+				access_token: session.provider_token,
+				refresh_token: session.provider_refresh_token,
+				updated_at: new Date().toISOString(),
+			});
+		}
+	}
 
-  if (!returnUrl.startsWith('/') || returnUrl.includes('://')) {
-    returnUrl = '/';
-  }
+	let returnUrl = requestUrl.searchParams.get("returnUrl") || "/";
 
-  return NextResponse.redirect(new URL(returnUrl, requestUrl.origin));
+	if (!returnUrl.startsWith("/") || returnUrl.includes("://")) {
+		returnUrl = "/";
+	}
+
+	return NextResponse.redirect(new URL(returnUrl, requestUrl.origin));
 }
