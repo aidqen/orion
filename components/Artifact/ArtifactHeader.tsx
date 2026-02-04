@@ -6,10 +6,7 @@ interface ArtifactHeaderProps {
 	closeArtifact: () => void;
 }
 
-export function ArtifactHeader({
-	title,
-	closeArtifact,
-}: ArtifactHeaderProps) {
+export function ArtifactHeader({ title, closeArtifact }: ArtifactHeaderProps) {
 	return (
 		<div className="border-b p-4 items-center gap-4 shrink-0 grid grid-cols-[minmax(0,1fr)_auto]">
 			<div className="flex items-center gap-3 overflow-hidden">

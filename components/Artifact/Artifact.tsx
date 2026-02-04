@@ -72,7 +72,6 @@ export function Artifact({ isActive }: ArtifactProps) {
 				{activeArtifact && (
 					<div className="h-full w-full flex flex-col">
 						<ArtifactHeader
-							status={activeArtifact.status}
 							title={activeArtifact.title}
 							closeArtifact={closeArtifact}
 						/>

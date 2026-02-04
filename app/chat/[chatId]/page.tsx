@@ -1,5 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
+import { Artifact } from "@/components/Artifact/Artifact";
 import { ChatpageHeader } from "@/components/Chatpage/ChatpageHeader";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
 import { DataStreamHandler } from "@/components/DataStreamHandler";
@@ -8,7 +9,6 @@ import { useUser } from "@/contexts/UserContext";
 import { useMessages } from "@/hooks/useMessages";
 import { cn } from "@/lib/utils";
 import { useArtifactStore } from "@/store/useArtifactStore";
-import { Artifact } from "@/components/Artifact/Artifact";
 
 export default function ChatPage() {
 	const params = useParams();

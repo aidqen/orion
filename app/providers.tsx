@@ -4,11 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { AuthPopup } from "@/components/auth/AuthPopup";
+import { Sidebar } from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DataStreamProvider } from "@/contexts/DataStreamContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { Toaster } from "../components/ui/sonner";
-import { Sidebar } from "@/components/Sidebar/Sidebar";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
