@@ -7,8 +7,8 @@ import { AuthPopup } from "@/components/auth/AuthPopup";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DataStreamProvider } from "@/contexts/DataStreamContext";
 import { UserProvider } from "@/contexts/UserContext";
-import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Toaster } from "../components/ui/sonner";
+import { Sidebar } from "@/components/Sidebar/Sidebar";
 
 const queryClient = new QueryClient({
 	defaultOptions: {

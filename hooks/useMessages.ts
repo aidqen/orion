@@ -6,7 +6,11 @@ import { useDataStream } from "@/contexts/DataStreamContext";
 import { getChatMessages } from "@/lib/supabase/messages";
 import { useArtifactStore } from "@/store/useArtifactStore";
 import { useChatStore } from "@/store/useChatStore";
-import type { FileUIPartWithId, MessageInput } from "@/types/chat";
+import type {
+	ChatMessage,
+	FileUIPartWithId,
+	MessageInput,
+} from "@/types/chat";
 import { saveLatestMessages } from "@/utils/messages";
 import { useChats } from "./useChats";
 
@@ -146,7 +150,7 @@ export function useMessages(chatId: string) {
 	return {
 		input,
 		setInput,
-		messages,
+		messages: messages as ChatMessage[],
 		status,
 		error,
 		stop,
