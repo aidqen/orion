@@ -142,18 +142,15 @@ export async function processMemoryExtraction(
 	memories: { memory_text: string }[],
 ) {
 	try {
-		// Stage 1a: Keyword check (instant)
 		if (!hasMemoryKeywords(userMessage)) {
 			return;
 		}
 
-		// Stage 1b: Haiku yes/no check (fast)
 		const shouldExtract = await shouldExtractMemory(userMessage, memories);
 		if (!shouldExtract) {
 			return;
 		}
 
-		// Stage 2: Full extraction with Sonnet
 		await extractAndSaveMemories(supabase, userId, userMessage, memories);
 	} catch (error) {
 		console.error("Error processing memory extraction:", error);
