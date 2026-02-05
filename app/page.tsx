@@ -8,8 +8,8 @@ import { HomeWidgets } from "@/components/Homepage/HomeWidgets";
 import { QuickActionButtons } from "@/components/QuickActionButtons";
 import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
 import { useUser } from "@/contexts/UserContext";
+import { createChat } from "@/data/chats";
 import { useChats } from "@/hooks";
-import { createChat } from "@/lib/supabase/chats";
 import { useAuthPopupStore } from "@/store/useAuthPopupStore";
 import { useChatStore } from "@/store/useChatStore";
 import type { MessageInput } from "@/types/chat";
@@ -42,8 +42,6 @@ export default function Home() {
 	return (
 		<>
 			<div className="w-full h-full flex flex-col pt-[20vh] md:pt-[20vh] justify-start items-center bg-background text-black dark:text-white">
-				<HomepageHeader />
-
 				<div className="w-full max-w-[720px] px-5 flex flex-col items-center gap-2">
 					<div className="flex flex-col items-center text-black dark:text-white mb-8">
 						<h1 className="text-3xl font-medium tracking-tight mb-1">
