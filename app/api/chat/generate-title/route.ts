@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/lib/google-token";
 import {
 	generateChatTitle,
 	updateChatTitle,
-} from "@/services/server/chat.service";
+} from "@/services/server/chat/title";
+import { getSupabaseServerClient } from "@/services/server/google/tokens";
 
 export async function POST(request: Request) {
 	try {

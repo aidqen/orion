@@ -4,8 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deleteMemory } from "@/lib/memory";
-import { createClient } from "@/lib/supabase/client";
+import { deleteMemory } from "@/data/memories";
+import { createClient } from "@/infra/supabase/client";
 
 interface Memory {
 	id: number;

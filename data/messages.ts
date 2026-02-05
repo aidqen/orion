@@ -1,5 +1,7 @@
+// UNIVERSAL: All functions work everywhere (browser, server components, API routes)
+
 import type { TextUIPart } from "ai";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/infra/supabase/client";
 
 export interface Message {
 	id?: string;

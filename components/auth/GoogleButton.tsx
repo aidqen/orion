@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import ErrorBanner from "@/components/ui/ErrorBanner";
-import { normalizeAuthError, signInWithGoogle } from "@/lib/supabase/auth";
+import { normalizeAuthError, signInWithGoogle } from "@/data/auth";
 
 interface GoogleButtonProps {
 	text?: string;

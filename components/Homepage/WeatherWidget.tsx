@@ -11,7 +11,7 @@ import {
 	MousePointer2,
 	Sun,
 } from "lucide-react";
-import { fetchUserWeather, getConditionText } from "@/lib/weather";
+import { fetchUserWeather, getConditionText } from "@/utils/browser/weather";
 
 export function WeatherWidget() {
 	const {

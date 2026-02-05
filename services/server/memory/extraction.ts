@@ -1,53 +1,15 @@
+// SERVER-ONLY: AI-powered memory extraction logic
+
 import { anthropic } from "@ai-sdk/anthropic";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { generateText, Output } from "ai";
-import OpenAI from "openai";
 import { z } from "zod";
-import { EMBEDDING_MODEL, SIMPLE_FAST_MODEL } from "@/constants/chat.constant";
+import { SIMPLE_FAST_MODEL } from "@/constants/chat.constant";
 import {
 	createMemoryExtractionPrompt,
 	createShouldExtractMemoryPrompt,
 } from "@/constants/prompt.constant";
-
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
-});
-
-export async function saveMemory(
-	supabase: SupabaseClient,
-	userId: string,
-	memoryText: string,
-	category?: string,
-) {
-	if (!memoryText) {
-		return null;
-	}
-	const response = await openai.embeddings.create({
-		model: EMBEDDING_MODEL,
-		input: memoryText,
-	});
-
-	const embedding = response.data[0].embedding;
-
-	// Save to database
-	const { data, error } = await supabase
-		.from("memories")
-		.insert({
-			user_id: userId,
-			memory_text: memoryText,
-			embedding: embedding,
-			category: category || null,
-		})
-		.select()
-		.single();
-
-	if (error) {
-		console.error("Error saving memory:", error);
-		return null;
-	}
-
-	return data;
-}
+import { saveMemory } from "./storage";
 
 const memorySchema = z.object({
 	memory_text: z.string().describe("A short, clear statement about the user"),
@@ -56,6 +18,9 @@ const memorySchema = z.object({
 		.describe("The type of memory"),
 });
 
+/**
+ * Extracts memories from user message using AI and saves them
+ */
 export async function extractAndSaveMemories(
 	supabase: SupabaseClient,
 	userId: string,
@@ -109,6 +74,9 @@ const MEMORY_KEYWORDS = [
 	"save",
 ];
 
+/**
+ * Quick check if message contains memory-related keywords
+ */
 export function hasMemoryKeywords(message: string): boolean {
 	const lowercaseMessage = message.toLowerCase();
 	return MEMORY_KEYWORDS.some((keyword) => lowercaseMessage.includes(keyword));
@@ -122,6 +90,9 @@ const shouldExtractSchema = z.object({
 		),
 });
 
+/**
+ * Uses AI to determine if memory extraction should happen
+ */
 async function shouldExtractMemory(
 	message: string,
 	memories: { memory_text: string }[],
@@ -135,6 +106,10 @@ async function shouldExtractMemory(
 	return output.shouldExtract;
 }
 
+/**
+ * Main memory extraction workflow
+ * Checks keywords -> AI decision -> extract and save
+ */
 export async function processMemoryExtraction(
 	supabase: SupabaseClient,
 	userId: string,
@@ -157,6 +132,9 @@ export async function processMemoryExtraction(
 	}
 }
 
+/**
+ * Formats memories for inclusion in AI prompts
+ */
 export function formatMemoryContext(
 	memories: { memory_text: string }[],
 ): string {

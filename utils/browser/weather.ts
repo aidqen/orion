@@ -1,23 +1,10 @@
-// weatherService.js
+// MIXED: Some functions are universal, fetchUserWeather is browser-only
 
-export async function getUserLocation() {
-	return new Promise((resolve, reject) => {
-		if (!navigator.geolocation) {
-			reject(new Error("Geolocation not supported"));
-			return;
-		}
+import { getUserLocation } from "@/utils/browser/location";
 
-		navigator.geolocation.getCurrentPosition(
-			(position) =>
-				resolve({
-					lat: position.coords.latitude,
-					lon: position.coords.longitude,
-				}),
-			(error) => reject(error),
-		);
-	});
-}
-
+/**
+ * Fetches city name from coordinates using OpenStreetMap
+ */
 export async function getCityName(lat: number, lon: number) {
 	const res = await fetch(
 		`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
@@ -31,6 +18,9 @@ export async function getCityName(lat: number, lon: number) {
 	);
 }
 
+/**
+ * Fetches weather data from Open-Meteo API
+ */
 export async function getWeather(lat: number, lon: number) {
 	const res = await fetch(
 		`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`,
@@ -38,6 +28,10 @@ export async function getWeather(lat: number, lon: number) {
 	return res.json();
 }
 
+/**
+ * Fetches complete weather information for user's location
+ * BROWSER-ONLY: Uses getUserLocation which requires navigator.geolocation
+ */
 export async function fetchUserWeather() {
 	const { lat, lon } = (await getUserLocation()) as {
 		lat: number;
@@ -58,6 +52,9 @@ export async function fetchUserWeather() {
 	};
 }
 
+/**
+ * Converts weather condition code to human-readable text
+ */
 export function getConditionText(code: number): string {
 	if (code === 0) return "Sunny";
 	if (code <= 3) return "Cloudy";

@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase/client";
+// UNIVERSAL: All functions work everywhere (browser, server components, API routes)
+
+import { createClient } from "@/infra/supabase/client";
 
 const BUCKET_NAME = "images"; // Create this bucket in Supabase
 

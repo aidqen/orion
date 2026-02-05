@@ -1,12 +1,11 @@
-import { auth, calendar_v3 } from "@googleapis/calendar";
-import { getGoogleAccessToken } from "@/lib/google-token";
-import type { CalendarEvent } from "../../types/types";
+// SERVER-ONLY: Uses Google Calendar API with access tokens
 
-export function createCalendarClient(accessToken: string) {
-	const oauth2Client = new auth.OAuth2();
-	oauth2Client.setCredentials({ access_token: accessToken });
-	return new calendar_v3.Calendar({ auth: oauth2Client });
-}
+import type { calendar_v3 } from "@googleapis/calendar";
+import { getGoogleAccessToken } from "@/services/server/google/tokens";
+import type { CalendarEvent, CreateEventInput } from "@/types/types";
+import { createCalendarClient } from "./client";
+
+// ===== FETCH EVENTS FUNCTIONS (from lib/calendar/fetch-events.ts) =====
 
 function parseDateRange(minDate: string, maxDate: string) {
 	const start = new Date(minDate);
@@ -71,4 +70,46 @@ export async function fetchCalendarEvents(
 
 	const allEvents = eventsArrays.flat();
 	return sortEventsByStartTime(allEvents);
+}
+
+// ===== CREATE EVENTS FUNCTIONS (from lib/calendar/create-events.ts) =====
+
+export function formatCalendarEvent(
+	input: CreateEventInput,
+	timezone: string,
+): calendar_v3.Schema$Event {
+	return {
+		summary: input.title,
+		description: input.description,
+		location: input.location,
+		start: {
+			dateTime: input.startDateTime,
+			timeZone: timezone,
+		},
+		end: {
+			dateTime: input.endDateTime,
+			timeZone: timezone,
+		},
+		attendees: input.attendees?.map((attendee) => ({ email: attendee })) || [],
+	};
+}
+
+export async function createCalendarEvent(
+	userId: string,
+	event: calendar_v3.Schema$Event,
+	calendarId: string = "primary",
+): Promise<CalendarEvent> {
+	const accessToken = await getGoogleAccessToken(userId);
+	const calendar = createCalendarClient(accessToken);
+
+	const response = await calendar.events.insert({
+		calendarId,
+		requestBody: event,
+	});
+
+	if (!response.data) {
+		throw { code: "event_creation_failed" };
+	}
+
+	return response.data as CalendarEvent;
 }

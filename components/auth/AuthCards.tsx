@@ -4,7 +4,7 @@ import { Link } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import AuthForm, { type Mode } from "@/components/auth/AuthForm";
 import ModeSwitch from "@/components/auth/ModeSwitch";
-import { linkGoogleIdentity } from "@/lib/supabase/auth";
+import { linkGoogleIdentity } from "@/data/auth";
 import GoogleButton from "./GoogleButton";
 
 function getInitialMode(): Mode {

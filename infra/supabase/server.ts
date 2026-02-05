@@ -1,3 +1,5 @@
+// SERVER-ONLY: Supabase server client factory (uses cookies from next/headers)
+
 import { createServerClient } from "@supabase/ssr";
 import type { cookies } from "next/headers";
 

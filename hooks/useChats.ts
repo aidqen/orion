@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/contexts/UserContext";
-import { getUserChats } from "@/lib/supabase/chats";
+import { getUserChats } from "@/data/chats";
 import { generateAndSaveChatTitle } from "@/services/client/chat.service";
 import type { Chat, MessageInput } from "@/types/chat";
 

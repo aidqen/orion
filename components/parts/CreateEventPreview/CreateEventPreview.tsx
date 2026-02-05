@@ -39,9 +39,11 @@ export const CreateEventPreview: React.FC<CreateEventPreviewProps> = ({
 		(e) => e.status === "pending_confirmation",
 	).length;
 	const failedCount = events.filter((e) => e.status === "failed").length;
+	const confirmedCount = events.filter((e) => e.status === "confirmed").length;
 
 	const hasPending = pendingCount > 0;
 	const hasFailures = failedCount > 0;
+	const isAllConfirmed = confirmedCount === events.length;
 
 	return (
 		<div className="w-fit min-w-[250px] sm:min-w-[400px] max-w-full space-y-3">
@@ -54,11 +56,12 @@ export const CreateEventPreview: React.FC<CreateEventPreviewProps> = ({
 				/>
 			))}
 
-			{hasPending && (
+			{(hasPending || isAllConfirmed) && (
 				<AddAllEventsButton
 					onClick={() => mutate({ events, timezone, messageId })}
 					isPending={isPending}
 					pendingCount={pendingCount}
+					isAllConfirmed={isAllConfirmed}
 				/>
 			)}
 

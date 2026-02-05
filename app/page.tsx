@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
-import { HomepageHeader } from "@/components/Homepage/HomepageHeader";
 import { HomeWidgets } from "@/components/Homepage/HomeWidgets";
 import { QuickActionButtons } from "@/components/QuickActionButtons";
 import { AUTH_POPUP_MODES } from "@/constants/auth.constant";

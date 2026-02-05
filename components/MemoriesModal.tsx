@@ -7,8 +7,8 @@ import { MemoriesList } from "@/components/MemoriesList";
 import { Modal } from "@/components/Modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
-import { fetchAllMemories } from "@/lib/memory";
-import { createClient } from "@/lib/supabase/client";
+import { fetchAllMemories } from "@/data/memories";
+import { createClient } from "@/infra/supabase/client";
 
 interface MemoriesModalProps {
 	open: boolean;

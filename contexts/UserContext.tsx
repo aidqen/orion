@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	createContext,
 	type ReactNode,
@@ -9,8 +10,9 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import * as auth from "@/lib/supabase/auth";
-import { createClient } from "@/lib/supabase/client";
+import * as auth from "@/data/auth";
+import { createClient } from "@/infra/supabase/client";
+import { useArtifactStore } from "@/store/useArtifactStore";
 
 // Infer User type from Supabase client
 type SupabaseClient = ReturnType<typeof createClient>;
@@ -105,12 +107,24 @@ export function UserProvider({ children }: { children: ReactNode }) {
 		}
 	}, []);
 
+	const queryClient = useQueryClient();
+
+	const resetUserState = useCallback(() => {
+		useArtifactStore.setState({
+			artifacts: new Map(),
+			activeArtifactId: null,
+			isOpen: false,
+		});
+		queryClient.clear();
+	}, [queryClient]);
+
 	const handleSignOut = useCallback(async () => {
 		setLoading(true);
 		setError(null);
 
 		try {
 			await auth.signOut();
+			resetUserState();
 			setUser(null);
 		} catch (err) {
 			setError(err as Error);
@@ -118,7 +132,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [resetUserState]);
 
 	const authenticated = user !== null;
 

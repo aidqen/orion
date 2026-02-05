@@ -1,3 +1,5 @@
+// UNIVERSAL: Shared utilities with no environment dependencies
+
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 

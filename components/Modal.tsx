@@ -4,7 +4,7 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shared";
 
 interface ModalProps {
 	open?: boolean;

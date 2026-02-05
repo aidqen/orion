@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { grab } from "@/lib/cursor-grabbing";
+import { grab } from "@/utils/browser/cursor";
 
 interface UseResizePanelOptions {
 	initialWidth?: number;

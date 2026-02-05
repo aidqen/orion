@@ -1,8 +1,10 @@
+// SERVER-ONLY: Uses server Supabase client and AI
+
 import { anthropic } from "@ai-sdk/anthropic";
 import { generateText, type UIMessagePart } from "ai";
 import { AI_TOOLS, SIMPLE_FAST_MODEL } from "@/constants/chat.constant";
 import { GENERATE_TITLE_PROMPT } from "@/constants/prompt.constant";
-import { getSupabaseServerClient } from "@/lib/google-token";
+import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import type { ChatTools, CustomUIDataTypes } from "@/types/chat";
 import type { EventWithStatus } from "@/types/event";
 

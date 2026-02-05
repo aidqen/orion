@@ -89,7 +89,7 @@
 	.hit-area-lg::before {
 		content: "";
 		position: absolute;
-		inset: -6px;
+		inset: -10px;
 	}
 }
 

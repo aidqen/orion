@@ -3,7 +3,7 @@ import { generateId, type UIMessage } from "ai";
 import { useEffect, useRef, useState } from "react";
 import { AI_MODEL } from "@/constants/chat.constant";
 import { useDataStream } from "@/contexts/DataStreamContext";
-import { getChatMessages } from "@/lib/supabase/messages";
+import { getChatMessages } from "@/data/messages";
 import { useArtifactStore } from "@/store/useArtifactStore";
 import { useChatStore } from "@/store/useChatStore";
 import type { ChatMessage, FileUIPartWithId, MessageInput } from "@/types/chat";

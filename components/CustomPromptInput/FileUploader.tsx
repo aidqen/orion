@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePromptInputAttachments } from "@/components/ai-elements/prompt-input";
-import { uploadChatImage } from "@/lib/supabase/storage";
+import { uploadChatImage } from "@/data/storage";
 import type { AttachmentFile } from "./types";
 
 export interface FileUploaderProps {
