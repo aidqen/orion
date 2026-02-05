@@ -48,11 +48,10 @@ export function RecentChats({ chats = [], loading = false }: RecentChatsProps) {
 								delay: 0.7,
 								duration: 0.1,
 							}}
-							className="recent-chats-header tracking-tight cursor-pointer group flex flex-row items-center gap-1.5 text-lg font-medium text-black dark:text-white"
+							className="recent-chats-header tracking-tight cursor-pointer group flex flex-row items-center gap-1.5 text-lg font-medium text-foreground"
 						>
-							{/* <IconMessageCircle className="size-5" /> */}
 							Your recent chats
-							<ChevronRight className="chevron group-hover:translate-x-1 transition-transform duration-100 size-4 mt-px text-stone-900 dark:text-stone-200" />
+							<ChevronRight className="chevron group-hover:translate-x-1 transition-transform duration-100 size-4 mt-px text-foreground" />
 						</motion.h3>
 					</div>
 					<RecentChatsList chats={sortedChats} onChatClick={handleChatClick} />

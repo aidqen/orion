@@ -39,7 +39,7 @@ export function QuickActionButtons() {
 							buttonAnimationConfig.baseDelay +
 							buttonAnimationConfig.staggerDelay * index,
 					}}
-					className="rounded-full flex flex-row gap-1 font-medium dark:text-stone-200 text-stone-600 items-center justify-center bg-[hsl(120,4%,95.1%)] hover:bg-(--panel-hover) px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
+					className="rounded-full flex flex-row gap-1 font-medium text-muted-foreground items-center justify-center bg-secondary hover:bg-muted px-3 py-1.5 text-xs text-start whitespace-nowrap transition-colors cursor-pointer"
 				>
 					<action.icon className="w-4 h-4" />
 					{action.label}

@@ -98,7 +98,7 @@ export function CustomPromptInput({
 				maxFileSize={undefined}
 				onError={undefined}
 				className={cn(
-					"mb-2 relative overflow-hidden bg-background shadow-[0_0_5px_2px_rgba(0,0,0,0.05)] border border-gray-300/50 dark:border-stone-700/40 mx-auto transition-[max-width] duration-300 ease-out ",
+					"mb-2 relative overflow-hidden bg-card shadow-[0_0_5px_2px_rgba(0,0,0,0.03)] border border-gray-300/50 dark:border-stone-700/40 mx-auto transition-[max-width] duration-300 ease-out ",
 
 					className,
 				)}
