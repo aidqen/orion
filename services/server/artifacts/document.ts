@@ -1,3 +1,5 @@
+// SERVER-ONLY: Uses Anthropic API with server-side API key
+
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { smoothStream, streamText, type UIMessageStreamWriter } from "ai";
 import { AI_MODEL } from "@/constants/chat.constant";
@@ -21,7 +23,6 @@ export async function onCreateDocument({
 	description,
 	dataStream,
 }: OnCreateDocumentProps) {
-	console.log("🚀 onCreateDocument called with:", { id, title, description });
 	let draftContent = "";
 
 	const { fullStream } = streamText({
@@ -34,7 +35,6 @@ export async function onCreateDocument({
 		},
 	});
 
-	console.log("📝 Starting to stream document content...");
 
 	for await (const delta of fullStream) {
 		const { type } = delta;
@@ -43,7 +43,6 @@ export async function onCreateDocument({
 			const { text } = delta;
 
 			draftContent += text;
-			console.log("✍️ Text delta:", text);
 
 			dataStream.write({
 				type: "data-textDelta",
@@ -57,9 +56,5 @@ export async function onCreateDocument({
 		data: { id },
 		transient: true,
 	});
-	console.log(
-		"✅ Document streaming complete. Total length:",
-		draftContent.length,
-	);
 	return draftContent;
 }

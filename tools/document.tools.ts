@@ -1,6 +1,6 @@
 import { tool, type UIMessageStreamWriter } from "ai";
 import { z } from "zod";
-import { onCreateDocument } from "@/artifacts/server";
+import { onCreateDocument } from "@/services/server/artifacts/document";
 import type { ChatMessage } from "@/types/chat";
 import { generateUUID } from "@/utils/shared";
 
