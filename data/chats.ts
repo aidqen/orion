@@ -1,4 +1,6 @@
-import { createClient } from "@/lib/supabase/client";
+// UNIVERSAL: All functions work everywhere (browser, server components, API routes)
+
+import { createClient } from "@/infra/supabase/client";
 import type { Chat } from "@/types/chat";
 
 export interface ChatMessage {
@@ -22,46 +24,6 @@ export async function createChat(userId: string) {
 
 	if (error) throw error;
 	return data.id as string;
-}
-
-export async function saveMessages(chatId: string, messages: ChatMessage[]) {
-	const supabase = createClient();
-
-	const messagesToInsert = messages.map((msg) => ({
-		chat_id: chatId,
-		role: msg.role,
-		parts_json: [
-			{
-				type: "text",
-				text: msg.content,
-			},
-		],
-	}));
-
-	const { error } = await supabase
-		.from("chat_messages")
-		.insert(messagesToInsert);
-
-	if (error) throw error;
-}
-
-export async function getChatMessages(chatId: string) {
-	const supabase = createClient();
-
-	const { data, error } = await supabase
-		.from("chat_messages")
-		.select("id, role, parts_json, created_at")
-		.eq("chat_id", chatId)
-		.order("created_at", { ascending: true });
-
-	if (error) throw error;
-
-	return data.map((msg) => ({
-		id: msg.id,
-		role: msg.role,
-		parts: msg.parts_json || [],
-		createdAt: msg.created_at,
-	}));
 }
 
 export async function getUserChats(userId: string): Promise<Chat[]> {
@@ -100,3 +62,7 @@ export async function updateChatTitle(
 
 	if (error) throw error;
 }
+
+// Removed duplicate functions:
+// - saveMessages (canonical version in messages.ts with tempId support)
+// - getChatMessages (canonical version in messages.ts with better typing)

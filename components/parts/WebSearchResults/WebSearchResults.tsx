@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import useMeasure from "react-use-measure";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shared";
 import { ResultsList } from "./ResultsList";
 import { ResultsToggleButton } from "./ResultsToggleButton";
 import { SearchHeader } from "./SearchHeader";

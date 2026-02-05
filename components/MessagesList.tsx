@@ -1,9 +1,9 @@
 import { StickToBottom } from "use-stick-to-bottom";
 import { ChatError } from "@/components/ChatError";
 import { Message } from "@/components/Message";
-import { cn } from "@/lib/utils";
 import { useArtifactStore } from "@/store/useArtifactStore";
 import type { ChatMessage } from "@/types/chat";
+import { cn } from "@/utils/shared";
 
 interface MessagesListProps {
 	messages: ChatMessage[];

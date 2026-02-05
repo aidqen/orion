@@ -1,5 +1,7 @@
+// SERVER-ONLY: Uses cookies from next/headers and server-side secrets
+
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/infra/supabase/server";
 
 export async function getSupabaseServerClient() {
 	const cookieStore = cookies();

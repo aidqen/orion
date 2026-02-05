@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
+import { AuthErrorHandler } from "@/components/AuthErrorHandler";
 import { AuthPopup } from "@/components/auth/AuthPopup";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -27,6 +29,9 @@ export function Providers({ children }: { children: ReactNode }) {
 					<UserProvider>
 						<SidebarProvider>
 							<Toaster position="bottom-right" />
+							<Suspense fallback={null}>
+								<AuthErrorHandler />
+							</Suspense>
 							<Sidebar />
 							<AuthPopup />
 							{children}

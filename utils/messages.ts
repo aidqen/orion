@@ -1,6 +1,6 @@
 import type { TextUIPart, UIMessage } from "ai";
 import { MESSAGE_ROLES } from "@/constants/chat.constant";
-import { type Message, saveMessages } from "@/lib/supabase/messages";
+import { type Message, saveMessages } from "@/data/messages";
 
 export function getLastUserMessageText(messages: UIMessage[]): string {
 	const lastUserMessage = messages.filter((m) => m.role === "user").pop();

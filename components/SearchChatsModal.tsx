@@ -3,8 +3,8 @@
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
 import type { Chat } from "@/types/chat";
+import { cn } from "@/utils/shared";
 import { Modal } from "./Modal";
 
 interface SearchChatsModalProps {

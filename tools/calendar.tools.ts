@@ -1,10 +1,10 @@
 import { jsonSchema, tool } from "ai";
 import {
+	fetchCalendarEvents,
 	formatCalendarEvent,
-	getUserTimezone,
-} from "@/lib/calendar/create-events";
-import { fetchCalendarEvents } from "@/lib/calendar/fetch-events";
+} from "@/services/server/calendar/events";
 import type { CreateEventInput } from "@/types/types";
+import { getUserTimezone } from "@/utils/browser/location";
 
 export function createCalendarTools(userId: string) {
 	return {

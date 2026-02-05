@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import { type ButtonHTMLAttributes, useEffect, useRef, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shared";
 
 export interface CmdKSearchProps
 	extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { type CSSProperties, memo, useMemo } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/shared";
 
 // Pre-create motion components outside of render
 const motionComponents = {

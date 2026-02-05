@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { createCalendarEvent } from "@/lib/calendar/create-events";
-import { getSupabaseServerClient } from "@/lib/google-token";
-import { updateEventsStatuses } from "@/services/server/chat.service";
+import { createCalendarEvent } from "@/services/server/calendar/events";
+import { updateEventsStatuses } from "@/services/server/chat/title";
+import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import type { EventData, EventWithStatus } from "@/types/event";
 
 export async function POST(req: Request) {

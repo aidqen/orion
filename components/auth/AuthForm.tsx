@@ -8,7 +8,7 @@ import {
 	normalizeAuthError,
 	signInWithPassword,
 	signUpWithPassword,
-} from "@/lib/supabase/auth";
+} from "@/data/auth";
 
 export type Mode = "login" | "signup";
 

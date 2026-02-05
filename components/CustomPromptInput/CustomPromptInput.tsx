@@ -17,8 +17,8 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Button } from "@/components/ui/button";
 import { useTypewriter } from "@/hooks/useTypewriter";
-import { cn } from "@/lib/utils";
 import type { FileUIPartWithId, MessageInput } from "@/types/chat";
+import { cn } from "@/utils/shared";
 import { DragOverlay } from "./DragOverlay";
 import { FileUploader } from "./FileUploader";
 import { PasteHandler } from "./PasteHandler";

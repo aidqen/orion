@@ -1,6 +1,6 @@
 import { GaxiosError } from "gaxios";
-import { createGoogleDoc } from "@/lib/docs/docs";
-import { getSupabaseServerClient } from "@/lib/google-token";
+import { createGoogleDoc } from "@/services/server/google/docs";
+import { getSupabaseServerClient } from "@/services/server/google/tokens";
 
 export async function POST(req: Request) {
 	const supabase = await getSupabaseServerClient();

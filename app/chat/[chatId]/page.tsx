@@ -1,18 +1,22 @@
 "use client";
-import { useParams } from "next/navigation";
+import { use } from "react";
 import { Artifact } from "@/components/Artifact/Artifact";
-import { ChatpageHeader } from "@/components/Chatpage/ChatpageHeader";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
 import { DataStreamHandler } from "@/components/DataStreamHandler";
 import { MessagesList } from "@/components/MessagesList";
 import { useUser } from "@/contexts/UserContext";
 import { useMessages } from "@/hooks/useMessages";
-import { cn } from "@/lib/utils";
 import { useArtifactStore } from "@/store/useArtifactStore";
+import { cn } from "@/utils/shared";
 
-export default function ChatPage() {
-	const params = useParams();
-	const chatId = params.chatId as string;
+interface ChatPageProps {
+	params: Promise<{
+		chatId: string;
+	}>;
+}
+
+export default function ChatPage({ params }: ChatPageProps) {
+	const { chatId } = use(params);
 	const { user } = useUser();
 
 	const {
@@ -31,7 +35,6 @@ export default function ChatPage() {
 		<>
 			<div className="flex flex-1 h-full grow overflow-hidden relative">
 				<div className="flex-50 h-full flex flex-col bg-background text-black">
-					<ChatpageHeader />
 					<MessagesList messages={messages} error={error} reload={reload} />
 					<CustomPromptInput
 						onSubmit={handleSendMessage}

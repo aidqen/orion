@@ -8,12 +8,12 @@ import {
 } from "ai";
 import { AI_MODEL } from "@/constants/chat.constant";
 import { SYSTEM_PROMPT } from "@/constants/prompt.constant";
-import { getSupabaseServerClient } from "@/lib/google-token";
-import { fetchAllMemories } from "@/lib/memory";
+import { fetchAllMemories } from "@/data/memories";
+import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import {
 	formatMemoryContext,
 	processMemoryExtraction,
-} from "@/services/server/memory.service";
+} from "@/services/server/memory/extraction";
 import { createCalendarTools } from "@/tools/calendar.tools";
 import { createDocumentTool } from "@/tools/document.tools";
 import { getLastUserMessageText } from "@/utils/messages";

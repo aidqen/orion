@@ -61,10 +61,10 @@ export function Artifact({ isActive }: ArtifactProps) {
 			>
 				{!isMobile && (
 					<div
-						className={`absolute hit-area-lg top-0 bottom-0 w-px cursor-col-resize transition-colors ${
+						className={`absolute hit-area-lg top-0 bottom-0 w-[2px] cursor-col-resize transition-colors ${
 							isDragging
 								? "bg-blue-500"
-								: "bg-stone-200 hover:bg-stone-400 dark:bg-stone-800 dark:hover:bg-gray-600"
+								: "bg-stone-200 hover:bg-blue-300 dark:bg-stone-800 dark:hover:bg-gray-600"
 						}`}
 						onMouseDown={isActive ? handleMouseDown : undefined}
 					/>

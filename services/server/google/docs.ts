@@ -1,5 +1,7 @@
+// SERVER-ONLY: Uses Google Docs API with access tokens
+
 import { docs } from "@googleapis/docs";
-import { getGoogleAccessToken } from "../google-token";
+import { getGoogleAccessToken } from "./tokens";
 
 export async function createGoogleDoc(
 	userId: string,

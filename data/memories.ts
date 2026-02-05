@@ -1,6 +1,10 @@
+// UNIVERSAL: Memory CRUD operations (work with any SupabaseClient)
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-// Fetch ALL memories for the current user — simple and fast
+/**
+ * Fetches all memories for the current user
+ */
 export async function fetchAllMemories(
 	supabase: SupabaseClient,
 	userId: string,
@@ -19,7 +23,9 @@ export async function fetchAllMemories(
 	return data || [];
 }
 
-// Delete a single memory by id
+/**
+ * Deletes a single memory by id
+ */
 export async function deleteMemory(supabase: SupabaseClient, memoryId: number) {
 	const { error } = await supabase.from("memories").delete().eq("id", memoryId);
 

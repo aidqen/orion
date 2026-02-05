@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
+import { Check, Loader2, Plus } from "lucide-react";
 import type React from "react";
 import GoogleButton from "@/components/auth/GoogleButton";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,14 @@ interface AddAllEventsButtonProps {
 	onClick: () => void;
 	isPending: boolean;
 	pendingCount: number;
+	isAllConfirmed: boolean;
 }
 
 export const AddAllEventsButton: React.FC<AddAllEventsButtonProps> = ({
 	onClick,
 	isPending,
 	pendingCount,
+	isAllConfirmed,
 }) => {
 	const { isGoogleConnected } = useUser();
 
@@ -34,11 +36,20 @@ export const AddAllEventsButton: React.FC<AddAllEventsButtonProps> = ({
 		<div className="flex flex-col items-start gap-2 py-2">
 			<Button
 				onClick={onClick}
-				disabled={isPending}
+				disabled={isPending || isAllConfirmed}
 				size="lg"
-				className="w-fit gap-2 font-medium bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-600 disabled:opacity-80"
+				className={`w-fit gap-2 font-medium text-white disabled:opacity-80 ${
+					isAllConfirmed
+						? "bg-green-800 dark:bg-green-800"
+						: "bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+				}`}
 			>
-				{isPending ? (
+				{isAllConfirmed ? (
+					<>
+						<Check className="h-4 w-4" />
+						Added
+					</>
+				) : isPending ? (
 					<>
 						<Loader2 className="h-4 w-4 animate-spin" />
 						Adding...
