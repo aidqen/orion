@@ -39,8 +39,21 @@ export async function POST(req: Request) {
 				headers: { "Content-Type": "application/json" },
 			},
 		);
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error("Error creating Google Doc:", error);
+		if (error && typeof error === "object" && "code" in error) {
+			const code = (error as { code: string }).code;
+			return new Response(
+				JSON.stringify({
+					error: "Google authentication error",
+					code,
+				}),
+				{
+					status: 401,
+					headers: { "Content-Type": "application/json" },
+				},
+			);
+		}
 
 		if (error instanceof GaxiosError) {
 			return new Response(
@@ -50,7 +63,7 @@ export async function POST(req: Request) {
 					status: error.status,
 				}),
 				{
-					status: error.status || 500,
+					status: error.status,
 					headers: { "Content-Type": "application/json" },
 				},
 			);

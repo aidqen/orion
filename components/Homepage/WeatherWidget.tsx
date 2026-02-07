@@ -62,7 +62,10 @@ export function WeatherWidget() {
 					>
 						{weather.city}
 					</span>
-					<MousePointer2 size={14} className="fill-muted-foreground rotate-90" />
+					<MousePointer2
+						size={14}
+						className="fill-muted-foreground rotate-90"
+					/>
 				</button>
 
 				<WeatherIcon code={weather.conditionCode} />

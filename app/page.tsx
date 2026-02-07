@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
+import { Header } from "@/components/Header";
 import { HomeWidgets } from "@/components/Homepage/HomeWidgets";
 import { QuickActionButtons } from "@/components/QuickActionButtons";
 import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
@@ -40,7 +41,8 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="w-full h-full flex flex-col pt-[20vh] md:pt-[20vh] justify-start items-center bg-background text-black dark:text-white">
+			<Header />
+			<div className="w-full h-full flex flex-col pt-[20vh] md:pt-[17vh] justify-start items-center bg-background text-black dark:text-white">
 				<div className="w-full max-w-[720px] px-5 flex flex-col items-center gap-2">
 					<div className="flex flex-col items-center text-black dark:text-white mb-8">
 						<h1 className="text-3xl font-medium tracking-tight mb-1">

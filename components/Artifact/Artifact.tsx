@@ -61,7 +61,7 @@ export function Artifact({ isActive }: ArtifactProps) {
 			>
 				{!isMobile && (
 					<div
-						className={`absolute hit-area-lg top-0 bottom-0 w-[2px] cursor-col-resize transition-colors ${
+						className={`absolute hit-area-lg top-0 bottom-0 w-[1.5px] cursor-col-resize transition-colors ${
 							isDragging
 								? "bg-blue-500"
 								: "bg-stone-200 hover:bg-blue-300 dark:bg-stone-800 dark:hover:bg-gray-600"

@@ -55,16 +55,16 @@ export const ArtifactPreview: React.FC<ArtifactPreviewProps> = ({
 			</div>
 
 			{/* Header */}
-			<div className="flex flex-row items-start justify-between gap-2 rounded-t-2xl border border-b-0 p-4 sm:items-center bg-card dark:border-zinc-700 dark:bg-muted">
+			<div className="flex flex-row items-start justify-between gap-2 rounded-t-2xl border border-b-0 text-black dark:text-white p-4 sm:items-center bg-card dark:border-zinc-700 dark:bg-muted">
 				<div className="flex flex-row items-start gap-3 sm:items-center">
-					<div className="text-muted-foreground">
+					<div>
 						{isCurrentlyStreaming ? (
 							<Loader2 className="h-4 w-4 animate-spin" />
 						) : (
 							<FileText className="h-4 w-4" />
 						)}
 					</div>
-					<div className="-translate-y-1 font-medium sm:translate-y-0">
+					<div className="-translate-y-1 font-medium sm:translate-y-0 ">
 						{displayData.title}
 					</div>
 				</div>

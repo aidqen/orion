@@ -3,6 +3,7 @@ import { use } from "react";
 import { Artifact } from "@/components/Artifact/Artifact";
 import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
 import { DataStreamHandler } from "@/components/DataStreamHandler";
+import { Header } from "@/components/Header";
 import { MessagesList } from "@/components/MessagesList";
 import { useUser } from "@/contexts/UserContext";
 import { useMessages } from "@/hooks/useMessages";
@@ -35,6 +36,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 		<>
 			<div className="flex flex-1 h-full grow overflow-hidden relative">
 				<div className="flex-50 h-full flex flex-col bg-background text-black">
+					<Header />
 					<MessagesList messages={messages} error={error} reload={reload} />
 					<CustomPromptInput
 						onSubmit={handleSendMessage}

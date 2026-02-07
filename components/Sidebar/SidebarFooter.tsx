@@ -5,7 +5,7 @@ import { SidebarFooter as ShadcnSidebarFooter } from "../ui/sidebar";
 export function SidebarFooter() {
 	const { user } = useUser();
 	return (
-		<ShadcnSidebarFooter className="mt-auto grid grid-cols-[auto_1fr_auto] gap-3 items-center hover:bg-gray-100 transition-colors cursor-pointer pb-3">
+		<ShadcnSidebarFooter className="mt-auto grid grid-cols-[auto_1fr_auto] gap-3 items-center hover:bg-gray-100 dark:hover:bg-stone-800 transition-colors cursor-pointer pb-3">
 			<button className="size-7 rounded-full bg-linear-to-r from-[#E100FF] to-[#7F00FF]" />
 
 			<div className="flex flex-col gap-0">

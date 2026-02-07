@@ -3,7 +3,7 @@ import {
 	fetchCalendarEvents,
 	formatCalendarEvent,
 } from "@/services/server/calendar/events";
-import type { CreateEventInput } from "@/types/types";
+import type { CreateEventInput } from "@/types/event";
 import { getUserTimezone } from "@/utils/browser/location";
 
 export function createCalendarTools(userId: string) {

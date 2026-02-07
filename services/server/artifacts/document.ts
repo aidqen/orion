@@ -35,7 +35,6 @@ export async function onCreateDocument({
 		},
 	});
 
-
 	for await (const delta of fullStream) {
 		const { type } = delta;
 

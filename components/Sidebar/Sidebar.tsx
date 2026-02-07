@@ -23,7 +23,7 @@ export function Sidebar() {
 	}, [isArtifactOpen, setOpen]);
 	return (
 		<>
-			<ShadcnSidebar className="flex flex-col justify-between h-full">
+			<ShadcnSidebar className="flex flex-col justify-between h-full dark:bg-card">
 				<div>
 					<SidebarHeader onSearchClick={() => setIsSearchModalOpen(true)} />
 

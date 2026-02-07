@@ -70,15 +70,18 @@ export function Header() {
 		<div className="w-full flex relative justify-end items-center p-2 gap-10 pe-6">
 			<SidebarTrigger
 				className={cn(
-					"absolute top-1/2 left-4 -translate-y-1/2 z-5 flex justify-center items-center",
-					state === "collapsed" ? "block" : "hidden",
+					"absolute top-1/2 left-2 -translate-y-1/2 z-5 flex justify-center items-center dark:text-white text-black size-9",
+					state === "collapsed" ? "flex" : "hidden",
 				)}
 			/>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button className="size-8 rounded-full border border-stone-300 dark:border-stone-600 shadow-sm bg-linear-to-r from-[#E100FF] to-[#7F00FF] cursor-pointer hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2" />
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className={cn(authenticated ? "w-56" : "w-fit")}>
+				<DropdownMenuContent
+					align="end"
+					className={cn(authenticated ? "w-56" : "w-fit")}
+				>
 					{authenticated ? (
 						<>
 							<DropdownMenuLabel className="font-normal">

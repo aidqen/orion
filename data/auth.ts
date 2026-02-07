@@ -75,7 +75,7 @@ export async function signInWithGoogle() {
 export async function linkGoogleIdentity() {
 	const supabase = createClient();
 	const currentPath = window.location.pathname;
-	const redirectTo = `${window.location.origin}/auth/callback?returnUrl=${encodeURIComponent(currentPath)}`;
+	const redirectTo = redirectToSaveToken(currentPath);
 
 	const { data, error } = await supabase.auth.linkIdentity({
 		provider: "google",

@@ -2,7 +2,7 @@
 
 import type { calendar_v3 } from "@googleapis/calendar";
 import { getGoogleAccessToken } from "@/services/server/google/tokens";
-import type { CalendarEvent, CreateEventInput } from "@/types/types";
+import type { CalendarEvent, CreateEventInput } from "@/types/event";
 import { createCalendarClient } from "./client";
 
 // ===== FETCH EVENTS FUNCTIONS (from lib/calendar/fetch-events.ts) =====
