@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { createCalendarEvent } from "@/services/server/calendar/events";
 import { updateToolOutput } from "@/services/server/chat/chat";
 import { getSupabaseServerClient } from "@/services/server/google/tokens";
-import type { EventData, EventWithStatus } from "@/types/event";
+import { createTodoistTask } from "@/services/server/todoist/tasks";
+import { getTodoistAccessToken } from "@/services/server/todoist/tokens";
+import type { TodoData, TodoWithStatus } from "@/types/todo";
 
 export async function POST(req: Request) {
 	const supabase = await getSupabaseServerClient();
@@ -16,25 +17,26 @@ export async function POST(req: Request) {
 
 	try {
 		const body = await req.json();
-		const { events, messageId } = body;
+		const { todos, messageId } = body;
 
-		// Validate required fields
-		if (!Array.isArray(events) || !messageId) {
+		if (!Array.isArray(todos) || !messageId) {
 			return NextResponse.json(
 				{ error: "Invalid request body" },
 				{ status: 400 },
 			);
 		}
 
-		const toProcess = events
+		const accessToken = await getTodoistAccessToken(user.id);
+
+		const toProcess = todos
 			.map((item, index) => ({ item, index }))
 			.filter(({ item }) => item.status !== "confirmed");
 
 		const results = await Promise.allSettled(
-			toProcess.map(({ item }) => createCalendarEvent(user.id, item.event)),
+			toProcess.map(({ item }) => createTodoistTask(accessToken, item.todo)),
 		);
 
-		const updatedEvents: EventWithStatus[] = events.map((item, index) => {
+		const updatedTodos: TodoWithStatus[] = todos.map((item, index) => {
 			if (item.status === "confirmed") {
 				return item;
 			}
@@ -45,33 +47,33 @@ export async function POST(req: Request) {
 			if (result.status === "fulfilled") {
 				return {
 					status: "confirmed" as const,
-					event: result.value as EventData,
+					todo: result.value as TodoData,
 				};
 			}
 
 			return {
 				status: "failed" as const,
-				event: item.event,
+				todo: item.todo,
 				error: result.reason?.message || "Unknown error",
 			};
 		});
 
-		await updateToolOutput(messageId, "events", updatedEvents);
+		await updateToolOutput(messageId, "todos", updatedTodos);
 
-		const confirmedCount = updatedEvents.filter(
-			(e) => e.status === "confirmed",
+		const confirmedCount = updatedTodos.filter(
+			(t) => t.status === "confirmed",
 		).length;
-		const failedCount = updatedEvents.filter(
-			(e) => e.status === "failed",
+		const failedCount = updatedTodos.filter(
+			(t) => t.status === "failed",
 		).length;
 
 		return NextResponse.json({
 			success: failedCount === 0,
-			events: updatedEvents,
+			todos: updatedTodos,
 			summary: { confirmed: confirmedCount, failed: failedCount },
 		});
 	} catch (error: unknown) {
-		console.error("Error creating calendar events:", error);
+		console.error("Error creating todos:", error);
 
 		const message = error instanceof Error ? error.message : "Unknown error";
 		return NextResponse.json({ error: message }, { status: 500 });

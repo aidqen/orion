@@ -17,14 +17,12 @@ interface MessagePart {
 	text?: string;
 }
 
-/** Builds message parts from files (already uploaded) and text */
 function buildMessageParts(
 	files: FileUIPartWithId[],
 	text?: string,
 ): MessagePart[] {
 	const parts: MessagePart[] = [];
 
-	// Add file parts (URLs are already Supabase URLs from CustomPromptInput)
 	for (const file of files) {
 		if (file.mediaType?.startsWith("image/")) {
 			parts.push({
@@ -35,7 +33,6 @@ function buildMessageParts(
 		}
 	}
 
-	// Add text part
 	if (text?.trim()) {
 		parts.push({ type: "text", text: text.trim() });
 	}
@@ -92,6 +89,7 @@ export function useMessages(chatId: string) {
 			setDataStream((ds) => [...ds, data]);
 		},
 	});
+	console.log("🚀 ~ useMessages ~ messages:", messages);
 
 	useEffect(() => {
 		hasFetchedMessages.current = false;

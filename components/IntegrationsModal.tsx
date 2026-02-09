@@ -6,6 +6,8 @@ import { IntegrationItem } from "@/components/IntegrationItem";
 import { NotionIcon } from "@/components/icons/NotionIcon";
 import { TodoistIcon } from "@/components/icons/TodoistIcon";
 import { Modal } from "@/components/Modal";
+import { useUser } from "@/contexts/UserContext";
+import { connectTodoist } from "@/services/client/todoist.service";
 
 interface IntegrationsModalProps {
 	open: boolean;
@@ -17,21 +19,30 @@ export function IntegrationsModal({
 	onOpenChange,
 }: IntegrationsModalProps) {
 	const [searchQuery, setSearchQuery] = useState("");
+	const { isTodoistConnected } = useUser();
+
+	const handleConnect = (integrationId: string) => {
+		if (integrationId === "todoist") {
+			connectTodoist();
+		}
+	};
 
 	const integrations = [
+		{
+			id: "todoist",
+			name: "Todoist",
+			description: "Manage your tasks and projects directly from Planwise.",
+			connected: isTodoistConnected,
+			icon: <TodoistIcon className="size-6" />,
+			isAvailable: true,
+		},
 		{
 			id: "notion",
 			name: "Notion",
 			description: "Connect your Notion workspace to sync pages and databases.",
 			connected: false,
 			icon: <NotionIcon className="size-6" />,
-		},
-		{
-			id: "todoist",
-			name: "Todoist",
-			description: "Manage your tasks and projects directly from Planwise.",
-			connected: false,
-			icon: <TodoistIcon className="size-6" />,
+			isAvailable: false,
 		},
 	];
 
@@ -81,7 +92,11 @@ export function IntegrationsModal({
 				{filteredIntegrations.length > 0 ? (
 					<div className="flex flex-col">
 						{filteredIntegrations.map((integration) => (
-							<IntegrationItem key={integration.id} integration={integration} />
+							<IntegrationItem
+								key={integration.id}
+								integration={integration}
+								onConnect={() => handleConnect(integration.id)}
+							/>
 						))}
 					</div>
 				) : (

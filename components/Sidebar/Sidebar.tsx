@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sidebar as ShadcnSidebar, useSidebar } from "@/components/ui/sidebar";
 import { useChats } from "@/hooks";
 import { useArtifactStore } from "@/store/useArtifactStore";
@@ -11,16 +11,18 @@ import { SidebarNav } from "../Sidebar/SidebarNav";
 import { SidebarFooter } from "./SidebarFooter";
 
 export function Sidebar() {
-	const { setOpen } = useSidebar();
+	const { setOpen, state } = useSidebar();
 	const isArtifactOpen = useArtifactStore((state) => state.isOpen);
 	const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 	const { chats, loading } = useChats();
+	const wasArtifactOpen = useRef(isArtifactOpen);
 
 	useEffect(() => {
-		if (isArtifactOpen) {
+		if (isArtifactOpen && !wasArtifactOpen.current && state === "expanded") {
 			setOpen(false);
 		}
-	}, [isArtifactOpen, setOpen]);
+		wasArtifactOpen.current = isArtifactOpen;
+	}, [isArtifactOpen, setOpen, state]);
 	return (
 		<>
 			<ShadcnSidebar className="flex flex-col justify-between h-full dark:bg-card">

@@ -1,9 +1,11 @@
 import { AI_TOOLS } from "@/constants/chat.constant";
 import type { ChatMessagePart } from "@/types/chat";
 import { ArtifactPreview } from "./ArtifactPreview";
-import { CreateEventPreview } from "./CreateEventPreview/CreateEventPreview";
+import { CreateEventsPreview } from "./CreateEventsPreview/CreateEventsPreview";
+import { CreateTodosPreview } from "./CreateTodosPreview/CreateTodosPreview";
 import { EventList } from "./EventList/EventList";
 import { TextPart } from "./TextPart";
+import { TodoList } from "./TodoList/TodoList";
 import { WebSearchResults } from "./WebSearchResults/WebSearchResults";
 
 interface RenderPartProps {
@@ -45,11 +47,19 @@ export function RenderPart({
 
 		case AI_TOOLS.CREATE_NEW_EVENTS:
 			if (!part.output) return null;
-			return <CreateEventPreview data={part.output} messageId={messageId} />;
+			return <CreateEventsPreview data={part.output} messageId={messageId} />;
 
 		case AI_TOOLS.GET_CALENDAR_EVENTS:
 			if (!part.output) return null;
 			return <EventList data={part.output} />;
+
+		case AI_TOOLS.FETCH_TODOS:
+			if (!part.output) return null;
+			return <TodoList data={part.output} messageId={messageId} />;
+
+		case AI_TOOLS.SUGGEST_NEW_TODOS:
+			if (!part.output) return null;
+			return <CreateTodosPreview data={part.output} messageId={messageId} />;
 
 		default:
 			return null;

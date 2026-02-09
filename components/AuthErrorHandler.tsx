@@ -9,11 +9,12 @@ const ERROR_MESSAGES: Record<string, string> = {
 	session_exchange_failed:
 		"Authentication failed: Could not verify your session.",
 	no_session: "Authentication failed: No session was created.",
-	token_save_failed:
-		"Signed in, but Google features may not work. Please try reconnecting your Google account.",
+	token_save_failed: "Authentication failed: Could not save your token.",
 	unexpected_error: "An unexpected error occurred during authentication.",
 	identity_already_exists:
 		"This Google account is already linked to another user.",
+	todoist_not_connected:
+		"Todoist is not connected. Please connect your Todoist account in Integrations.",
 };
 
 export function AuthErrorHandler() {

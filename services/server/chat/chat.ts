@@ -7,18 +7,29 @@ import { GENERATE_TITLE_PROMPT } from "@/constants/prompt.constant";
 import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import type { ChatTools, CustomUIDataTypes } from "@/types/chat";
 import type { EventWithStatus } from "@/types/event";
+import type { TodoWithStatus } from "@/types/todo";
 
-/**
- * Updates the events statuses for a specific message
- * Finds the part with type CREATE_NEW_EVENTS and updates its output.events with new statuses
- */
-export async function updateEventsStatuses(
+type ItemType = "events" | "todos";
+
+const ITEM_CONFIG = {
+	events: {
+		toolType: AI_TOOLS.CREATE_NEW_EVENTS,
+		outputField: "events",
+	},
+	todos: {
+		toolType: AI_TOOLS.SUGGEST_NEW_TODOS,
+		outputField: "todos",
+	},
+} as const;
+
+export async function updateToolOutput(
 	messageId: string,
-	updatedEvents: EventWithStatus[],
+	itemType: ItemType,
+	updatedItems: EventWithStatus[] | TodoWithStatus[],
 ): Promise<void> {
 	const supabase = await getSupabaseServerClient();
+	const config = ITEM_CONFIG[itemType];
 
-	// Fetch the message by temp_id
 	const { data: message, error: fetchError } = await supabase
 		.from("chat_messages")
 		.select("parts_json, id")
@@ -30,25 +41,23 @@ export async function updateEventsStatuses(
 		throw new Error("Message not found");
 	}
 
-	// Find and update the CREATE_NEW_EVENTS part
 	const parts = message.parts_json as UIMessagePart<
 		CustomUIDataTypes,
 		ChatTools
 	>[];
 	const updatedParts = parts.map((part) => {
-		if (part.type === AI_TOOLS.CREATE_NEW_EVENTS && part.output) {
+		if (part.type === config.toolType && part.output) {
 			return {
 				...part,
 				output: {
 					...part.output,
-					events: updatedEvents,
+					[config.outputField]: updatedItems,
 				},
 			};
 		}
 		return part;
 	});
 
-	// Update the message with the modified parts using the actual database id
 	const { error: updateError } = await supabase
 		.from("chat_messages")
 		.update({ parts_json: updatedParts })
@@ -56,15 +65,10 @@ export async function updateEventsStatuses(
 
 	if (updateError) {
 		console.error("Failed to update message:", updateError);
-		throw new Error("Failed to update event statuses");
+		throw new Error(`Failed to update ${itemType} statuses`);
 	}
 }
 
-/**
- * Generates a concise title for a chat conversation using AI
- * @param firstMessage - The first user message in the chat
- * @returns A 3-6 word title for the chat
- */
 export async function generateChatTitle(firstMessage: string): Promise<string> {
 	const result = await generateText({
 		model: anthropic(SIMPLE_FAST_MODEL),
@@ -76,9 +80,6 @@ export async function generateChatTitle(firstMessage: string): Promise<string> {
 	return result.text.trim();
 }
 
-/**
- * Updates the title of a chat in the database
- */
 export async function updateChatTitle(
 	chatId: string,
 	title: string,

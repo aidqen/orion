@@ -1,4 +1,5 @@
 import type { calendar_v3 } from "@googleapis/calendar";
+import type { ItemStatus } from "./chat";
 
 export interface EventData {
 	id?: string | null;
@@ -18,10 +19,8 @@ export interface EventData {
 	attendees?: { email?: string | null }[];
 }
 
-export type EventStatus = "pending_confirmation" | "confirmed" | "failed";
-
 export interface EventWithStatus {
-	status: EventStatus;
+	status: ItemStatus;
 	event: calendar_v3.Schema$Event;
 	error?: string;
 }
