@@ -43,7 +43,7 @@ export default function Home() {
 		<>
 			<Header />
 			<div className="w-full h-full flex flex-col pt-[20vh] md:pt-[17vh] justify-start items-center bg-background text-black dark:text-white">
-				<div className="w-full max-w-[720px] px-5 flex flex-col items-center gap-2">
+				<div className="w-full md:max-w-[620px] lg:max-w-[720px] px-5 flex flex-col items-center gap-2">
 					<div className="flex flex-col items-center text-black dark:text-white mb-8">
 						<h1 className="text-3xl font-medium tracking-tight mb-1">
 							Good evening,{" "}
@@ -62,7 +62,7 @@ export default function Home() {
 						chatId={""}
 						userId={user?.id}
 					/>
-					<QuickActionButtons />
+					<QuickActionButtons setInput={setInput} />
 					<HomeWidgets chats={chats} loading={loading} />
 				</div>
 			</div>

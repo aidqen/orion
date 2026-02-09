@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Streamdown } from "streamdown";
+import { StickToBottom } from "use-stick-to-bottom";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { useResizePanel } from "@/hooks/useResizePanel";
 import { useArtifactStore } from "@/store/useArtifactStore";
@@ -76,17 +77,23 @@ export function Artifact({ isActive }: ArtifactProps) {
 							closeArtifact={closeArtifact}
 						/>
 
-						<div className="flex-1 overflow-y-auto min-h-0">
-							<div className="p-6">
-								<div className="prose prose-sm dark:prose-invert max-w-none">
-									<Streamdown
-										isAnimating={activeArtifact.status === "streaming"}
-									>
-										{activeArtifact.content}
-									</Streamdown>
+						<StickToBottom
+							className="flex-1 overflow-y-auto min-h-0"
+							resize="smooth"
+							initial={true}
+						>
+							<StickToBottom.Content>
+								<div className="p-6">
+									<div className="prose prose-sm dark:prose-invert max-w-none">
+										<Streamdown
+											isAnimating={activeArtifact.status === "streaming"}
+										>
+											{activeArtifact.content}
+										</Streamdown>
+									</div>
 								</div>
-							</div>
-						</div>
+							</StickToBottom.Content>
+						</StickToBottom>
 					</div>
 				)}
 			</motion.div>

@@ -27,6 +27,8 @@ interface UserContextType {
 	loading: boolean;
 	error: Error | null;
 	isGoogleConnected: boolean;
+	isTodoistConnected: boolean;
+	refreshIntegrations: () => void;
 	signInWithPassword: (email: string, password: string) => Promise<void>;
 	signInWithGoogle: () => Promise<void>;
 	signOut: () => Promise<void>;
@@ -39,10 +41,32 @@ export function UserProvider({ children }: { children: ReactNode }) {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
 
+	const [connectedProviders, setConnectedProviders] = useState<Set<string>>(
+		new Set(),
+	);
+
 	const isGoogleConnected = useMemo(
 		() => user?.identities?.some((i) => i.provider === "google") ?? false,
 		[user],
 	);
+	const isTodoistConnected = connectedProviders.has("todoist");
+
+	const fetchUserIntegrations = useCallback(async (userId: string) => {
+		const supabase = createClient();
+		const { data } = await supabase
+			.from("user_integrations")
+			.select("provider")
+			.eq("user_id", userId);
+
+		const providers = new Set(data?.map((row) => row.provider) ?? []);
+		setConnectedProviders(providers);
+	}, []);
+
+	const refreshIntegrations = useCallback(() => {
+		if (user?.id) {
+			fetchUserIntegrations(user.id);
+		}
+	}, [user?.id, fetchUserIntegrations]);
 
 	useEffect(() => {
 		const supabase = createClient();
@@ -56,6 +80,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
 				} = await supabase.auth.getSession();
 				if (sessionError) throw sessionError;
 				setUser(session?.user ?? null);
+
+				if (session?.user?.id) {
+					fetchUserIntegrations(session.user.id);
+				}
 			} catch (err) {
 				setError(err as Error);
 			} finally {
@@ -72,12 +100,27 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			setUser(session?.user ?? null);
 			setLoading(false);
 			setError(null);
+
+			if (session?.user?.id) {
+				fetchUserIntegrations(session.user.id);
+			} else {
+				setConnectedProviders(new Set());
+			}
 		});
+
+		// Re-check on window focus (after OAuth redirect returns)
+		const handleFocus = () => {
+			if (user?.id) {
+				fetchUserIntegrations(user.id);
+			}
+		};
+		window.addEventListener("focus", handleFocus);
 
 		return () => {
 			subscription.unsubscribe();
+			window.removeEventListener("focus", handleFocus);
 		};
-	}, []);
+	}, [fetchUserIntegrations, user?.id]);
 
 	const handleSignInWithPassword = useCallback(
 		async (email: string, password: string) => {
@@ -143,6 +186,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			loading,
 			error,
 			isGoogleConnected,
+			isTodoistConnected,
+			refreshIntegrations,
 			signInWithPassword: handleSignInWithPassword,
 			signInWithGoogle: handleSignInWithGoogle,
 			signOut: handleSignOut,
@@ -153,6 +198,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			loading,
 			error,
 			isGoogleConnected,
+			isTodoistConnected,
+			refreshIntegrations,
 			handleSignInWithPassword,
 			handleSignInWithGoogle,
 			handleSignOut,

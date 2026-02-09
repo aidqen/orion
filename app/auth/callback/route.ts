@@ -49,13 +49,16 @@ export async function GET(request: Request) {
 		if (session.provider_token) {
 			const { error: tokenError } = await supabase
 				.from("user_integrations")
-				.upsert({
-					user_id: session.user.id,
-					access_token: session.provider_token,
-					refresh_token: session.provider_refresh_token,
-					provider: session.user.identities?.[0]?.provider,
-					updated_at: new Date().toISOString(),
-				});
+				.upsert(
+					{
+						user_id: session.user.id,
+						access_token: session.provider_token,
+						refresh_token: session.provider_refresh_token,
+						provider: session.user.identities?.[0]?.provider,
+						updated_at: new Date().toISOString(),
+					},
+					{ onConflict: "user_id,provider" },
+				);
 
 			if (tokenError) {
 				console.error("Auth callback token save error:", tokenError);

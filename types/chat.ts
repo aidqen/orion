@@ -5,6 +5,7 @@ import type {
 	getCalendarEventsTool,
 } from "@/tools/calendar.tools";
 import type { createDocumentTool } from "@/tools/document.tools";
+import type { fetchTodosTool, suggestNewTodosTool } from "@/tools/todos.tools";
 
 export interface Chat {
 	id: string;
@@ -12,11 +13,15 @@ export interface Chat {
 	createdAt: string;
 }
 
+export type ItemStatus = "pending_confirmation" | "confirmed" | "failed";
+
 export type ChatTools = {
 	getCalendarEvents: getCalendarEventsToolType;
 	createNewEvents: createNewEventsToolType;
 	createDocument: createDocumentToolType;
 	webSearchTool: webSearchToolType;
+	fetchTodos: fetchTodosToolType;
+	suggestNewTodos: suggestNewTodosToolType;
 };
 
 export type CustomUIDataTypes = {
@@ -46,6 +51,10 @@ type createDocumentToolType = InferUITool<
 >;
 type AnthropicWebSearchType = InferUITool<
 	ReturnType<typeof anthropic.tools.webSearch_20250305>
+>;
+type fetchTodosToolType = InferUITool<ReturnType<typeof fetchTodosTool>>;
+type suggestNewTodosToolType = InferUITool<
+	ReturnType<typeof suggestNewTodosTool>
 >;
 export type webSearchToolType = Omit<AnthropicWebSearchType, "type"> & {
 	type: "tool-webSearchTool";

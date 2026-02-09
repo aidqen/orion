@@ -16,6 +16,7 @@ import {
 } from "@/services/server/memory/extraction";
 import { createCalendarTools } from "@/tools/calendar.tools";
 import { createDocumentTool } from "@/tools/document.tools";
+import { createTodoTools } from "@/tools/todos.tools";
 import { getLastUserMessageText } from "@/utils/messages";
 
 export const maxDuration = 30;
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
 					messages: modelMessages,
 					tools: {
 						...createCalendarTools(user.id),
+						...createTodoTools(user.id),
 						webSearchTool,
 						createDocument: createDocumentTool({ dataStream }),
 					},

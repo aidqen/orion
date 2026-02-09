@@ -8,16 +8,17 @@ import {
 	Clock,
 } from "lucide-react";
 import type React from "react";
-import type { EventData, EventStatus } from "@/types/event";
+import type { ItemStatus } from "@/types/chat";
+import type { EventData } from "@/types/event";
 import { EventBody } from "./EventBody";
 
 interface EventCardProps {
 	event: EventData;
-	status: EventStatus;
+	status: ItemStatus;
 	error?: string;
 }
 
-const StatusIcon = ({ status }: { status: EventStatus }) => {
+const StatusIcon = ({ status }: { status: ItemStatus }) => {
 	switch (status) {
 		case "confirmed":
 			return <Check className="h-4 w-4 text-green-500" />;
@@ -28,7 +29,7 @@ const StatusIcon = ({ status }: { status: EventStatus }) => {
 	}
 };
 
-const CalendarIcon: React.FC<{ status: EventStatus }> = ({ status }) => {
+const CalendarIcon: React.FC<{ status: ItemStatus }> = ({ status }) => {
 	return status === "confirmed" ? (
 		<CalendarCheck2 className="h-5 w-5" />
 	) : (
@@ -43,7 +44,7 @@ export const EventCard: React.FC<EventCardProps> = ({
 }) => {
 	const statusStyles = {
 		pending_confirmation: "border-border",
-		confirmed: "border-green-500/50 bg-green-500/5",
+		confirmed: "",
 		failed: "border-red-500/50 bg-red-500/5",
 	};
 

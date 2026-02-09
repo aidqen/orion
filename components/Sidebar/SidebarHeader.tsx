@@ -15,13 +15,13 @@ interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ onSearchClick }: SidebarHeaderProps) {
-	const { open, toggleSidebar } = useSidebar();
+	const { open } = useSidebar();
 
 	return (
 		<SidebarGroup>
 			<SidebarGroupContent>
 				<SidebarMenu>
-					<SidebarTitle open={open} toggleSidebar={toggleSidebar} />
+					<SidebarTitle />
 
 					<SidebarMenuItem>
 						{/* <button

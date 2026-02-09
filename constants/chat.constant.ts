@@ -14,5 +14,7 @@ export const AI_TOOLS = {
 	CREATE_NEW_EVENTS: "tool-createNewEvents",
 	WEB_SEARCH: "tool-webSearchTool",
 	CREATE_DOCUMENT: "tool-createDocument",
+	FETCH_TODOS: "tool-fetchTodos",
+	SUGGEST_NEW_TODOS: "tool-suggestNewTodos",
 	TEXT: "text",
 } as const;

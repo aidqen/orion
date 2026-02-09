@@ -8,13 +8,18 @@ interface Integration {
 	description: string;
 	connected: boolean;
 	icon: ReactNode;
+	isAvailable?: boolean;
 }
 
 interface IntegrationItemProps {
 	integration: Integration;
+	onConnect?: () => void;
 }
 
-export function IntegrationItem({ integration }: IntegrationItemProps) {
+export function IntegrationItem({
+	integration,
+	onConnect,
+}: IntegrationItemProps) {
 	return (
 		<div className="py-[16px] border-b border-gray-200 dark:border-[#333333] last:border-b-0 flex items-center justify-between gap-4">
 			<div className="flex items-center gap-4">
@@ -31,19 +36,23 @@ export function IntegrationItem({ integration }: IntegrationItemProps) {
 				</div>
 			</div>
 			<button
+				onClick={!integration.connected ? onConnect : undefined}
+				disabled={!integration.isAvailable}
 				className={cn(
-					"px-4 py-2 rounded-full text-sm font-medium transition-colors border",
-					!integration.connected
-						? "bg-transparent border-stone-100 dark:border-[#333333] text-stone-200 cursor-default"
-						: "bg-black dark:bg-white text-white dark:text-black border-transparent hover:opacity-90",
+					"px-4 py-2 disabled:opacity-50 rounded-full text-sm font-medium transition-colors border",
+					integration.connected
+						? "bg-transparent border-stone-100 dark:border-stone-200 text-stone-400 dark:text-stone-200 cursor-default"
+						: "bg-black dark:bg-white text-white dark:text-black border-transparent hover:opacity-90 cursor-pointer",
 				)}
 			>
-				{!integration.connected ? (
+				{integration.connected ? (
 					<span className="flex items-center gap-2">
 						<Check size={18} /> Connected
 					</span>
 				) : (
-					<span className="flex items-center gap-1">Connect</span>
+					<span className="flex items-center gap-1">
+						{integration.isAvailable ? "Connect" : "Coming Soon"}
+					</span>
 				)}
 			</button>
 		</div>

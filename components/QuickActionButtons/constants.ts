@@ -1,15 +1,40 @@
 import {
-	CalendarClock,
+	CalendarPlus,
 	CalendarRange,
-	Lightbulb,
+	FileText,
 	ListChecks,
-	PenLine,
+	Search,
 } from "lucide-react";
 
 export const quickActions = [
-	{ id: "plan-day", label: "Plan my day", icon: CalendarRange },
-	{ id: "prioritize", label: "Prioritize tasks", icon: ListChecks },
-	{ id: "optimize-focus", label: "Optimize Routines", icon: CalendarClock },
-	{ id: "help-write", label: "Import Events", icon: PenLine },
-	{ id: "brainstorm", label: "Brainstorm", icon: Lightbulb },
+	{
+		id: "view-calendar",
+		label: "View Calendar",
+		icon: CalendarRange,
+		prompt: "I want to know what is scheduled for me at ",
+	},
+	{
+		id: "create-event",
+		label: "Create Event",
+		icon: CalendarPlus,
+		prompt: "Create a new event for ",
+	},
+	{
+		id: "fetch-todos",
+		label: "Fetch Todos",
+		icon: ListChecks,
+		prompt: "Show me my todos for ",
+	},
+	{
+		id: "research",
+		label: "Research The Web",
+		icon: Search,
+		prompt: "Research and find information about ",
+	},
+	{
+		id: "create-document",
+		label: "Create Document",
+		icon: FileText,
+		prompt: "Create a document about ",
+	},
 ];
