@@ -80,8 +80,7 @@ export function IntegrationsModal({
 					</button>
 				</div>
 				<p className="text-[13px] text-gray-500 dark:text-[#B4B4B4] leading-[1.4]">
-					Connect your favorite tools to supercharge your workflow with
-					Orion.
+					Connect your favorite tools to supercharge your workflow with Orion.
 				</p>
 			</div>
 

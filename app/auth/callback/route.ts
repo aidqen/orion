@@ -67,19 +67,14 @@ export async function GET(request: Request) {
 			}
 		}
 
-		const userCreatedAt = new Date(session.user.created_at).getTime();
-		const isNewUser = userCreatedAt > Date.now() - 60000;
+		try {
+			const hasChats = await userHasChats(session.user.id, supabase);
 
-		if (isNewUser) {
-			try {
-				const hasChats = await userHasChats(session.user.id, supabase);
-
-				if (!hasChats) {
-					await createWelcomeChat(session.user.id, supabase);
-				}
-			} catch (welcomeError) {
-				console.error("Failed to create welcome chat:", welcomeError);
+			if (!hasChats) {
+				await createWelcomeChat(session.user.id, supabase);
 			}
+		} catch (welcomeError) {
+			console.error("Failed to create welcome chat:", welcomeError);
 		}
 
 		return NextResponse.redirect(new URL(returnUrl, requestUrl.origin));
