@@ -53,7 +53,7 @@ export function MemoriesModal({ open, onOpenChange }: MemoriesModalProps) {
 					</button>
 				</div>
 				<p className="text-[13px] text-gray-500 dark:text-[#B4B4B4] leading-[1.4]">
-					Planwise tries to remember your recent chats, but it may forget things
+					Orion tries to remember your recent chats, but it may forget things
 					over time. Saved memories are never forgotten.{" "}
 					<a
 						href="#"

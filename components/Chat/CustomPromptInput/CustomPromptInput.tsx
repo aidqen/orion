@@ -26,7 +26,7 @@ import { FileUploader } from "./FileUploader";
 export function CustomPromptInput({
 	input,
 	setInput,
-	placeholder = "Ask Planwise AI...",
+	placeholder = "Ask Orion...",
 	className = "",
 	textAnimation = true,
 	onSubmit,

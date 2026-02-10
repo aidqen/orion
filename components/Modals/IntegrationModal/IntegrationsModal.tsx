@@ -32,7 +32,7 @@ export function IntegrationsModal({
 		{
 			id: "todoist",
 			name: "Todoist",
-			description: "Manage your tasks and projects directly from Planwise.",
+			description: "Manage your tasks and projects directly from Orion.",
 			connected: isTodoistConnected,
 			icon: <TodoistIcon className="size-6" />,
 			isAvailable: true,
@@ -81,7 +81,7 @@ export function IntegrationsModal({
 				</div>
 				<p className="text-[13px] text-gray-500 dark:text-[#B4B4B4] leading-[1.4]">
 					Connect your favorite tools to supercharge your workflow with
-					Planwise.
+					Orion.
 				</p>
 			</div>
 
