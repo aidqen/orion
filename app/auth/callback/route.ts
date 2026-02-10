@@ -2,7 +2,12 @@
 
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { createWelcomeChat, userHasChats } from "@/data/chats";
 import { createClient } from "@/infra/supabase/server";
+import {
+	type IntegrationProvider,
+	saveUserIntegration,
+} from "@/services/server/integrations";
 
 export async function GET(request: Request) {
 	const requestUrl = new URL(request.url);
@@ -47,23 +52,29 @@ export async function GET(request: Request) {
 		}
 
 		if (session.provider_token) {
-			const { error: tokenError } = await supabase
-				.from("user_integrations")
-				.upsert(
-					{
-						user_id: session.user.id,
-						access_token: session.provider_token,
-						refresh_token: session.provider_refresh_token,
-						provider: session.user.identities?.[0]?.provider,
-						updated_at: new Date().toISOString(),
-					},
-					{ onConflict: "user_id,provider" },
-				);
+			const provider = session.user.identities?.[0]
+				?.provider as IntegrationProvider;
 
-			if (tokenError) {
-				console.error("Auth callback token save error:", tokenError);
+			try {
+				await saveUserIntegration(
+					session.user.id,
+					provider,
+					session.provider_token,
+					session.provider_refresh_token,
+				);
+			} catch {
 				return redirectWithError("token_save_failed");
 			}
+		}
+
+		try {
+			const hasChats = await userHasChats(session.user.id, supabase);
+
+			if (!hasChats) {
+				await createWelcomeChat(session.user.id, supabase);
+			}
+		} catch (welcomeError) {
+			console.error("Failed to create welcome chat:", welcomeError);
 		}
 
 		return NextResponse.redirect(new URL(returnUrl, requestUrl.origin));

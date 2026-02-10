@@ -1,5 +1,5 @@
 export const WELCOME_MESSAGE = `
-**Welcome to PlanWise AI!** 👋
+**Welcome to Orion!** 👋
 
 I'm your personal AI assistant designed to help you stay organized, productive, and on top of everything. Let me show you around!
 
@@ -68,7 +68,7 @@ I might not remember every chat, but I will remember the important things.
 ---
 
 ### 🔗 Integrations
-Connect the apps you use daily to unlock the full potential of PlanWise AI.
+Connect the apps you use daily to unlock the full potential of Orion.
 
 **Supported integrations:**
 - **Google Calendar** – Sync and manage your events

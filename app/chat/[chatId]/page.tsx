@@ -1,10 +1,10 @@
 "use client";
 import { use } from "react";
-import { Artifact } from "@/components/Artifact/Artifact";
-import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
-import { DataStreamHandler } from "@/components/DataStreamHandler";
-import { Header } from "@/components/Header";
-import { MessagesList } from "@/components/MessagesList";
+import { Artifact } from "@/components/Chat/Artifact/Artifact";
+import { CustomPromptInput } from "@/components/Chat/CustomPromptInput/CustomPromptInput";
+import { MessagesList } from "@/components/Chat/MessagesList";
+import { DataStreamHandler } from "@/components/Handlers/DataStreamHandler";
+import { Header } from "@/components/Header/Header";
 import { useUser } from "@/contexts/UserContext";
 import { useMessages } from "@/hooks/useMessages";
 import { useArtifactStore } from "@/store/useArtifactStore";

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@/infra/supabase/server";
-import { saveTodoistToken } from "@/services/server/todoist/tokens";
+import { saveUserIntegration } from "@/services/server/integrations";
 
 const TODOIST_TOKEN_URL = "https://todoist.com/oauth/access_token";
 
@@ -41,7 +41,6 @@ export async function GET(request: Request) {
 		});
 
 		if (!tokenResponse.ok) {
-			console.error("Todoist token exchange failed:", tokenResponse.status);
 			return redirectWithError("token_exchange_failed");
 		}
 
@@ -59,21 +58,18 @@ export async function GET(request: Request) {
 		} = await supabase.auth.getUser();
 
 		if (userError || !user) {
-			console.error("Todoist callback: user not authenticated", userError);
 			return redirectWithError("not_authenticated");
 		}
 
-		// Save the Todoist token to user_integrations
 		try {
-			await saveTodoistToken(supabase, user.id, access_token);
+			await saveUserIntegration(user.id, "todoist", access_token);
 		} catch {
 			return redirectWithError("token_save_failed");
 		}
 
 		// Redirect back to the app
 		return NextResponse.redirect(new URL("/?todoist=connected", appUrl));
-	} catch (error) {
-		console.error("Todoist callback unexpected error:", error);
+	} catch (_error) {
 		return redirectWithError("unexpected_error");
 	}
 }

@@ -93,7 +93,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 		getInitialSession();
 
-		// Listen for auth state changes (SINGLE listener for entire app)
 		const {
 			data: { subscription },
 		} = supabase.auth.onAuthStateChange((_event, session) => {
@@ -108,7 +107,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			}
 		});
 
-		// Re-check on window focus (after OAuth redirect returns)
 		const handleFocus = () => {
 			if (user?.id) {
 				fetchUserIntegrations(user.id);

@@ -1,38 +1,15 @@
-// SERVER-ONLY: Uses cookies from next/headers and server-side secrets
-
-import { cookies } from "next/headers";
-import { createClient } from "@/infra/supabase/server";
-
-export async function getSupabaseServerClient() {
-	const cookieStore = cookies();
-	return createClient(cookieStore);
-}
+import {
+	fetchUserTokens,
+	updateAccessToken,
+} from "@/services/server/integrations";
 
 export async function getGoogleAccessToken(userId: string): Promise<string> {
 	const tokens = await fetchUserTokens(userId, "google");
 
 	const newAccessToken = await refreshAccessToken(tokens.refresh_token);
-	await saveAccessToken(userId, "google", newAccessToken);
+	await updateAccessToken(userId, "google", newAccessToken);
 
 	return newAccessToken;
-}
-
-async function fetchUserTokens(userId: string, provider: "google" | "todoist") {
-	const supabase = await getSupabaseServerClient();
-
-	const { data, error } = await supabase
-		.from("user_integrations")
-		.select("access_token, refresh_token")
-		.eq("user_id", userId)
-		.eq("provider", provider) // Added filter
-		.single();
-
-	if (error || !data) {
-		console.error(`❌ Failed to fetch ${provider} tokens:`, error);
-		throw { code: `${provider}_not_connected` };
-	}
-
-	return data;
 }
 
 async function refreshAccessToken(refreshToken: string): Promise<string> {
@@ -50,26 +27,9 @@ async function refreshAccessToken(refreshToken: string): Promise<string> {
 	const tokenData = await res.json();
 
 	if (tokenData.error) {
-		console.error("❌ Failed to refresh Google access token:", tokenData.error);
+		console.error("Failed to refresh Google access token:", tokenData.error);
 		throw { code: "google_access_revoked" };
 	}
 
 	return tokenData.access_token;
-}
-
-async function saveAccessToken(
-	userId: string,
-	provider: "google" | "todoist",
-	accessToken: string,
-) {
-	const supabase = await getSupabaseServerClient();
-
-	await supabase
-		.from("user_integrations")
-		.update({
-			access_token: accessToken,
-			updated_at: new Date().toISOString(),
-		})
-		.eq("user_id", userId)
-		.eq("provider", provider);
 }

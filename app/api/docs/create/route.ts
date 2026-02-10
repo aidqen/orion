@@ -1,6 +1,6 @@
 import { GaxiosError } from "gaxios";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import { createGoogleDoc } from "@/services/server/google/docs";
-import { getSupabaseServerClient } from "@/services/server/google/tokens";
 
 export async function POST(req: Request) {
 	const supabase = await getSupabaseServerClient();
@@ -40,7 +40,6 @@ export async function POST(req: Request) {
 			},
 		);
 	} catch (error: unknown) {
-		console.error("Error creating Google Doc:", error);
 		if (error && typeof error === "object" && "code" in error) {
 			const code = (error as { code: string }).code;
 			return new Response(

@@ -39,7 +39,6 @@ export async function extractAndSaveMemories(
 	});
 
 	if (!output || !Array.isArray(output)) {
-		console.log("No memories extracted");
 		return;
 	}
 

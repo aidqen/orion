@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sidebar as ShadcnSidebar, useSidebar } from "@/components/ui/sidebar";
 import { useChats } from "@/hooks";
 import { useArtifactStore } from "@/store/useArtifactStore";
-import { SearchChatsModal } from "../SearchChatsModal";
+import { SearchChatsModal } from "../Modals/SearchChatsModal/SearchChatsModal";
 import { SidebarHeader } from "../Sidebar/SidebarHeader";
 import { SidebarHistory } from "../Sidebar/SidebarHistory";
 import { SidebarNav } from "../Sidebar/SidebarNav";

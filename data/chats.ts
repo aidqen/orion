@@ -1,5 +1,7 @@
 // UNIVERSAL: All functions work everywhere (browser, server components, API routes)
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { WELCOME_MESSAGE } from "@/constants/prompt.constant";
 import { createClient } from "@/infra/supabase/client";
 import type { Chat } from "@/types/chat";
 
@@ -66,3 +68,50 @@ export async function updateChatTitle(
 // Removed duplicate functions:
 // - saveMessages (canonical version in messages.ts with tempId support)
 // - getChatMessages (canonical version in messages.ts with better typing)
+
+export async function createWelcomeChat(
+	userId: string,
+	supabaseClient?: SupabaseClient,
+): Promise<string> {
+	const supabase = supabaseClient || createClient();
+
+	const { data: chatData, error: chatError } = await supabase
+		.from("chats")
+		.insert({
+			user_id: userId,
+			title: "Welcome to Orion!",
+		})
+		.select("id")
+		.single();
+
+	if (chatError) throw chatError;
+
+	const chatId = chatData.id as string;
+
+	const { error: messageError } = await supabase.from("chat_messages").insert({
+		chat_id: chatId,
+		role: "assistant",
+		parts_json: [{ type: "text", text: WELCOME_MESSAGE }],
+		metadata: {},
+	});
+
+	if (messageError) throw messageError;
+
+	return chatId;
+}
+
+export async function userHasChats(
+	userId: string,
+	supabaseClient?: SupabaseClient,
+): Promise<boolean> {
+	const supabase = supabaseClient || createClient();
+
+	const { count, error } = await supabase
+		.from("chats")
+		.select("id", { count: "exact", head: true })
+		.eq("user_id", userId);
+
+	if (error) throw error;
+
+	return (count ?? 0) > 0;
+}

@@ -134,7 +134,6 @@ export const useArtifactStore = create<ArtifactStore>((set, get) => ({
 			}
 		}
 
-		console.log(`📚 Reconstructed ${newArtifacts.size} artifacts from history`);
 		set({ artifacts: newArtifacts });
 	},
 }));

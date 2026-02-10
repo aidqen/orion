@@ -1,9 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/**
- * Updates a task's completedAt inside the message's parts_json
- * after toggling it in Todoist.
- */
 export async function updateTaskInMessage(
 	supabase: SupabaseClient,
 	messageId: string,

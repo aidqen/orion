@@ -4,7 +4,7 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { generateText, type UIMessagePart } from "ai";
 import { AI_TOOLS, SIMPLE_FAST_MODEL } from "@/constants/chat.constant";
 import { GENERATE_TITLE_PROMPT } from "@/constants/prompt.constant";
-import { getSupabaseServerClient } from "@/services/server/google/tokens";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import type { ChatTools, CustomUIDataTypes } from "@/types/chat";
 import type { EventWithStatus } from "@/types/event";
 import type { TodoWithStatus } from "@/types/todo";

@@ -30,7 +30,6 @@ export function createDocumentTool({ dataStream }: CreateDocumentToolProps) {
 				data: id,
 			});
 
-			console.log("📤 Writing data-title:", title);
 			dataStream.write({
 				type: "data-title",
 				data: title,
