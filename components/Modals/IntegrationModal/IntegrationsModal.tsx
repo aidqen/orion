@@ -43,7 +43,7 @@ export function IntegrationsModal({
 			description:
 				"Connect your google calendar account for calendar management.",
 			connected: isGoogleConnected,
-			icon: <GoogleIcon className="size-6" />,
+			icon: <GoogleIcon />,
 			isAvailable: false,
 		},
 		{
