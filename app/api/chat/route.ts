@@ -8,8 +8,8 @@ import {
 } from "ai";
 import { AI_MODEL } from "@/constants/chat.constant";
 import { SYSTEM_PROMPT } from "@/constants/prompt.constant";
-import { getSupabaseServerClient } from "@/infra/supabase/server";
 import { fetchAllMemories } from "@/data/memories";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import {
 	formatMemoryContext,
 	processMemoryExtraction,
@@ -83,7 +83,6 @@ export async function POST(req: Request) {
 
 		return createUIMessageStreamResponse({ stream: uiStream });
 	} catch (error) {
-		console.error("Error details:", error);
 		return new Response(
 			JSON.stringify({
 				error: "Internal server error",

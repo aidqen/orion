@@ -40,7 +40,6 @@ export async function POST(req: Request) {
 			},
 		);
 	} catch (error: unknown) {
-		console.error("Error creating Google Doc:", error);
 		if (error && typeof error === "object" && "code" in error) {
 			const code = (error as { code: string }).code;
 			return new Response(

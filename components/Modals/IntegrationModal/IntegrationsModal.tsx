@@ -2,9 +2,9 @@
 
 import { Search, X } from "lucide-react";
 import { useState } from "react";
-import { IntegrationItem } from "@/components/Modals/IntegrationModal/IntegrationItem";
 import { NotionIcon } from "@/components/Icons/NotionIcon";
 import { TodoistIcon } from "@/components/Icons/TodoistIcon";
+import { IntegrationItem } from "@/components/Modals/IntegrationModal/IntegrationItem";
 import { Modal } from "@/components/Modals/Modal";
 import { useUser } from "@/contexts/UserContext";
 import { connectTodoist } from "@/services/client/todoist";
@@ -40,7 +40,8 @@ export function IntegrationsModal({
 		{
 			id: "google",
 			name: "Google",
-			description: "Connect your google calendar account for calendar management.",
+			description:
+				"Connect your google calendar account for calendar management.",
 			connected: isGoogleConnected,
 			icon: <GoogleIcon className="size-6" />,
 			isAvailable: false,

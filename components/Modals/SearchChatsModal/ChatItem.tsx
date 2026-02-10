@@ -1,5 +1,5 @@
-import { cn } from "@/utils/shared";
 import { MessageCircle } from "lucide-react";
+import { cn } from "@/utils/shared";
 
 interface ChatItemProps {
 	title: string;

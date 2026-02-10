@@ -25,10 +25,8 @@ export function DataStreamHandler() {
 		for (const delta of newDeltas) {
 			// The delta itself contains type and data from CustomUIDataTypes
 			const streamData = delta as DataUIPart<CustomUIDataTypes>;
-			console.log("🚀 ~ DataStreamHandler ~ streamData:", streamData);
 
 			if (streamData.type === "data-id") {
-				console.log("🔵 Setting artifactId:", streamData.data);
 				artifactIdRef.current = streamData.data;
 			}
 

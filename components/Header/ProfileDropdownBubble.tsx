@@ -9,15 +9,10 @@ import {
 	Monitor,
 	Moon,
 	Puzzle,
-	Settings,
 	Sun,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
-import { useUser } from "@/contexts/UserContext";
-import { useAuthPopupStore } from "@/store/useAuthPopupStore";
-import { cn } from "@/utils/shared";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -32,6 +27,10 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
+import { useUser } from "@/contexts/UserContext";
+import { useAuthPopupStore } from "@/store/useAuthPopupStore";
+import { cn } from "@/utils/shared";
 
 export type ModalState = "closed" | "memories" | "integrations";
 

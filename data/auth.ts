@@ -1,8 +1,8 @@
 // UNIVERSAL: Most functions work everywhere
 // BROWSER-ONLY: redirectToSaveToken() uses window.location
 
-import { createClient } from "@/infra/supabase/client";
 import { createWelcomeChat } from "@/data/chats";
+import { createClient } from "@/infra/supabase/client";
 
 // Google Calendar scopes for OAuth
 const GOOGLE_SCOPES = [
@@ -96,7 +96,6 @@ export async function linkGoogleIdentity() {
 			},
 		},
 	});
-	console.log("🚀 ~ linkGoogleIdentity ~ data:", data);
 
 	if (error) throw error;
 	return data;

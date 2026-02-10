@@ -3,9 +3,9 @@
 import { Link } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import AuthForm, { type Mode } from "@/components/Auth/AuthForm";
+import GoogleButton from "@/components/Auth/GoogleButton";
 import ModeSwitch from "@/components/Auth/ModeSwitch";
 import { linkGoogleIdentity } from "@/data/auth";
-import GoogleButton from "@/components/Auth/GoogleButton";
 
 function getInitialMode(): Mode {
 	if (typeof window === "undefined") return "login";

@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import type React from "react";
 import { useRef, useState } from "react";
 import { ConnectTodoistButton } from "@/components/Auth/ConnectTodoistButton";
+import { TodoItem } from "@/components/Chat/Parts/TodoList/TodoItem";
 import { useUser } from "@/contexts/UserContext";
 import { createTodos } from "@/services/client/todoist";
 import type { TodoWithStatus } from "@/types/todo";
@@ -11,7 +12,6 @@ import {
 	type ButtonState,
 	SubmitItemsButton,
 } from "../CreateEventsPreview/SubmitItemsButton";
-import { TodoItem } from "@/components/Chat/Parts/TodoList/TodoItem";
 
 interface CreateTodosPreviewProps {
 	data: {

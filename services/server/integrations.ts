@@ -1,9 +1,6 @@
-
 import { getSupabaseServerClient } from "@/infra/supabase/server";
 
 export type IntegrationProvider = "google" | "todoist";
-
-
 
 export async function fetchUserTokens(
 	userId: string,

@@ -2,6 +2,7 @@
 
 import { ArrowUp, RotateCw } from "lucide-react";
 import { type ChangeEvent, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
 	PromptInput,
 	PromptInputActionAddAttachments,
@@ -15,13 +16,12 @@ import {
 	PromptInputToolbar,
 	PromptInputTools,
 } from "@/components/ui/prompt-input";
-import { Button } from "@/components/ui/button";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import type { FileUIPartWithId, MessageInput } from "@/types/chat";
 import { cn } from "@/utils/shared";
+import { PasteHandler } from "../../Handlers/PasteHandler";
 import { DragOverlay } from "./DragOverlay";
 import { FileUploader } from "./FileUploader";
-import { PasteHandler } from "../../Handlers/PasteHandler";
 
 export function CustomPromptInput({
 	input,

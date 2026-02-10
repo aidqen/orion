@@ -4,11 +4,11 @@ import { useIsMobile } from "@/hooks/useMediaQuery";
 import { cn } from "@/utils/shared";
 import { IntegrationsModal } from "../Modals/IntegrationModal/IntegrationsModal";
 import { MemoriesModal } from "../Modals/MemoriesModal/MemoriesModal";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 import {
 	type ModalState,
 	ProfileDropdownBubble,
 } from "./ProfileDropdownBubble";
-import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 
 export function Header() {
 	const isMobile = useIsMobile();

@@ -41,7 +41,6 @@ export async function saveMemory(
 		.single();
 
 	if (error) {
-		console.error("Error saving memory:", error);
 		return null;
 	}
 

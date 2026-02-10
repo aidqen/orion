@@ -1,9 +1,9 @@
 // UNIVERSAL: All functions work everywhere (browser, server components, API routes)
 
-import { createClient } from "@/infra/supabase/client";
-import { WELCOME_MESSAGE } from "@/constants/prompt.constant";
-import type { Chat } from "@/types/chat";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { WELCOME_MESSAGE } from "@/constants/prompt.constant";
+import { createClient } from "@/infra/supabase/client";
+import type { Chat } from "@/types/chat";
 
 export interface ChatMessage {
 	role: "user" | "assistant" | "system";

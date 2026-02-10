@@ -17,8 +17,6 @@ export async function POST(request: Request) {
 		}
 
 		const { chatId, firstMessage } = await request.json();
-		console.log("🚀 ~ POST ~ firstMessage:", firstMessage);
-		console.log("🚀 ~ POST ~ chatId:", chatId);
 
 		if (!chatId || !firstMessage) {
 			return NextResponse.json(
@@ -34,8 +32,7 @@ export async function POST(request: Request) {
 		await updateChatTitle(chatId, generatedTitle);
 
 		return NextResponse.json({ title: generatedTitle });
-	} catch (error) {
-		console.error("Error generating chat title:", error);
+	} catch (_error) {
 		return NextResponse.json(
 			{ error: "Failed to generate title" },
 			{ status: 500 },

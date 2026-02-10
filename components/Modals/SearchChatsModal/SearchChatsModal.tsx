@@ -1,10 +1,8 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { Chat } from "@/types/chat";
-import { cn } from "@/utils/shared";
 import { Modal } from "../Modal";
 import { ChatItem } from "./ChatItem";
 
@@ -92,4 +90,3 @@ export function SearchChatsModal({
 		</Modal>
 	);
 }
-

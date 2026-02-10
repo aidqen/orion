@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { fetchUserTokens } from "@/services/server/integrations";
 import { getSupabaseServerClient } from "@/infra/supabase/server";
+import { fetchUserTokens } from "@/services/server/integrations";
 import { updateTaskInMessage } from "@/services/server/todoist/messages";
 import { toggleTodoistTask } from "@/services/server/todoist/tasks";
 
@@ -35,7 +35,10 @@ export async function POST(
 			);
 		}
 
-		const { access_token: accessToken } = await fetchUserTokens(user.id, "todoist");
+		const { access_token: accessToken } = await fetchUserTokens(
+			user.id,
+			"todoist",
+		);
 		await toggleTodoistTask(accessToken, taskId, completed);
 
 		await updateTaskInMessage(supabase, messageId, taskId, completed);

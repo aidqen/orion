@@ -3,8 +3,11 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createWelcomeChat, userHasChats } from "@/data/chats";
-import { saveUserIntegration, type IntegrationProvider } from "@/services/server/integrations";
 import { createClient } from "@/infra/supabase/server";
+import {
+	type IntegrationProvider,
+	saveUserIntegration,
+} from "@/services/server/integrations";
 
 export async function GET(request: Request) {
 	const requestUrl = new URL(request.url);
@@ -49,7 +52,8 @@ export async function GET(request: Request) {
 		}
 
 		if (session.provider_token) {
-			const provider = session.user.identities?.[0]?.provider as IntegrationProvider;
+			const provider = session.user.identities?.[0]
+				?.provider as IntegrationProvider;
 
 			try {
 				await saveUserIntegration(
@@ -71,10 +75,7 @@ export async function GET(request: Request) {
 				const hasChats = await userHasChats(session.user.id, supabase);
 
 				if (!hasChats) {
-					await createWelcomeChat(
-						session.user.id,
-						supabase,
-					);
+					await createWelcomeChat(session.user.id, supabase);
 				}
 			} catch (welcomeError) {
 				console.error("Failed to create welcome chat:", welcomeError);

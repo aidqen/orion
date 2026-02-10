@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import ErrorBanner from "@/components/ui/ErrorBanner";
 import { normalizeAuthError, signInWithGoogle } from "@/data/auth";

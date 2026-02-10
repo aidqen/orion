@@ -32,7 +32,6 @@ export function ArtifactToolbar({ closeArtifact }: ArtifactToolbarProps) {
 	const activeArtifact = activeArtifactId
 		? artifacts.get(activeArtifactId)
 		: null;
-	console.log("🚀 ~ ArtifactToolbar ~ activeArtifact:", activeArtifact);
 	const [isCopied, setIsCopied] = useState(false);
 
 	// const { mutate: createDoc, isPending } = useMutation({
