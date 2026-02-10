@@ -1,7 +1,7 @@
 // SERVER-ONLY: Supabase server client factory (uses cookies from next/headers)
 
 import { createServerClient } from "@supabase/ssr";
-import type { cookies } from "next/headers";
+import { cookies } from "next/headers";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -27,3 +27,8 @@ export const createClient = (cookieStore: ReturnType<typeof cookies>) => {
 		},
 	});
 };
+
+export async function getSupabaseServerClient() {
+	const cookieStore = cookies();
+	return createClient(cookieStore);
+}

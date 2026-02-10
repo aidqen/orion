@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { AuthCard, ConnectGoogleCard } from "@/components/auth/AuthCards";
+import { AuthCard, ConnectGoogleCard } from "@/components/Auth/AuthCards";
 import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
 import { useAuthPopupStore } from "@/store/useAuthPopupStore";
 

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { saveUserIntegration } from "@/services/server/integrations";
 import { createClient } from "@/infra/supabase/server";
-import { saveTodoistToken } from "@/services/server/todoist/tokens";
 
 const TODOIST_TOKEN_URL = "https://todoist.com/oauth/access_token";
 
@@ -63,9 +63,8 @@ export async function GET(request: Request) {
 			return redirectWithError("not_authenticated");
 		}
 
-		// Save the Todoist token to user_integrations
 		try {
-			await saveTodoistToken(supabase, user.id, access_token);
+			await saveUserIntegration(user.id, "todoist", access_token);
 		} catch {
 			return redirectWithError("token_save_failed");
 		}

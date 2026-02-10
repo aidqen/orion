@@ -1,7 +1,7 @@
 "use client";
 
 import { type ChangeEvent, useState } from "react";
-import GoogleButton from "@/components/auth/GoogleButton";
+import GoogleButton from "@/components/Auth/GoogleButton";
 import ErrorBanner from "@/components/ui/ErrorBanner";
 import { Input } from "@/components/ui/input";
 import {
@@ -146,13 +146,13 @@ export default function AuthForm({
 				</button>
 			</form>
 
-			<div className="my-5 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+			{/* <div className="my-5 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
 				<div className="h-px flex-1 bg-gray-200 dark:bg-[#2A2F3A]" />
 				<span>OR</span>
 				<div className="h-px flex-1 bg-gray-200 dark:bg-[#2A2F3A]" />
 			</div>
 
-			<GoogleButton />
+			<GoogleButton /> */}
 		</>
 	);
 }

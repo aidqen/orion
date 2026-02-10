@@ -23,29 +23,24 @@ export function useResizePanel({
 	const [width, setWidth] = useState(initialWidth);
 	const [isDragging, setIsDragging] = useState(false);
 
-	// Use refs for values that change during drag to avoid re-renders
 	const isDraggingRef = useRef(false);
 	const startXRef = useRef(0);
 	const startWidthRef = useRef(0);
 	const rafIdRef = useRef<number | null>(null);
 	const pendingWidthRef = useRef<number | null>(null);
 
-	// Handle mouse move during drag
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {
 			if (!isDraggingRef.current) return;
 
-			// Calculate new width: dragging LEFT increases width (panel is on right)
 			const deltaX = startXRef.current - e.clientX;
 			const newWidth = Math.min(
 				maxWidth,
 				Math.max(minWidth, startWidthRef.current + deltaX),
 			);
 
-			// Store pending width for rAF update
 			pendingWidthRef.current = newWidth;
 
-			// Use rAF to batch DOM updates
 			if (rafIdRef.current === null) {
 				rafIdRef.current = requestAnimationFrame(() => {
 					if (pendingWidthRef.current !== null) {

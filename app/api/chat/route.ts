@@ -8,8 +8,8 @@ import {
 } from "ai";
 import { AI_MODEL } from "@/constants/chat.constant";
 import { SYSTEM_PROMPT } from "@/constants/prompt.constant";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import { fetchAllMemories } from "@/data/memories";
-import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import {
 	formatMemoryContext,
 	processMemoryExtraction,

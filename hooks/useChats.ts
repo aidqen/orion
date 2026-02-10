@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/contexts/UserContext";
 import { getUserChats } from "@/data/chats";
-import { generateAndSaveChatTitle } from "@/services/client/chat.service";
+import { generateAndSaveChatTitle } from "@/services/client/chat";
 import type { Chat, MessageInput } from "@/types/chat";
 
 export function useChats() {

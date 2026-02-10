@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CustomPromptInput } from "@/components/CustomPromptInput/CustomPromptInput";
-import { Header } from "@/components/Header";
-import { HomeWidgets } from "@/components/Homepage/HomeWidgets";
-import { QuickActionButtons } from "@/components/QuickActionButtons";
+import { CustomPromptInput } from "@/components/Chat/CustomPromptInput/CustomPromptInput";
+import { Header } from "@/components/Header/Header";
+import { HomeWidgets } from "@/components/Home/HomeWidgets";
+import { QuickActionButtons } from "@/components/Home/QuickActionButtons";
 import { AUTH_POPUP_MODES } from "@/constants/auth.constant";
 import { useUser } from "@/contexts/UserContext";
 import { createChat } from "@/data/chats";

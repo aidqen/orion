@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Planwise",
-	description: "Plan your life with ease",
+	title: "Orion",
+	description: "Your personal AI assistant",
 };
 
 export default function RootLayout({

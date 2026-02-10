@@ -2,6 +2,7 @@
 // BROWSER-ONLY: redirectToSaveToken() uses window.location
 
 import { createClient } from "@/infra/supabase/client";
+import { createWelcomeChat } from "@/data/chats";
 
 // Google Calendar scopes for OAuth
 const GOOGLE_SCOPES = [
@@ -29,7 +30,7 @@ export async function signUpWithPassword(
 	email: string,
 	password: string,
 	name?: string,
-) {
+): Promise<{ userId: string; welcomeChatId: string }> {
 	// Supabase prevents duplicate users. It returns error: "User already registered"
 	const supabase = createClient();
 
@@ -43,7 +44,13 @@ export async function signUpWithPassword(
 		},
 	});
 	if (error) throw error;
-	return data;
+
+	const userId = data.user?.id;
+	if (!userId) throw new Error("User ID not found after signup");
+
+	const welcomeChatId = await createWelcomeChat(userId);
+
+	return { userId, welcomeChatId };
 }
 
 // BROWSER-ONLY: uses window.location

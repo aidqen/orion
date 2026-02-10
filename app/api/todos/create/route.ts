@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { fetchUserTokens } from "@/services/server/integrations";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import { updateToolOutput } from "@/services/server/chat/chat";
-import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import { createTodoistTask } from "@/services/server/todoist/tasks";
-import { getTodoistAccessToken } from "@/services/server/todoist/tokens";
 import type { TodoData, TodoWithStatus } from "@/types/todo";
 
 export async function POST(req: Request) {
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 			);
 		}
 
-		const accessToken = await getTodoistAccessToken(user.id);
+		const { access_token: accessToken } = await fetchUserTokens(user.id, "todoist");
 
 		const toProcess = todos
 			.map((item, index) => ({ item, index }))

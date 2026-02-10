@@ -1,6 +1,6 @@
 import { jsonSchema, tool } from "ai";
+import { fetchUserTokens } from "@/services/server/integrations";
 import { fetchTodoistTasks } from "@/services/server/todoist/tasks";
-import { getTodoistAccessToken } from "@/services/server/todoist/tokens";
 
 export function createTodoTools(userId: string) {
 	return {
@@ -37,8 +37,8 @@ export function fetchTodosTool(userId: string) {
 			filter?: string;
 			projectId?: string;
 		}) => {
-			const accessToken = await getTodoistAccessToken(userId);
-			const tasks = await fetchTodoistTasks(accessToken, {
+			const { access_token } = await fetchUserTokens(userId, "todoist");
+			const tasks = await fetchTodoistTasks(access_token, {
 				filter,
 				projectId,
 			});

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Mode } from "./AuthForm";
+import type { Mode } from "@/components/Auth/AuthForm";
 
 export default function ModeSwitch({
 	mode,

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import ErrorBanner from "@/components/ui/ErrorBanner";
 import { normalizeAuthError, signInWithGoogle } from "@/data/auth";
+import { GoogleIcon } from "../Icons/GoogleIcon";
 
 interface GoogleButtonProps {
 	text?: string;
@@ -42,13 +43,7 @@ export default function GoogleButton({
 				disabled={loading}
 				className="cursor-pointer flex flex-row items-center gap-2 justify-center h-11 w-full rounded-lg border border-gray-200 dark:border-[#2A2F3A] bg-gray-50 dark:bg-[#1B1F27] text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-[#20242E] disabled:opacity-70"
 			>
-				<Image
-					src="/google-icon-logo-svgrepo-com.svg"
-					alt="Google"
-					className="h-5 w-5"
-					width={20}
-					height={20}
-				/>
+				<GoogleIcon />
 				{text}
 			</button>
 		</>

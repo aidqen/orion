@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { getSupabaseServerClient } from "@/infra/supabase/server";
 import { createCalendarEvent } from "@/services/server/calendar/events";
 import { updateToolOutput } from "@/services/server/chat/chat";
-import { getSupabaseServerClient } from "@/services/server/google/tokens";
 import type { EventData, EventWithStatus } from "@/types/event";
 
 export async function POST(req: Request) {

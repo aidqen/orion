@@ -1,5 +1,5 @@
 export const WELCOME_MESSAGE = `
-**Welcome to PlanWise AI!** 👋
+**Welcome to Orion!** 👋
 
 I'm your personal AI assistant designed to help you stay organized, productive, and on top of everything. Let me show you around!
 
