@@ -13,6 +13,7 @@ import {
 import * as auth from "@/data/auth";
 import { createClient } from "@/infra/supabase/client";
 import { useArtifactStore } from "@/store/useArtifactStore";
+import { connectTodoist } from "@/services/client/todoist";
 
 // Infer User type from Supabase client
 type SupabaseClient = ReturnType<typeof createClient>;
@@ -31,6 +32,7 @@ interface UserContextType {
 	refreshIntegrations: () => void;
 	signInWithPassword: (email: string, password: string) => Promise<void>;
 	signInWithGoogle: () => Promise<void>;
+	signInTodoist: () => void;
 	signOut: () => Promise<void>;
 }
 
@@ -148,6 +150,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
 		}
 	}, []);
 
+	const handleSignInTodoist = useCallback(() => {
+		setError(null);
+		try {
+			connectTodoist();
+		} catch (err) {
+			setError(err as Error);
+			throw err;
+		}
+	}, []);
+
 	const queryClient = useQueryClient();
 
 	const resetUserState = useCallback(() => {
@@ -188,6 +200,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			refreshIntegrations,
 			signInWithPassword: handleSignInWithPassword,
 			signInWithGoogle: handleSignInWithGoogle,
+			signInTodoist: handleSignInTodoist,
 			signOut: handleSignOut,
 		}),
 		[
@@ -200,6 +213,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 			refreshIntegrations,
 			handleSignInWithPassword,
 			handleSignInWithGoogle,
+			handleSignInTodoist,
 			handleSignOut,
 		],
 	);
