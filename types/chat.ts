@@ -1,4 +1,3 @@
-import type { anthropic } from "@ai-sdk/anthropic";
 import type { FileUIPart, InferUITool, UIMessage } from "ai";
 import type {
 	createNewEventsTool,
@@ -15,11 +14,42 @@ export interface Chat {
 
 export type ItemStatus = "pending_confirmation" | "confirmed" | "failed";
 
+// Tavily Search Types
+export type TavilySearchResult = {
+	title: string;
+	url: string;
+	content: string;
+	score: number;
+	rawContent?: string;
+	publishedDate?: string;
+	favicon?: string;
+};
+
+export type TavilyImageResult = {
+	url: string;
+	description?: string;
+};
+
+export type TavilySearchOutput = {
+	query: string;
+	results: TavilySearchResult[];
+	responseTime: number;
+	requestId: string;
+	answer?: string;
+	images?: string[] | TavilyImageResult[];
+};
+
+export type webSearchToolType = {
+	type: "tool-webSearch";
+	input: { query: string };
+	output: TavilySearchOutput;
+};
+
 export type ChatTools = {
 	getCalendarEvents: getCalendarEventsToolType;
 	createNewEvents: createNewEventsToolType;
 	createDocument: createDocumentToolType;
-	webSearchTool: webSearchToolType;
+	webSearch: webSearchToolType;
 	fetchTodos: fetchTodosToolType;
 	suggestNewTodos: suggestNewTodosToolType;
 };
@@ -49,16 +79,10 @@ type createNewEventsToolType = InferUITool<
 type createDocumentToolType = InferUITool<
 	ReturnType<typeof createDocumentTool>
 >;
-type AnthropicWebSearchType = InferUITool<
-	ReturnType<typeof anthropic.tools.webSearch_20250305>
->;
 type fetchTodosToolType = InferUITool<ReturnType<typeof fetchTodosTool>>;
 type suggestNewTodosToolType = InferUITool<
 	ReturnType<typeof suggestNewTodosTool>
 >;
-export type webSearchToolType = Omit<AnthropicWebSearchType, "type"> & {
-	type: "tool-webSearchTool";
-};
 
 export type ChatMessage = UIMessage<
 	MessageMetadata,

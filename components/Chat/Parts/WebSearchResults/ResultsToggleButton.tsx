@@ -20,7 +20,7 @@ export function ResultsToggleButton({
 			onClick={onToggle}
 			className="flex items-center justify-between w-full hover:bg-bg-200 rounded py-1.5 gap-2 transition-colors"
 		>
-			<div className="flex items-center gap-2 text-sm">
+			<div className="flex items-center gap-3 text-sm">
 				<div className="h-6 w-5 flex justify-center items-center relative">
 					<Globe size={16} className="" />
 				</div>

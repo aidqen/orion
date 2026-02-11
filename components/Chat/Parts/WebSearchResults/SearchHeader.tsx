@@ -14,7 +14,7 @@ export function SearchHeader({ query, isOutputAvailable }: SearchHeaderProps) {
 	const successText = `Found results for ${searchQuery}`;
 
 	return (
-		<div className="px-3 py-3.5 flex items-center gap-2 text-sm text-text-300 overflow-hidden">
+		<div className="px-3 py-3.5 flex items-center gap-3 text-sm text-text-300 overflow-hidden text-white">
 			<div className="w-5 h-4 flex justify-center items-center relative">
 				<Search size={16} className="text-text-300" />
 			</div>
