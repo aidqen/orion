@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ConnectTodoistButton } from "@/components/Auth/ConnectTodoistButton";
 import { toggleTodo } from "@/services/client/todoist";
 import { TodoItem } from "./TodoItem";
 
@@ -18,21 +19,29 @@ interface TodoTask {
 
 interface TodoListProps {
 	data: {
-		tasks: TodoTask[];
+		tasks?: TodoTask[];
+		error?: { code: string };
 	};
 	messageId: string;
 }
 
 export const TodoList: React.FC<TodoListProps> = ({ data, messageId }) => {
-	const { tasks: initialTasks } = data || {};
-	const [tasks, setTasks] = useState(initialTasks);
+	const { tasks: initialTasks, error } = data || {};
+
+	if (error?.code === "todoist_not_connected") {
+		return (
+				<ConnectTodoistButton className="w-fit"/>
+		);
+	}
+
+	const [tasks, setTasks] = useState(initialTasks || []);
 	const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
 
 	if (!tasks || tasks.length === 0) return null;
 
 	const updateTaskStatus = (taskId: string, completed: boolean) => {
 		setTasks((prev) =>
-			prev.map((t) =>
+			(prev || []).map((t) =>
 				t.id === taskId
 					? {
 							...t,

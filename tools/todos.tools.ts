@@ -37,13 +37,20 @@ export function fetchTodosTool(userId: string) {
 			filter?: string;
 			projectId?: string;
 		}) => {
-			const { access_token } = await fetchUserTokens(userId, "todoist");
-			const tasks = await fetchTodoistTasks(access_token, {
-				filter,
-				projectId,
-			});
+			try {
+				const { access_token } = await fetchUserTokens(userId, "todoist");
+				const tasks = await fetchTodoistTasks(access_token, {
+					filter,
+					projectId,
+				});
 
-			return { tasks };
+				return { tasks };
+			} catch (error) {
+				if (error && typeof error === "object" && "code" in error) {
+					return { error: { code: error.code as string } };
+				}
+				throw error;
+			}
 		},
 	});
 }
