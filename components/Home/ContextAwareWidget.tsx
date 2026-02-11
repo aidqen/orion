@@ -14,7 +14,7 @@ export function ContextAwareWidget({
 	badgeText = "New",
 }: ContextAwareWidgetProps) {
 	return (
-		<div className="flex-1 bg-sidebar dark:bg-card rounded-2xl border border-border p-3 flex flex-col gap-2 shadow-[0_2px_8px_rgba(0,0,0,0.02)] font-sans">
+		<div className="flex-1 bg-sidebar dark:bg-card rounded-2xl border border-border p-3 flex flex-col gap-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] font-sans">
 			<div className="flex items-center gap-0.5 px-1.5 py-[3px]  border border-border rounded-full w-fit shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
 				<Earth size={15} className="text-muted-foreground" />
 				<span className="text-[11px] font-semibold text-foreground">

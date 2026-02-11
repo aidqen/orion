@@ -39,14 +39,14 @@ export function IntegrationItem({
 				onClick={!integration.connected ? onConnect : undefined}
 				disabled={!integration.isAvailable}
 				className={cn(
-					"px-4 py-2 disabled:opacity-50 rounded-full text-sm font-medium transition-colors border",
+					"w-30 h-10 flex justify-center items-center disabled:opacity-50 rounded-full text-sm font-medium transition-colors border",
 					integration.connected
-						? "bg-transparent border-stone-100 dark:border-stone-200 text-stone-400 dark:text-stone-200 cursor-default"
+						? "bg-transparent border-stone-400 dark:border-stone-200 text-stone-400 dark:text-stone-200 cursor-default"
 						: "bg-black dark:bg-white text-white dark:text-black border-transparent hover:opacity-90 cursor-pointer",
 				)}
 			>
 				{integration.connected ? (
-					<span className="flex items-center gap-2">
+					<span className="flex items-center gap-1">
 						<Check size={18} /> Connected
 					</span>
 				) : (
