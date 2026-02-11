@@ -6,7 +6,7 @@ import { CreateTodosPreview } from "./CreateTodosPreview/CreateTodosPreview";
 import { EventList } from "./EventList/EventList";
 import { TextPart } from "./TextPart";
 import { TodoList } from "./TodoList/TodoList";
-import { WebSearchResults } from "./WebSearchResults/WebSearchResults";
+import { WebSearch } from "./WebSearch/WebSearch";
 
 interface RenderPartProps {
 	part: ChatMessagePart;
@@ -33,7 +33,7 @@ export function RenderPart({
 			);
 
 		case AI_TOOLS.WEB_SEARCH:
-			return <WebSearchResults data={part} />;
+			return <WebSearch data={part} />;
 
 		case AI_TOOLS.CREATE_DOCUMENT:
 			return (

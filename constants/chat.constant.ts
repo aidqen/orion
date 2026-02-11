@@ -12,7 +12,7 @@ export const EMBEDDING_MODEL = "text-embedding-3-small" as const;
 export const AI_TOOLS = {
 	GET_CALENDAR_EVENTS: "tool-getCalendarEvents",
 	CREATE_NEW_EVENTS: "tool-createNewEvents",
-	WEB_SEARCH: "tool-webSearchTool",
+	WEB_SEARCH: "tool-webSearch",
 	CREATE_DOCUMENT: "tool-createDocument",
 	FETCH_TODOS: "tool-fetchTodos",
 	SUGGEST_NEW_TODOS: "tool-suggestNewTodos",

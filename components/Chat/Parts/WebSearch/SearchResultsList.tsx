@@ -1,17 +1,17 @@
 "use client";
 
 import type { TavilySearchResult } from "@/types/chat";
-import { WebSearchResultItem } from "./WebSearchItem";
+import { SearchResultItem } from "./SearchResultItem";
 
-interface ResultsListProps {
+interface SearchResultsListProps {
 	results: TavilySearchResult[];
 }
 
-export function ResultsList({ results }: ResultsListProps) {
+export function SearchResultsList({ results }: SearchResultsListProps) {
 	return (
 		<div className="mt-2 pl-4 overflow-x-hidden space-y-1">
 			{results.map((result, index) => (
-				<WebSearchResultItem
+				<SearchResultItem
 					key={index}
 					title={result.title}
 					url={result.url}

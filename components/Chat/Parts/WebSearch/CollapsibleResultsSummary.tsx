@@ -2,19 +2,19 @@
 
 import { ChevronDown, Globe } from "lucide-react";
 
-interface ResultsToggleButtonProps {
+interface CollapsibleResultsSummaryProps {
 	query: string;
 	resultCount: number;
 	isExpanded: boolean;
 	onToggle: () => void;
 }
 
-export function ResultsToggleButton({
+export function CollapsibleResultsSummary({
 	query,
 	resultCount,
 	isExpanded,
 	onToggle,
-}: ResultsToggleButtonProps) {
+}: CollapsibleResultsSummaryProps) {
 	return (
 		<button
 			onClick={onToggle}

@@ -9,7 +9,7 @@ interface WebSearchResultItemProps {
 	favicon?: string;
 }
 
-export function WebSearchResultItem({
+export function SearchResultItem({
 	title,
 	url,
 	favicon,

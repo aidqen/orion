@@ -5,9 +5,9 @@ import { useState } from "react";
 import useMeasure from "react-use-measure";
 import { cn } from "@/utils/shared";
 import type { TavilySearchOutput } from "@/types/chat";
-import { ResultsList } from "./ResultsList";
-import { ResultsToggleButton } from "./ResultsToggleButton";
-import { SearchHeader } from "./SearchHeader";
+import { SearchResultsList } from "./SearchResultsList";
+import { CollapsibleResultsSummary } from "./CollapsibleResultsSummary";
+import { SearchStatusBanner } from "./SearchStatusBanner";
 
 interface WebSearchData {
 	input?: { query?: string };
@@ -18,7 +18,7 @@ interface WebSearchFetchProps {
 	data: WebSearchData;
 }
 
-export function WebSearchResults({ data }: WebSearchFetchProps) {
+export function WebSearch({ data }: WebSearchFetchProps) {
 	const [showResults, setShowResults] = useState(false);
 	const [ref, bounds] = useMeasure();
 
@@ -34,7 +34,7 @@ export function WebSearchResults({ data }: WebSearchFetchProps) {
 			transition={{ type: "spring", stiffness: 300, damping: 30 }}
 		>
 			<div ref={ref} className="w-full">
-				<SearchHeader query={query} isOutputAvailable={!!outputAvailable} />
+				<SearchStatusBanner query={query} isOutputAvailable={!!outputAvailable} />
 
 				{outputAvailable && query ? (
 					<div
@@ -43,14 +43,14 @@ export function WebSearchResults({ data }: WebSearchFetchProps) {
 							showResults ? "bg-muted/50" : "bg-transparent hover:bg-muted/30",
 						)}
 					>
-						<ResultsToggleButton
+						<CollapsibleResultsSummary
 							query={query}
 							resultCount={results.length}
 							isExpanded={showResults}
 							onToggle={() => setShowResults(!showResults)}
 						/>
 
-						{showResults && <ResultsList results={results} />}
+						{showResults && <SearchResultsList results={results} />}
 					</div>
 				) : null}
 			</div>

@@ -3,18 +3,18 @@
 import { Search } from "lucide-react";
 import { Shimmer } from "@/components/ui/shimmer";
 
-interface SearchHeaderProps {
+interface SearchStatusBannerProps {
 	query?: string;
 	isOutputAvailable?: boolean;
 }
 
-export function SearchHeader({ query, isOutputAvailable }: SearchHeaderProps) {
+export function SearchStatusBanner({ query, isOutputAvailable }: SearchStatusBannerProps) {
 	const searchQuery = query ?? "your query";
 	const loadingText = `Searching data for ${searchQuery}`;
 	const successText = `Found results for ${searchQuery}`;
 
 	return (
-		<div className="px-3 py-3.5 flex items-center gap-3 text-sm text-text-300 overflow-hidden text-white">
+		<div className="px-3 py-3.5 flex items-center gap-3 text-sm text-text-300 overflow-hidden dark:text-white text-black">
 			<div className="w-5 h-4 flex justify-center items-center relative">
 				<Search size={16} className="text-text-300" />
 			</div>
