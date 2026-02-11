@@ -3,10 +3,10 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import useMeasure from "react-use-measure";
-import { cn } from "@/utils/shared";
 import type { TavilySearchOutput } from "@/types/chat";
-import { SearchResultsList } from "./SearchResultsList";
+import { cn } from "@/utils/shared";
 import { CollapsibleResultsSummary } from "./CollapsibleResultsSummary";
+import { SearchResultsList } from "./SearchResultsList";
 import { SearchStatusBanner } from "./SearchStatusBanner";
 
 interface WebSearchData {
@@ -34,7 +34,10 @@ export function WebSearch({ data }: WebSearchFetchProps) {
 			transition={{ type: "spring", stiffness: 300, damping: 30 }}
 		>
 			<div ref={ref} className="w-full">
-				<SearchStatusBanner query={query} isOutputAvailable={!!outputAvailable} />
+				<SearchStatusBanner
+					query={query}
+					isOutputAvailable={!!outputAvailable}
+				/>
 
 				{outputAvailable && query ? (
 					<div

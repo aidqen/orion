@@ -8,7 +8,10 @@ interface SearchStatusBannerProps {
 	isOutputAvailable?: boolean;
 }
 
-export function SearchStatusBanner({ query, isOutputAvailable }: SearchStatusBannerProps) {
+export function SearchStatusBanner({
+	query,
+	isOutputAvailable,
+}: SearchStatusBannerProps) {
 	const searchQuery = query ?? "your query";
 	const loadingText = `Searching data for ${searchQuery}`;
 	const successText = `Found results for ${searchQuery}`;

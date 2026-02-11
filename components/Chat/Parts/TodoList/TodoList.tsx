@@ -27,14 +27,12 @@ interface TodoListProps {
 
 export const TodoList: React.FC<TodoListProps> = ({ data, messageId }) => {
 	const { tasks: initialTasks, error } = data || {};
-	if (error?.code === "todoist_not_connected") {
-		return (
-			<ConnectTodoistButton className="w-fit" />
-		);
-	}
-
 	const [tasks, setTasks] = useState(initialTasks || []);
 	const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+
+	if (error?.code === "todoist_not_connected") {
+		return <ConnectTodoistButton className="w-fit" />;
+	}
 
 	if (!tasks || tasks.length === 0) return null;
 
@@ -43,9 +41,9 @@ export const TodoList: React.FC<TodoListProps> = ({ data, messageId }) => {
 			(prev || []).map((t) =>
 				t.id === taskId
 					? {
-						...t,
-						completedAt: completed ? new Date().toISOString() : null,
-					}
+							...t,
+							completedAt: completed ? new Date().toISOString() : null,
+						}
 					: t,
 			),
 		);

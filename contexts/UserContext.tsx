@@ -12,8 +12,8 @@ import {
 } from "react";
 import * as auth from "@/data/auth";
 import { createClient } from "@/infra/supabase/client";
-import { useArtifactStore } from "@/store/useArtifactStore";
 import { connectTodoist } from "@/services/client/todoist";
+import { useArtifactStore } from "@/store/useArtifactStore";
 
 // Infer User type from Supabase client
 type SupabaseClient = ReturnType<typeof createClient>;

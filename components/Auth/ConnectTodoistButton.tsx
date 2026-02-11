@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import ErrorBanner from "@/components/ui/ErrorBanner";
+import { useUser } from "@/contexts/UserContext";
 import { connectTodoist } from "@/services/client/todoist";
+import { cn } from "@/utils/shared";
 import { TodoistIcon } from "../Icons/TodoistIcon";
 import { Button } from "../ui/button";
-import { cn } from "@/utils/shared";
-import { useUser } from "@/contexts/UserContext";
 
 interface ConnectTodoistButtonProps {
 	className?: string;
@@ -47,7 +47,11 @@ export function ConnectTodoistButton({
 				className={cn("bg-[#E44332] hover:bg-[#c93a2b] text-white", className)}
 			>
 				<TodoistIcon />
-				{isTodoistConnected ? "Connected" : loading ? "Connecting..." : "Connect Todoist"}
+				{isTodoistConnected
+					? "Connected"
+					: loading
+						? "Connecting..."
+						: "Connect Todoist"}
 			</Button>
 		</>
 	);
