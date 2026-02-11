@@ -12,6 +12,33 @@ Orion is an intelligent personal assistant that seamlessly integrates with your 
 
 ---
 
+## Sample Interactions
+
+**Calendar Management:**
+> "What's on my calendar this week?"
+
+> "Find a 30-minute slot for a call tomorrow afternoon"
+
+> "Create a meeting with John next Tuesday at 2pm about the new project"
+
+**Task Management:**
+> "Show me my todos and what's overdue"
+
+> "Add 'Review PR #123' to my Todoist for tomorrow"
+
+**Knowledge & Research:**
+> "Create a document about React Server Components for my team presentation"
+
+> "Search for the latest news about AI agents"
+
+**Memory System:**
+> "Remember that I prefer morning meetings before 11am"
+
+**Image-to-Event:**
+> *[Uploads event flyer image]* → Automatically extracts details and creates calendar event
+
+---
+
 ## Features
 
 ### AI Chat Interface
@@ -91,135 +118,34 @@ See [.github/workflows/ci.yml](.github/workflows/ci.yml) for full CI configurati
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- **Node.js 20+** (project uses pnpm as package manager)
-- **pnpm 9+** installed globally (`npm install -g pnpm`)
-- **Supabase Project** with:
-  - PostgreSQL database
-  - Auth configured with Google OAuth provider
-  - Storage bucket for image uploads (`images` bucket)
-  - Tables: `chats`, `chat_messages`, `memories`, `user_integrations`
-- **Google Cloud Project** with:
-  - Calendar API enabled
-  - Google Docs API enabled
-  - OAuth 2.0 credentials configured
-
-
-### Environment Variables
-
-Create a `.env.local` file in the root directory with the following variables:
-
-### Installation
-
-**OAuth Setup:**
-- Configure Google OAuth redirect URI: `http://localhost:3000/auth/callback`
-- Configure Todoist OAuth redirect URI: `http://localhost:3000/api/auth/todoist/callback`
-
----
-
 ## Project Structure
 
 ```
-├── app/                            # Next.js App Router
-│   ├── api/                        # API routes
-│   │   ├── auth/todoist/callback/  # Todoist OAuth callback
-│   │   ├── calendar/create/        # Calendar event creation
-│   │   ├── chat/                   # Main chat endpoint + title generation
-│   │   ├── docs/create/            # Document creation
-│   │   └── todos/                  # Todo CRUD operations
-│   ├── auth/                       # Authentication pages + OAuth callback
-│   ├── chat/[chatId]/              # Dynamic chat interface
-│   ├── page.tsx                    # Home page
-│   ├── layout.tsx                  # Root layout with providers
-│   └── providers.tsx               # React Query and Context setup
-├── components/                     # React components
-│   ├── Auth/                       # Auth UI (popup, forms, OAuth buttons)
-│   ├── Chat/                       # Chat interface components
-│   │   ├── Message.tsx
-│   │   ├── MessagesList.tsx
-│   │   ├── CustomPromptInput/      # Input with file upload
-│   │   ├── Artifact/               # Document viewer with streaming
-│   │   └── Parts/                  # Tool result renderers
-│   ├── Home/                       # Home page widgets
-│   ├── Header/                     # Navigation header
-│   ├── Sidebar/                    # Chat history sidebar
-│   ├── Modals/                     # Search, integrations, memories
-│   └── ui/                         # shadcn/ui components
-├── contexts/                       # React Context providers
-│   ├── UserContext.tsx             # User auth and integrations state
-│   └── DataStreamContext.tsx       # WebSocket streaming data
-├── store/                          # Zustand stores
-│   ├── useChatStore.ts             # Chat state management
-│   ├── useArtifactStore.ts         # Artifact/document state
-│   ├── useSidebarStore.ts          # Sidebar UI state
-│   └── useAuthPopupStore.ts        # Auth modal state
-├── hooks/                          # Custom React hooks
-│   ├── useMessages.ts              # Message CRUD and streaming
-│   ├── useChats.ts                 # Chat CRUD operations
-│   └── useChatTitle.ts             # Auto-generate chat titles
-├── services/                       # Business logic layer
-│   ├── client/                     # Client-side API calls
-│   │   ├── calendar.ts
-│   │   ├── chat.ts
-│   │   ├── docs.ts
-│   │   └── todoist.ts
-│   └── server/                     # Server-side business logic
-│       ├── chat/                   # Chat orchestration
-│       ├── calendar/               # Google Calendar client
-│       ├── todoist/                # Todoist API client
-│       ├── google/                 # Google API utils and token refresh
-│       ├── memory/                 # Memory extraction and storage
-│       └── artifacts/              # Document streaming generation
-├── data/                           # Data access layer (Supabase)
-│   ├── chats.ts                    # Chat CRUD
-│   ├── messages.ts                 # Message CRUD
-│   ├── memories.ts                 # Memory CRUD
-│   ├── storage.ts                  # Supabase Storage (images)
-│   └── auth.ts                     # Auth operations
-├── tools/                          # AI tool definitions (Vercel AI SDK)
-│   ├── calendar.tools.ts           # getCalendarEvents, createNewEvents
-│   ├── todos.tools.ts              # fetchTodos, suggestNewTodos
-│   └── document.tools.ts           # createDocument
-├── constants/                      # App constants and configuration
-│   ├── prompt.constant.ts          # System prompts for AI
-│   ├── chat.constant.ts            # Chat config (model names, etc.)
-│   └── auth.constant.ts            # Auth modes and settings
-├── types/                          # TypeScript type definitions
-├── utils/                          # Utility functions
-├── infra/                          # Infrastructure setup
-│   └── supabase/                   # Supabase client configs
-└── public/                         # Static assets
+├── app/                  # Next.js App Router
+│   ├── api/              # API routes (chat, calendar, todos, docs, auth)
+│   ├── auth/             # Authentication pages
+│   └── chat/[chatId]/    # Chat interface
+├── components/           # React components
+│   ├── Auth/             # Authentication UI
+│   ├── Chat/             # Chat interface and message components
+│   ├── Home/             # Home interface
+│   ├── Modals/           # Modals (search, integrations, memories)
+│   └── ui/               # shadcn/ui components
+├── contexts/             # React Context (user state, streaming data)
+├── store/                # Zustand stores (chat, artifacts, sidebar, auth)
+├── hooks/                # Custom React hooks
+├── services/             # Business logic
+│   ├── client/           # Client-side API calls
+│   └── server/           # Server-side logic (calendar, todoist, memory, artifacts)
+├── data/                 # Data access layer (Supabase CRUD)
+├── tools/                # AI tool definitions (calendar, todos, documents)
+├── constants/            # App constants and prompts
+├── types/                # TypeScript definitions
+├── utils/                # Utility functions
+└── infra/                # Infrastructure (Supabase clients)
 ```
 
 ---
-
-## Sample Interactions
-
-**Calendar Management:**
-> "What's on my calendar this week?"
-
-> "Find a 30-minute slot for a call tomorrow afternoon"
-
-> "Create a meeting with John next Tuesday at 2pm about the new project"
-
-**Task Management:**
-> "Show me my todos and what's overdue"
-
-> "Add 'Review PR #123' to my Todoist for tomorrow"
-
-**Knowledge & Research:**
-> "Create a document about React Server Components for my team presentation"
-
-> "Search for the latest news about AI agents"
-
-**Memory System:**
-> "Remember that I prefer morning meetings before 11am"
-
-**Image-to-Event:**
-> *[Uploads event flyer image]* → Automatically extracts details and creates calendar event
 
 ## Key Implementation Highlights
 
