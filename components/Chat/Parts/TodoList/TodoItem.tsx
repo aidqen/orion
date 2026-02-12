@@ -68,14 +68,14 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 					>
 						{task.content}
 					</Preview.Title>
-					{subtitle && (
+					{subtitle ? (
 						<Preview.Description className="capitalize">
 							{subtitle}
 						</Preview.Description>
-					)}
+					) : null}
 				</Preview.TextGroup>
 			</Preview.Group>
-			{task.due && (
+			{task.due ? (
 				<span
 					className={`text-xs flex flex-row items-center gap-0.5 shrink-0 ${
 						isOverdue(task.due.date)
@@ -86,7 +86,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 					{formatDueDate(task.due.date)}
 					<Flag size={12} />
 				</span>
-			)}
+			) : null}
 		</Preview.Container>
 	);
 };

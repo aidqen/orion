@@ -53,11 +53,11 @@ export function SidebarChatList({ chats, loading }: SidebarChatListProps) {
 					</SidebarMenuItem>
 				);
 			})}
-			{loading && (
+			{loading ? (
 				<>
 					<ChatSkeleton number={10} />
 				</>
-			)}
+			) : null}
 		</>
 	);
 }

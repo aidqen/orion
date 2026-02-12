@@ -36,7 +36,7 @@ export const EventList: React.FC<EventListProps> = ({ data }) => {
 									<Preview.Title>{event.summary || "No Title"}</Preview.Title>
 									<Preview.Description>
 										{dateStr}
-										{timeStr && ` • ${timeStr}`}
+										{timeStr ? ` • ${timeStr}` : null}
 									</Preview.Description>
 								</Preview.TextGroup>
 							</Preview.Group>
@@ -48,13 +48,13 @@ export const EventList: React.FC<EventListProps> = ({ data }) => {
 				})}
 			</div>
 
-			{selectedEvent && (
+			{selectedEvent ? (
 				<EventDetailsModal
 					event={selectedEvent}
 					isOpen={!!selectedEvent}
 					onClose={() => setSelectedEvent(null)}
 				/>
-			)}
+			) : null}
 		</>
 	);
 };

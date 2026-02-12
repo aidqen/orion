@@ -10,9 +10,9 @@ interface SearchResultsListProps {
 export function SearchResultsList({ results }: SearchResultsListProps) {
 	return (
 		<div className="mt-2 pl-4 overflow-x-hidden space-y-1">
-			{results.map((result, index) => (
+			{results.map((result) => (
 				<SearchResultItem
-					key={index}
+					key={result.url}
 					title={result.title}
 					url={result.url}
 					favicon={result.favicon}

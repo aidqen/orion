@@ -26,7 +26,7 @@ export function AuthPopup() {
 
 	return (
 		<AnimatePresence>
-			{isOpen && (
+			{isOpen ? (
 				<motion.div
 					onClick={handleClose}
 					className="fixed inset-0 bg-black/60 z-1000"
@@ -52,7 +52,7 @@ export function AuthPopup() {
 						</motion.div>
 					</div>
 				</motion.div>
-			)}
+			) : null}
 		</AnimatePresence>
 	);
 }

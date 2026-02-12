@@ -78,7 +78,7 @@ export const CreateEventsPreview: React.FC<CreateEventsPreviewProps> = ({
 				/>
 			))}
 
-			{showButton && (
+			{showButton ? (
 				<SubmitItemsButton
 					state={getButtonState()}
 					onClick={handleSubmit}
@@ -89,7 +89,7 @@ export const CreateEventsPreview: React.FC<CreateEventsPreviewProps> = ({
 						) : undefined
 					}
 				/>
-			)}
+			) : null}
 		</div>
 	);
 };

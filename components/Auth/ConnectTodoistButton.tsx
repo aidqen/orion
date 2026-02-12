@@ -40,7 +40,7 @@ export function ConnectTodoistButton({
 
 	return (
 		<>
-			{err && <ErrorBanner message={err} className="mt-3" />}
+			{err ? <ErrorBanner message={err} className="mt-3" /> : null}
 			<Button
 				onClick={handleConnect}
 				disabled={loading || isTodoistConnected}

@@ -41,7 +41,7 @@ export function CmdKSearch({ className, open, ...props }: CmdKSearchProps) {
 			{...props}
 		>
 			<Search className="h-4 w-4" aria-hidden="true" />
-			{open && (
+			{open ? (
 				<>
 					<span>Search</span>
 					<div className="ms-auto inline-flex gap-0.5">
@@ -53,7 +53,7 @@ export function CmdKSearch({ className, open, ...props }: CmdKSearchProps) {
 						</kbd>
 					</div>
 				</>
-			)}
+			) : null}
 		</button>
 	);
 }

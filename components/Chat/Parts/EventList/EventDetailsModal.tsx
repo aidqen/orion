@@ -57,9 +57,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 			return (
 				<div className="flex flex-col">
 					<span>{dateText}</span>
-					{timeText && (
+					{timeText ? (
 						<span className="text-sm text-muted-foreground">{timeText}</span>
-					)}
+					) : null}
 				</div>
 			);
 		} catch (_error: unknown) {
@@ -87,14 +87,14 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 					</div>
 
 					{/* Location */}
-					{event.location && (
+					{event.location ? (
 						<DetailRow icon={MapPin}>{event.location}</DetailRow>
-					)}
+					) : null}
 
 					{/* Description */}
-					{event.description && (
+					{event.description ? (
 						<DetailRow icon={AlignLeft}>{event.description}</DetailRow>
-					)}
+					) : null}
 
 					{/* Notification (Mocked) */}
 					<DetailRow icon={Bell} isMuted>

@@ -36,7 +36,7 @@ export function Artifact({ isActive }: ArtifactProps) {
 
 	return (
 		<>
-			{isMobile && isActive && (
+			{isMobile && isActive ? (
 				<motion.div
 					className="fixed top-0 left-0 w-dvw h-dvh backdrop-blur-sm z-10 bg-black/50"
 					initial={{ opacity: 0 }}
@@ -45,7 +45,7 @@ export function Artifact({ isActive }: ArtifactProps) {
 					onClick={closeArtifact}
 					transition={{ duration: 0.3, ease: "easeInOut" }}
 				/>
-			)}
+			) : null}
 			<motion.div
 				className="fixed md:relative top-0 right-0 bottom-0 flex z-20 overflow-hidden bg-background border-l"
 				initial={false}
@@ -70,7 +70,7 @@ export function Artifact({ isActive }: ArtifactProps) {
 						onMouseDown={isActive ? handleMouseDown : undefined}
 					/>
 				)}
-				{activeArtifact && (
+				{activeArtifact ? (
 					<div className="h-full w-full flex flex-col">
 						<ArtifactHeader
 							title={activeArtifact.title}
@@ -95,7 +95,7 @@ export function Artifact({ isActive }: ArtifactProps) {
 							</StickToBottom.Content>
 						</StickToBottom>
 					</div>
-				)}
+				) : null}
 			</motion.div>
 		</>
 	);

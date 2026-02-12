@@ -55,7 +55,7 @@ export default function AuthForm({
 
 	return (
 		<>
-			{err && <ErrorBanner message={err} className="mt-4" />}
+			{err ? <ErrorBanner message={err} className="mt-4" /> : null}
 
 			<form onSubmit={submit} className="mt-6 space-y-3">
 				{mode === "signup" && (

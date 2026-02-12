@@ -91,7 +91,7 @@ export const CreateTodosPreview: React.FC<CreateTodosPreviewProps> = ({
 				))}
 			</div>
 
-			{showButton && (
+			{showButton ? (
 				<SubmitItemsButton
 					state={getButtonState()}
 					onClick={handleSubmit}
@@ -100,7 +100,7 @@ export const CreateTodosPreview: React.FC<CreateTodosPreviewProps> = ({
 						!isTodoistConnected ? <ConnectTodoistButton /> : undefined
 					}
 				/>
-			)}
+			) : null}
 		</div>
 	);
 };

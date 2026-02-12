@@ -19,7 +19,7 @@ export function SidebarNav() {
 						<SidebarMenuItem key={item.text}>
 							<SidebarMenuButton asChild>
 								<Link href={`${item.href}`}>
-									{item.icon && <item.icon className="size-4" />}
+									{item.icon ? <item.icon className="size-4" /> : null}
 									<span>{item.text}</span>
 								</Link>
 							</SidebarMenuButton>

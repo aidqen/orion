@@ -83,9 +83,9 @@ export const EventCard: React.FC<EventCardProps> = ({
 				attendees={event.attendees ?? undefined}
 			/>
 
-			{status === "failed" && error && (
+			{status === "failed" && error ? (
 				<div className="px-4 pb-3 text-sm text-red-500">{error}</div>
-			)}
+			) : null}
 		</div>
 	);
 };

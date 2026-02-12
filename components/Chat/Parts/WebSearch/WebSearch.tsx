@@ -53,7 +53,7 @@ export function WebSearch({ data }: WebSearchFetchProps) {
 							onToggle={() => setShowResults(!showResults)}
 						/>
 
-						{showResults && <SearchResultsList results={results} />}
+						{showResults ? <SearchResultsList results={results} /> : null}
 					</div>
 				) : null}
 			</div>

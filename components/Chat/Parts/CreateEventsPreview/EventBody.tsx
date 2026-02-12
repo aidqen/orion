@@ -42,30 +42,30 @@ export const EventBody: React.FC<EventBodyProps> = ({
 }) => (
 	<div className="grid gap-3 p-4 text-sm">
 		<div className="flex flex-col items-start gap-1">
-			{start && <span className="font-medium">{formatDate(start)}</span>}
-			{start && end && (
+			{start ? <span className="font-medium">{formatDate(start)}</span> : null}
+			{start && end ? (
 				<span className="text-muted-foreground">
 					{formatTime(start)} - {formatTime(end)}
 				</span>
-			)}
+			) : null}
 		</div>
 
-		{location && (
+		{location ? (
 			<div className="flex items-start gap-2">
 				<MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 				<span className="wrap-break-word text-muted-foreground">
 					{location}
 				</span>
 			</div>
-		)}
+		) : null}
 
-		{description && (
+		{description ? (
 			<div className="flex items-start gap-2">
 				<AlignLeft className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 				<p className="wrap-break-word text-muted-foreground">{description}</p>
 			</div>
-		)}
-		{attendees && attendees.length > 0 && (
+		) : null}
+		{attendees && attendees.length > 0 ? (
 			<div className="flex items-start gap-2">
 				<User className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 				<p className="wrap-break-word text-muted-foreground">
@@ -75,6 +75,6 @@ export const EventBody: React.FC<EventBodyProps> = ({
 						.join(", ")}
 				</p>
 			</div>
-		)}
+		) : null}
 	</div>
 );

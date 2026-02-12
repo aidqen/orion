@@ -25,7 +25,7 @@ export function Modal({
 	if (!isMounted) return null;
 	return createPortal(
 		<AnimatePresence>
-			{open && (
+			{open ? (
 				<div className="fixed inset-0 z-50 flex items-center justify-center">
 					<MotionConfig
 						transition={
@@ -57,7 +57,7 @@ export function Modal({
 						</motion.div>
 					</MotionConfig>
 				</div>
-			)}
+			) : null}
 		</AnimatePresence>,
 		document.body,
 	);
