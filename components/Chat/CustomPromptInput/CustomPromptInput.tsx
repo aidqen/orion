@@ -50,6 +50,7 @@ export function CustomPromptInput({
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 	const [keyboardOffset, setKeyboardOffset] = useState(0);
+	const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
@@ -63,21 +64,28 @@ export function CustomPromptInput({
 	useEffect(() => {
 		if (!mobileKeyboardFix || !window.visualViewport) return;
 
-		const viewport = window.visualViewport;
+		let rafId: number;
 
 		const handleResize = () => {
-			const offset = window.innerHeight - viewport.height;
-			if (offset > 50) {
-				setKeyboardOffset(prev => Math.abs(prev - offset) > 10 ? offset : prev);
-			} else {
-				setKeyboardOffset(0);
-			}
+			cancelAnimationFrame(rafId);
+
+			rafId = requestAnimationFrame(() => {
+				const offset = window.innerHeight - window.visualViewport!.height;
+				const open = offset > 50;
+
+				setIsKeyboardOpen(open);
+				setKeyboardOffset(open ? offset : 0);
+			});
 		};
 
-		viewport.addEventListener("resize", handleResize);
+		window.visualViewport.addEventListener("resize", handleResize);
+		window.visualViewport.addEventListener("scroll", handleResize);
 
 		return () => {
-			viewport.removeEventListener("resize", handleResize);
+			window.visualViewport?.removeEventListener("resize", handleResize);
+			window.visualViewport?.removeEventListener("scroll", handleResize);
+			cancelAnimationFrame(rafId);
+			setIsKeyboardOpen(false);
 			setKeyboardOffset(0);
 		};
 	}, [mobileKeyboardFix]);
@@ -127,8 +135,8 @@ export function CustomPromptInput({
 					className,
 				)}
 				style={{
-					transform: `translateY(-${keyboardOffset}px)`,
-					transition: 'transform 0.15s ease-out',
+					transform: keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : undefined,
+					transition: isKeyboardOpen ? "transform 0.15s ease-out" : undefined,
 				}}
 			>
 				<PromptInputBody className="">
