@@ -50,7 +50,6 @@ export function CustomPromptInput({
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 	const [keyboardOffset, setKeyboardOffset] = useState(0);
-	console.log("🚀 ~ CustomPromptInput ~ keyboardOffset:", keyboardOffset)
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
@@ -69,7 +68,7 @@ export function CustomPromptInput({
 		const handleResize = () => {
 			const offset = window.innerHeight - viewport.height;
 			if (offset > 50) {
-				setKeyboardOffset(offset);
+				setKeyboardOffset(prev => Math.abs(prev - offset) > 10 ? offset : prev);
 			} else {
 				setKeyboardOffset(0);
 			}
