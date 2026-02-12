@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp, RotateCw } from "lucide-react";
-import { type ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	PromptInput,
@@ -47,6 +47,7 @@ export function CustomPromptInput({
 	userId?: string;
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
+	const [keyboardOffset, setKeyboardOffset] = useState(0);
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
@@ -57,6 +58,22 @@ export function CustomPromptInput({
 		speed: 100,
 		enabled: textAnimation,
 	});
+
+	useEffect(() => {
+		const viewport = window.visualViewport;
+		if (!viewport) return;
+
+		const handleResize = () => {
+			const offset = window.innerHeight - viewport.height;
+			setKeyboardOffset(offset);
+		};
+
+		viewport.addEventListener("resize", handleResize);
+
+		return () => {
+			viewport.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
 	const markFailed = (id: string) => {
 		setFailedIds((prev) => new Set(prev).add(id));
@@ -102,6 +119,9 @@ export function CustomPromptInput({
 
 					className,
 				)}
+				style={{
+					transform: `translateY(-${keyboardOffset}px)`,
+				}}
 			>
 				<PromptInputBody className="">
 					<FileUploader
