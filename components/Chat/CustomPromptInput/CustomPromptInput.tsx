@@ -34,6 +34,7 @@ export function CustomPromptInput({
 	stop,
 	chatId,
 	userId,
+	mobileKeyboardFix = false,
 }: {
 	input: string;
 	setInput: (value: string) => void;
@@ -45,6 +46,7 @@ export function CustomPromptInput({
 	stop?: () => void;
 	chatId?: string;
 	userId?: string;
+	mobileKeyboardFix?: boolean;
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 	const [keyboardOffset, setKeyboardOffset] = useState(0);
@@ -60,20 +62,30 @@ export function CustomPromptInput({
 	});
 
 	useEffect(() => {
+		// Skip if feature is disabled or visualViewport isn't supported
+		if (!mobileKeyboardFix || !window.visualViewport) return;
+
 		const viewport = window.visualViewport;
-		if (!viewport) return;
 
 		const handleResize = () => {
 			const offset = window.innerHeight - viewport.height;
-			setKeyboardOffset(offset);
+
+			// Only apply offset if keyboard is actually open (offset > some threshold)
+			// Small threshold handles minor viewport adjustments that aren't the keyboard
+			if (offset > 50) {
+				setKeyboardOffset(offset);
+			} else {
+				setKeyboardOffset(0); // Keyboard closed, reset
+			}
 		};
 
 		viewport.addEventListener("resize", handleResize);
 
 		return () => {
 			viewport.removeEventListener("resize", handleResize);
+			setKeyboardOffset(0); // Reset on cleanup too
 		};
-	}, []);
+	}, [mobileKeyboardFix]);
 
 	const markFailed = (id: string) => {
 		setFailedIds((prev) => new Set(prev).add(id));

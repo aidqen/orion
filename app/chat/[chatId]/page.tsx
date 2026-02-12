@@ -46,6 +46,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 						status={status}
 						stop={stop}
 						chatId={chatId}
+						mobileKeyboardFix={true}
 						userId={user?.id || ""}
 						className={cn(
 							isArtifactOpen
