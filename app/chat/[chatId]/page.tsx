@@ -35,7 +35,7 @@ export default function ChatPage({ params }: ChatPageProps) {
 	return (
 		<>
 			<div className="flex flex-1 h-full grow overflow-hidden relative">
-				<div className="flex-50 h-full flex flex-col bg-background text-black">
+				<div className="flex-50 h-full flex flex-col bg-background text-black overflow-hidden">
 					<Header />
 					<MessagesList messages={messages} error={error} reload={reload} />
 					<CustomPromptInput
