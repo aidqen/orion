@@ -135,7 +135,8 @@ export function CustomPromptInput({
 					className,
 				)}
 				style={{
-					transform: keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : undefined,
+					transform:
+						keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : undefined,
 					transition: isKeyboardOpen ? "transform 0.15s ease-out" : undefined,
 				}}
 			>
