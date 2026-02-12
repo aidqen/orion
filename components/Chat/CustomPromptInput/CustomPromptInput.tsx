@@ -50,11 +50,11 @@ export function CustomPromptInput({
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 	const [keyboardOffset, setKeyboardOffset] = useState(0);
+	console.log("🚀 ~ CustomPromptInput ~ keyboardOffset:", keyboardOffset)
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
 
-	// Use the typewriter hook for animated placeholder
 	const { displayedContent: typedPlaceholder } = useTypewriter({
 		text: placeholder,
 		speed: 100,
@@ -62,20 +62,16 @@ export function CustomPromptInput({
 	});
 
 	useEffect(() => {
-		// Skip if feature is disabled or visualViewport isn't supported
 		if (!mobileKeyboardFix || !window.visualViewport) return;
 
 		const viewport = window.visualViewport;
 
 		const handleResize = () => {
 			const offset = window.innerHeight - viewport.height;
-
-			// Only apply offset if keyboard is actually open (offset > some threshold)
-			// Small threshold handles minor viewport adjustments that aren't the keyboard
 			if (offset > 50) {
 				setKeyboardOffset(offset);
 			} else {
-				setKeyboardOffset(0); // Keyboard closed, reset
+				setKeyboardOffset(0);
 			}
 		};
 
@@ -83,7 +79,7 @@ export function CustomPromptInput({
 
 		return () => {
 			viewport.removeEventListener("resize", handleResize);
-			setKeyboardOffset(0); // Reset on cleanup too
+			setKeyboardOffset(0);
 		};
 	}, [mobileKeyboardFix]);
 
@@ -133,6 +129,7 @@ export function CustomPromptInput({
 				)}
 				style={{
 					transform: `translateY(-${keyboardOffset}px)`,
+					transition: 'transform 0.15s ease-out',
 				}}
 			>
 				<PromptInputBody className="">

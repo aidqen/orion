@@ -6,7 +6,6 @@ interface ChatErrorProps {
 }
 
 export function ChatError({ error, reload }: ChatErrorProps) {
-	console.log("🚀 ~ ChatError ~ error:", error)
 	if (!error) return null;
 
 	return (
