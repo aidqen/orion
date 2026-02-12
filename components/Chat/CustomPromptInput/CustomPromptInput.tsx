@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUp, RotateCw } from "lucide-react";
-import { type ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	PromptInput,
@@ -34,6 +34,7 @@ export function CustomPromptInput({
 	stop,
 	chatId,
 	userId,
+	mobileKeyboardFix = false,
 }: {
 	input: string;
 	setInput: (value: string) => void;
@@ -45,18 +46,29 @@ export function CustomPromptInput({
 	stop?: () => void;
 	chatId?: string;
 	userId?: string;
+	mobileKeyboardFix?: boolean;
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
 
-	// Use the typewriter hook for animated placeholder
 	const { displayedContent: typedPlaceholder } = useTypewriter({
 		text: placeholder,
 		speed: 100,
 		enabled: textAnimation,
 	});
+
+	// Opt into VirtualKeyboard API for mobile keyboard handling
+	useEffect(() => {
+		if (mobileKeyboardFix && "virtualKeyboard" in navigator) {
+			(
+				navigator as Navigator & {
+					virtualKeyboard: { overlaysContent: boolean };
+				}
+			).virtualKeyboard.overlaysContent = true;
+		}
+	}, [mobileKeyboardFix]);
 
 	const markFailed = (id: string) => {
 		setFailedIds((prev) => new Set(prev).add(id));
@@ -102,6 +114,14 @@ export function CustomPromptInput({
 
 					className,
 				)}
+				style={
+					mobileKeyboardFix
+						? {
+								bottom: "env(keyboard-inset-height, 0)",
+								transition: "bottom 0.15s ease-out",
+							}
+						: undefined
+				}
 			>
 				<PromptInputBody className="">
 					<FileUploader
