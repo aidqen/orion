@@ -49,8 +49,6 @@ export function CustomPromptInput({
 	mobileKeyboardFix?: boolean;
 }) {
 	const [failedIds, setFailedIds] = useState<Set<string>>(new Set());
-	const [keyboardOffset, setKeyboardOffset] = useState(0);
-	const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
 	const uploadingIdsRef = useRef<Set<string>>(new Set());
 	const uploadedUrlsRef = useRef<Map<string, string>>(new Map());
@@ -61,33 +59,15 @@ export function CustomPromptInput({
 		enabled: textAnimation,
 	});
 
+	// Opt into VirtualKeyboard API for mobile keyboard handling
 	useEffect(() => {
-		if (!mobileKeyboardFix || !window.visualViewport) return;
-
-		let rafId: number;
-
-		const handleResize = () => {
-			cancelAnimationFrame(rafId);
-
-			rafId = requestAnimationFrame(() => {
-				const offset = window.innerHeight - window.visualViewport!.height;
-				const open = offset > 50;
-
-				setIsKeyboardOpen(open);
-				setKeyboardOffset(open ? offset : 0);
-			});
-		};
-
-		window.visualViewport.addEventListener("resize", handleResize);
-		window.visualViewport.addEventListener("scroll", handleResize);
-
-		return () => {
-			window.visualViewport?.removeEventListener("resize", handleResize);
-			window.visualViewport?.removeEventListener("scroll", handleResize);
-			cancelAnimationFrame(rafId);
-			setIsKeyboardOpen(false);
-			setKeyboardOffset(0);
-		};
+		if (mobileKeyboardFix && "virtualKeyboard" in navigator) {
+			(
+				navigator as Navigator & {
+					virtualKeyboard: { overlaysContent: boolean };
+				}
+			).virtualKeyboard.overlaysContent = true;
+		}
 	}, [mobileKeyboardFix]);
 
 	const markFailed = (id: string) => {
@@ -134,11 +114,14 @@ export function CustomPromptInput({
 
 					className,
 				)}
-				style={{
-					transform:
-						keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : undefined,
-					transition: isKeyboardOpen ? "transform 0.15s ease-out" : undefined,
-				}}
+				style={
+					mobileKeyboardFix
+						? {
+								bottom: "env(keyboard-inset-height, 0)",
+								transition: "bottom 0.15s ease-out",
+							}
+						: undefined
+				}
 			>
 				<PromptInputBody className="">
 					<FileUploader
