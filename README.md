@@ -2,8 +2,6 @@
 
 A personal AI assistant with deep calendar, task management, document creation and web search integrations — powered by AI.
 
-**[Live Demo →](https://orion-inky-six.vercel.app/)**
-
 ---
 
 ## Overview
